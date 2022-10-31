@@ -1,0 +1,284 @@
+// This is your Prisma schema file,
+// learn more about it in the docs https//pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  username String @unique
+  password String
+
+  email       String? @unique
+  phoneNumber String?
+
+  firstName String?
+  lastName  String?
+
+  province String?
+  district String?
+  ward String?
+  address  String?
+  birthDay DateTime?
+
+  avatar String   @default("https://res.cloudinary.com/vhh/image/upload/v1665845758/watch-ecommerce/istockphoto-476085198-612x612_bt6y0m.jpg")
+  status Boolean?
+
+  role Role @default(USER)
+
+  Shop     Shop?
+  Favorite Favorite[]
+  Cart     Cart[]
+  Order    Order[]
+
+  isActive Boolean @default(true)
+}
+
+enum Role {
+  USER
+  VENDOR
+  ADMIN
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Shop {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  description String?
+  content     String?
+
+  province String?
+  district String?
+  ward String?
+  address  String?
+
+  email       String?
+  phoneNumber String?
+
+  logo   String  @default("https://res.cloudinary.com/vhh/image/upload/v1665845746/watch-ecommerce/74827_of9gt0.png")
+  banner String?
+
+  user User @relation(fields: [UID], references: [id])
+  UID  Int  @unique
+
+  Watchs Watch[]
+
+  isActive Boolean @default(true)
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Watch {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  BID Int?
+
+  shop Shop @relation(fields: [SID], references: [id])
+  SID  Int
+
+  CID Int[]
+
+  sku         String?
+  description String?
+  content     String?
+
+  quantity   Int
+  saled      Int @default(0)
+  price      Int
+  priceFloor Int
+
+  gender       Gender    @default(None)
+  materialCord String?
+  glassSurface String?
+  glassSize    String?
+  weight       Int?
+  madeBy       String?
+  image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
+  warranty     DateTime?
+
+  Favorite Favorite[]
+  Cart     Cart[]
+
+  isActive     Boolean        @default(true)
+  Order_detail Order_detail[]
+}
+
+enum Gender {
+  Male
+  Female
+  None
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String  @unique
+  description String?
+  image       String?
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Brand {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String?
+  image       String?
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+// model Rating {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   rate Int
+// }
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [UID], references: [id])
+  UID  Int
+
+  watch Watch @relation(fields: [WID], references: [id])
+  WID   Int
+
+  isActive Boolean @default(true)
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [UID], references: [id])
+  UID  Int
+
+  watch Watch @relation(fields: [WID], references: [id])
+  WID   Int
+
+  quantity Int
+
+  isActive Boolean @default(true)
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status        orderProcess
+  total         Int
+
+  user User @relation(fields: [UID], references: [id])
+  UID  Int
+
+  Note            String?
+
+  isActive     Boolean        @default(true)
+  Order_detail Order_detail[]
+  Payment_detail Payment_detail?
+  Delivery_detail Delivery_detail?
+}
+
+enum orderProcess {
+  confirm
+  pickup
+  delivery
+  delivered
+  cancel
+}
+
+enum paymentMethod {
+  online
+  receiving
+}
+
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Order_detail {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [OID], references: [id])
+  OID   Int
+
+  watch Watch @relation(fields: [WID], references: [id])
+  WID   Int
+
+  quantity Int
+}
+
+model Payment_detail {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  paymentMethod paymentMethod
+
+  order Order @relation(fields: [OID], references: [id])
+  OID   Int @unique
+}
+
+model Delivery_detail {
+    id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  province String?
+  district String?
+  ward String?
+  address  String?
+
+  order Order @relation(fields: [OID], references: [id])
+  OID   Int @unique
+}

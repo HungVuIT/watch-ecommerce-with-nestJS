@@ -1,0 +1,110 @@
+import { HttpException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import vnAddressFormatter from 'src/shared/vnProvince';
+import { shopDto } from './dto/shop.dto';
+
+@Injectable()
+export class ShopService {
+  constructor(private prisma: PrismaService) {}
+
+  findById(shopId: number) {
+    try {
+      return this.prisma.shop.findUnique({
+        where: { id: shopId },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findMany(option: any) {
+    try {
+      let query = {};
+
+      if (option.skip) query['skip'] = Number(option.skip);
+
+      if (option.take) query['take'] = Number(option.take);
+
+      if (option.orderBy) {
+        let sort = {};
+
+        sort[option.orderBy] = 'asc';
+
+        query['orderBy'] = sort;
+      }
+
+      const list = await this.prisma.shop.findMany(query);
+
+      return list;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteByUserId(userId: number) {
+    try {
+      await this.prisma.shop.delete({
+        where: { UID: userId },
+      });
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { role: 'USER' },
+      });
+    } catch (error) {
+      throw new HttpException(error.messeger, 500);
+    }
+  }
+
+  async updateByUserId(
+    id: number,
+    body: shopDto,
+    files: {
+      logo?: Express.Multer.File[];
+      banner?: Express.Multer.File[];
+    },
+  ) {
+    try {
+      if (files.logo) {
+        body.logo = files.logo[0].path;
+      }
+
+      if (files.banner) {
+        body.banner = files.banner[0].path;
+      }
+
+      const shop = await this.prisma.shop.update({
+        where: { UID: id },
+        data: body,
+      });
+
+      return shop;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async create(userId: number, body: { name: string }) {
+    try {
+      const shop = await this.prisma.shop.create({
+        data: {
+          UID: userId,
+          ...body,
+        },
+      });
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { role: 'VENDOR' },
+      });
+
+      return shop;
+    } catch (error) {
+      throw new HttpException(error.messeger, 500);
+    }
+  }
+
+  myShop() {
+    throw new Error('Method not implemented.');
+  }
+}
