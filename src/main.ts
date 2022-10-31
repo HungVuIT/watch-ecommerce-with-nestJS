@@ -11,6 +11,6 @@ async function bootstrap() {
     whitelist: true
   }));
   
-  await app.listen(new ConfigService().get("PORT"));
+  await app.listen(process.env.PORT || 8000);
 }
 bootstrap();
