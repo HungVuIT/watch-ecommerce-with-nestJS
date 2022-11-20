@@ -16,10 +16,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { fileFieldsUpload, fileUpload } from 'src/shared/cloudinary/storage';
+import { Shop } from 'src/shared/customDecorator/shop.decorator';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard, VendorGuard } from 'src/shared/guard';
 import { AddressPipe } from 'src/shared/pipe/addressValidation.pipe';
-import { shopDto } from './dto/shop.dto';
+import { createShopDto } from './dto/createShop.dto';
 import { ShopService } from './shop.service';
 
 @Controller('shops')
@@ -29,7 +30,7 @@ export class ShopController {
   @UseGuards(jwtGuard)
   @UseInterceptors(FileInterceptor(''))
   @Post('my-shop')
-  createShop(@User('id') id: number, @Body() body: { name: string }) {
+  createShop(@User('id') id: number, @Body(new AddressPipe()) body: createShopDto) {
     return this.shopService.create(id, body);
   }
 
@@ -43,7 +44,7 @@ export class ShopController {
   @Patch('my-shop')
   updateShop(
     @User('id') id: number,
-    @Body(new AddressPipe()) body: shopDto,
+    @Body(new AddressPipe()) body,
     @UploadedFiles()
     files: {
       logo?: Express.Multer.File[];
@@ -71,7 +72,14 @@ export class ShopController {
 
   @UseGuards(jwtGuard, VendorGuard)
   @Get('me')
-  async myShop() {
+  myShop() {
     return this.shopService.myShop();
+  }
+
+  @UseGuards(jwtGuard, VendorGuard)
+  @UseInterceptors(FileInterceptor(''))
+  @Post('add-payment-method')
+  addPayment(@Shop('id') id: number, @Body() body){
+    return this.shopService.addPayment(id, body.email);
   }
 }

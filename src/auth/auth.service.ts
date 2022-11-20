@@ -24,7 +24,7 @@ export class AuthService {
       });
 
       if (exit)
-        throw new HttpException('Email đã tồn tại', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Username hoặc email đã tồn tại', HttpStatus.BAD_REQUEST);
 
       body.password = await hash(body.password);
 
@@ -47,7 +47,7 @@ export class AuthService {
         where: { username: body.username },
       });
 
-      if (!user) throw new HttpException('Sai email', HttpStatus.FORBIDDEN);
+      if (!user) throw new HttpException('Sai username hoặc email', HttpStatus.FORBIDDEN);
 
       const match = await verify(user.password, body.password);
 

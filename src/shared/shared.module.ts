@@ -1,11 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { VendorGuard } from './guard';
 import { JwtStrategy } from './strategy';
 import {HttpModule} from "@nestjs/axios"
+import { SharedService } from './shared.service';
+import { globalVariables } from './global.service';
 
-
+@Global()
 @Module({
-    imports: [HttpModule],
-    providers: [JwtStrategy]
+    providers: [JwtStrategy, SharedService, globalVariables],
+    exports: [SharedService, globalVariables]
+
 })
 export class SharedModule {}

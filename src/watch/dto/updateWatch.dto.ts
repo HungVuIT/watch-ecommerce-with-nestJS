@@ -1,6 +1,6 @@
 import { Gender } from "@prisma/client"
 import { Type } from "class-transformer"
-import { IsArray, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator"
+import { IsArray, IsIn, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator"
 import { Interface } from "readline"
 
 export class updateWatchDto{
@@ -48,6 +48,7 @@ export class updateWatchDto{
   
     @IsOptional()
     @IsString()
+    @IsIn([Gender.female, Gender.male, Gender.none])
     gender      : Gender
 
     @IsOptional()

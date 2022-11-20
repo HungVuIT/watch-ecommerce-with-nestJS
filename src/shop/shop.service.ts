@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import vnAddressFormatter from 'src/shared/vnProvince';
-import { shopDto } from './dto/shop.dto';
+import { createShopDto } from './dto/createShop.dto';
 
 @Injectable()
 export class ShopService {
@@ -58,7 +58,7 @@ export class ShopService {
 
   async updateByUserId(
     id: number,
-    body: shopDto,
+    body: createShopDto,
     files: {
       logo?: Express.Multer.File[];
       banner?: Express.Multer.File[];
@@ -84,7 +84,7 @@ export class ShopService {
     }
   }
 
-  async create(userId: number, body: { name: string }) {
+  async create(userId: number, body: createShopDto) {
     try {
       const shop = await this.prisma.shop.create({
         data: {
@@ -106,5 +106,18 @@ export class ShopService {
 
   myShop() {
     throw new Error('Method not implemented.');
+  }
+
+  async addPayment(shopId: number, email: string) {
+    try {
+      return await this.prisma.shopWallet.create({
+        data: {
+          paypalMethod: email,
+          SID: shopId,
+        },
+      });
+    } catch (error) {
+      throw error
+    }
   }
 }

@@ -1,17 +1,31 @@
-import { orderProcess, paymentMethod } from '@prisma/client';
-import { IsIn, IsNotEmpty, IsOptional } from 'class-validator';
+import { paymentMethod } from '@prisma/client';
+import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class createOrderDto {
   // requiredDate:  dat
+  
   @IsNotEmpty()
   @IsIn([
-    orderProcess.confirm,
-    orderProcess.cancel,
-    orderProcess.delivered,
-    orderProcess.delivery,
-    orderProcess.pickup,
+    paymentMethod.online,
+    paymentMethod.offline
   ])
-  status: orderProcess;
+  paymentMethod: paymentMethod
+
+  @IsNotEmpty()
+  @IsString()
+  province: string
+
+  @IsNotEmpty()
+  @IsString()
+  district: string
+
+  @IsNotEmpty()
+  @IsString()
+  ward   :  string
+
+  @IsNotEmpty()
+  @IsString()
+  address : string
 
   @IsOptional()
   Note: string;

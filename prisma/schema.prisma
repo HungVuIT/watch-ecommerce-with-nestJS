@@ -30,7 +30,7 @@ model User {
 
   province String?
   district String?
-  ward String?
+  ward     String?
   address  String?
   birthDay DateTime?
 
@@ -44,7 +44,8 @@ model User {
   Cart     Cart[]
   Order    Order[]
 
-  isActive Boolean @default(true)
+  isActive Boolean   @default(true)
+  Comment  Comment[]
 }
 
 enum Role {
@@ -63,16 +64,16 @@ model Shop {
 
   name String
 
-  description String?
+  description String
   content     String?
 
-  province String?
-  district String?
-  ward String?
-  address  String?
+  province String
+  district String
+  ward     String
+  address  String
 
   email       String?
-  phoneNumber String?
+  phoneNumber String
 
   logo   String  @default("https://res.cloudinary.com/vhh/image/upload/v1665845746/watch-ecommerce/74827_of9gt0.png")
   banner String?
@@ -80,9 +81,23 @@ model Shop {
   user User @relation(fields: [UID], references: [id])
   UID  Int  @unique
 
+  ShopWallet ShopWallet?
+
   Watchs Watch[]
 
   isActive Boolean @default(true)
+}
+
+model ShopWallet {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  paypalMethod String
+
+  shop Shop @relation(fields: [SID], references: [id])
+  SID  Int @unique
+
 }
 
 // ===========================================================================================================
@@ -111,7 +126,7 @@ model Watch {
   price      Int
   priceFloor Int
 
-  gender       Gender    @default(None)
+  gender       Gender    @default(none)
   materialCord String?
   glassSurface String?
   glassSize    String?
@@ -125,12 +140,13 @@ model Watch {
 
   isActive     Boolean        @default(true)
   Order_detail Order_detail[]
+  Comment      Comment[]
 }
 
 enum Gender {
-  Male
-  Female
-  None
+  male
+  female
+  none
 }
 
 // ===========================================================================================================
@@ -214,31 +230,32 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  status        orderProcess
-  total         Int
+  status orderProcess @default(created)
+  total  Float
+  paymentMethod paymentMethod
 
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
-  Note            String?
+  Note String?
 
-  isActive     Boolean        @default(true)
-  Order_detail Order_detail[]
-  Payment_detail Payment_detail?
+  isActive        Boolean          @default(true)
+  Order_detail    Order_detail[]
   Delivery_detail Delivery_detail?
 }
 
 enum orderProcess {
+  created
   confirm
-  pickup
-  delivery
+  delivering
   delivered
   cancel
+  done
 }
 
 enum paymentMethod {
   online
-  receiving
+  offline
 }
 
 // ===========================================================================================================
@@ -256,29 +273,38 @@ model Order_detail {
   WID   Int
 
   quantity Int
+  total    Float
+  fee      Float
 }
 
-model Payment_detail {
+model Delivery_detail {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  paymentMethod paymentMethod
+  province String
+  district String
+  ward     String
+  address  String
+  shipFee  Float
 
   order Order @relation(fields: [OID], references: [id])
-  OID   Int @unique
+  OID   Int   @unique
 }
 
-model Delivery_detail {
-    id        Int      @id @default(autoincrement())
+// ===========================================================================================================
+// ===========================================================================================================
+
+model Comment {
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  province String?
-  district String?
-  ward String?
-  address  String?
+  user User @relation(fields: [UID], references: [id])
+  UID  Int
 
-  order Order @relation(fields: [OID], references: [id])
-  OID   Int @unique
+  watch Watch @relation(fields: [WID], references: [id])
+  WID   Int
+
+  content String
 }

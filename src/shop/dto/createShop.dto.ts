@@ -1,33 +1,33 @@
-import { IsEmail, IsNumberString, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, IsUrl } from "class-validator";
 
-export class shopDto{
+export class createShopDto{
 
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     name: string;
 
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     description: string;
 
     @IsString()
     @IsOptional()
     content :    string;
   
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     province: string
 
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     district: string
 
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     ward: string
 
+    @IsNotEmpty()
     @IsString()
-    @IsOptional()
     address :string;
   
     @IsString()
@@ -35,8 +35,8 @@ export class shopDto{
     @IsOptional()
     email     :  string;
 
+    @IsNotEmpty()
     @IsNumberString()
-    @IsOptional()
     phoneNumber: string;
   
     @IsOptional()

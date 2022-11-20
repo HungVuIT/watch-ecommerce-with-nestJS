@@ -45,7 +45,7 @@ export class createWatchDto{
   
     @IsOptional()
     @IsString()
-    @IsIn(["Male", "Female", "None"])
+    @IsIn([Gender.female, Gender.male, Gender.none])
     gender      : Gender
 
     @IsOptional()
