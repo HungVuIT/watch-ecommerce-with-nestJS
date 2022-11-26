@@ -1,6 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import vnAddressFormatter from 'src/shared/vnProvince';
 import { createShopDto } from './dto/createShop.dto';
 
 @Injectable()
@@ -117,7 +116,7 @@ export class ShopService {
         },
       });
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

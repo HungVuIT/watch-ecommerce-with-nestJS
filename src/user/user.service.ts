@@ -1,7 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import vnAddressFormatter from 'src/shared/vnProvince';
-import vnAddress from 'src/shared/vnProvince';
 import { userDto } from './dto/user.dto';
 
 @Injectable()

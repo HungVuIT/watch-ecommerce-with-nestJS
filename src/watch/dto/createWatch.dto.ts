@@ -1,100 +1,106 @@
-import { Gender } from "@prisma/client"
-import { Type } from "class-transformer"
-import { IsArray, IsEnum, IsIn, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator"
-import { Interface } from "readline"
+import { Gender } from '@prisma/client';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class createWatchDto{
+export class createWatchDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    name: string
+  @IsNumber()
+  @IsOptional()
+  BID: number;
 
-    @IsNumber()
-    @IsOptional()
-    BID: number
-  
-    @IsArray()
-    @IsOptional()
-    CID : number[]
-  
-    @IsOptional()
-    sku        : string
+  @IsArray()
+  @IsOptional()
+  CID: number[];
 
-    @IsOptional()
-    @IsString()
-    description  : string
+  @IsOptional()
+  sku: string;
 
-    @IsOptional()
-    @IsString()
-    content    : string
-  
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsInt()
-    quantity   : number
-    
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsInt()
-    price      : number
+  @IsOptional()
+  @IsString()
+  description: string;
 
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsInt()
-    priceFloor : number
-  
-    @IsOptional()
-    @IsString()
-    @IsIn([Gender.female, Gender.male, Gender.none])
-    gender      : Gender
+  @IsOptional()
+  @IsString()
+  content: string;
 
-    @IsOptional()
-    @IsString()
-    materialCord  : string
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsInt()
+  quantity: number;
 
-    @IsOptional()
-    @IsString()
-    glassSurface  : string
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsInt()
+  price: number;
 
-    @IsOptional()
-    @IsString()
-    glassSize    : string
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsInt()
+  priceFloor: number;
 
-    @IsOptional()
-    @Type(() => Number)
-    weight      : number
+  @IsOptional()
+  @IsString()
+  @IsIn([Gender.female, Gender.male, Gender.none])
+  gender: Gender;
 
-    @IsOptional()
-    madeBy      : string
+  @IsOptional()
+  @IsString()
+  materialCord: string;
 
-    @IsOptional()
-    image: any
+  @IsOptional()
+  @IsString()
+  glassSurface: string;
 
-    // @IsOptional()
-    // warranty     : date
+  @IsOptional()
+  @IsString()
+  glassSize: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  weight: number;
+
+  @IsOptional()
+  madeBy: string;
+
+  @IsOptional()
+  image: any;
+
+  // @IsOptional()
+  // warranty     : date
 }
 
 // model Watch {
 //     id        Int      @id @default(autoincrement())
 //     createdAt DateTime @default(now())
 //     updatedAt DateTime @updatedAt
-  
+
 //     BID Int?
-  
+
 //     shop Shop @relation(fields: [SID], references: [id])
 //     SID  Int
-  
+
 //     CID Int?
-  
+
 //     sku         String?
 //     description String?
 //     content     String?
-  
+
 //     quantity   Int
 //     saled      Int @default(0)
 //     price      Int
 //     priceFloor Int
-  
+
 //     gender       String?
 //     materialCord String?
 //     glassSurface String?
@@ -103,10 +109,9 @@ export class createWatchDto{
 //     madeBy       String?
 //     image        String[]
 //     warranty     DateTime?
-  
+
 //     Favorite Favorite[]
 //     Cart     Cart[]
-  
+
 //     isActive Boolean @default(true)
 //   }
-  

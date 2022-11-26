@@ -6,17 +6,14 @@ import {
   ParseIntPipe,
   Post,
   Req,
-  Res,
-  Session,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { globalVariables } from 'src/shared/global.service';
 import { jwtGuard } from 'src/shared/guard';
-import { tsRequest } from 'src/shared/requestModify/request.config';
 import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 
@@ -32,7 +29,7 @@ export class OrderController {
     @Body() body: createOrderDto,
     @Req() req: Request,
   ) {
-    globalVariables.diliveryLocation[id] = {
+    globalVariables.deliveryLocation[id] = {
       address: body.address,
       deliveryOption: body.deliveryOption,
       district: body.district,

@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
@@ -24,7 +23,10 @@ export class AuthService {
       });
 
       if (exit)
-        throw new HttpException('Username hoặc email đã tồn tại', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Username hoặc email đã tồn tại',
+          HttpStatus.BAD_REQUEST,
+        );
 
       body.password = await hash(body.password);
 
@@ -47,7 +49,11 @@ export class AuthService {
         where: { username: body.username },
       });
 
-      if (!user) throw new HttpException('Sai username hoặc email', HttpStatus.FORBIDDEN);
+      if (!user)
+        throw new HttpException(
+          'Sai username hoặc email',
+          HttpStatus.FORBIDDEN,
+        );
 
       const match = await verify(user.password, body.password);
 
@@ -62,12 +68,15 @@ export class AuthService {
   async tokenByRefreshToken(refreshToken: string) {
     const refresh_secret = this.config.get('REFRESH_TOKEN_SECRET');
     const decoded = this.jwt.verify(refreshToken, { secret: refresh_secret });
-    const { id , username } = decoded;
+    const { id, username } = decoded;
     const secret = this.config.get('TOKEN_SECRET');
-    const access_token = this.jwt.sign({ id , username }, {
-      expiresIn: '1y',
-      secret: secret,
-    });
+    const access_token = this.jwt.sign(
+      { id, username },
+      {
+        expiresIn: '1y',
+        secret: secret,
+      },
+    );
     return {
       access_token: access_token,
     };

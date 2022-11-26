@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { query } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from 'src/shared/shared.service';
 import { CommentDto } from './dto/comment.dto';
 
 @Injectable()
@@ -39,7 +37,7 @@ export class CommentService {
         where: { id: id },
       });
     } catch (error) {
-      throw new BadRequestException(error)
+      throw new BadRequestException(error);
     }
   }
 }

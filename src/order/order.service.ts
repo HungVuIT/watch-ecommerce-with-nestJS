@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { deliveryOption } from '@prisma/client';
-import { Request, Response } from 'express';
 import { DeliveryService } from 'src/delivery/delivery.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { globalVariables } from 'src/shared/global.service';
-import { createOrderDto } from './dto/createOrder.dto';
 
 @Injectable()
 export class OrderService {
@@ -55,7 +53,8 @@ export class OrderService {
           LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
         `;
 
-      if (listItem.length === 0) throw new HttpException("Cart is emty", HttpStatus.BAD_REQUEST)
+      if (listItem.length === 0)
+        throw new HttpException('Cart is emty', HttpStatus.BAD_REQUEST);
 
       globalVariables.cartList[userId] = listItem;
 
@@ -89,7 +88,7 @@ export class OrderService {
       }));
 
       // Tính chi phí ship hàng
-      const location = globalVariables.diliveryLocation[userId];
+      const location = globalVariables.deliveryLocation[userId];
 
       let shipFee = await this.delivery.diliveryFee({
         toProvince: location.province,
@@ -99,14 +98,14 @@ export class OrderService {
         quantity: quantiry,
       });
 
-      switch (globalVariables.diliveryLocation[userId].deliveryOption) {
+      switch (globalVariables.deliveryLocation[userId].deliveryOption) {
         case 1:
-          shipFee = Math.round(shipFee* 1.1);
+          shipFee = Math.round(shipFee * 1.1);
           break;
         case 2:
           break;
         case 3:
-          shipFee = Math.round(shipFee* 0.8);
+          shipFee = Math.round(shipFee * 0.8);
           break;
       }
 
@@ -206,7 +205,7 @@ export class OrderService {
 
         let deliveryType: deliveryOption = deliveryOption.standard;
 
-        switch (globalVariables.diliveryLocation[userId].deliveryOption) {
+        switch (globalVariables.deliveryLocation[userId].deliveryOption) {
           case 1:
             deliveryType = deliveryOption.express;
             break;
@@ -220,11 +219,11 @@ export class OrderService {
 
         await tx.delivery_detail.create({
           data: {
-            ...globalVariables.diliveryLocation[userId],
+            ...globalVariables.deliveryLocation[userId],
             OID: order.id,
             shipFee: globalVariables.orderDetail[userId].shipFee,
             deliveryOption: deliveryType,
-          }
+          },
         });
 
         await tx.cart.deleteMany({

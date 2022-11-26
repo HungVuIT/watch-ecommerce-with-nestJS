@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 
 export class editCategoryDto {
-    @IsOptional()
-    name: string
+  @IsOptional()
+  name: string;
 
-    @IsOptional()
-    description: string
+  @IsOptional()
+  description: string;
 
-    @IsOptional()
-    image: any
+  @IsOptional()
+  image: any;
 }

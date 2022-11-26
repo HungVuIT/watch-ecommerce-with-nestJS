@@ -4,6 +4,6 @@ import { WatchService } from './watch.service';
 
 @Module({
   controllers: [WatchController],
-  providers: [WatchService]
+  providers: [WatchService],
 })
 export class WatchModule {}

@@ -41,7 +41,7 @@ export class CommentController {
     @User('id') userId: number,
     @Param('id', ParseIntPipe) commentId: number,
   ) {
-    if ( await this.tool.havePermisson(userId, commentId, 'comment'))
+    if (await this.tool.havePermisson(userId, commentId, 'comment'))
       return this.service.deleteCmt(commentId);
     else
       throw new HttpException(

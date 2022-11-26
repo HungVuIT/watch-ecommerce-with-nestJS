@@ -1,4 +1,10 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { jwtGuard } from 'src/shared/guard';
 import { DeliveryService } from './delivery.service';
@@ -17,7 +23,5 @@ export class DeliveryController {
       toDistrict: string;
       toWard: string;
     },
-  ) {
-
-  }
+  ) {}
 }

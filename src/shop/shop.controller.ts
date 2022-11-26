@@ -8,14 +8,12 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Request } from 'express';
-import { fileFieldsUpload, fileUpload } from 'src/shared/cloudinary/storage';
+import { fileFieldsUpload } from 'src/shared/cloudinary/storage';
 import { Shop } from 'src/shared/customDecorator/shop.decorator';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard, VendorGuard } from 'src/shared/guard';
@@ -30,7 +28,10 @@ export class ShopController {
   @UseGuards(jwtGuard)
   @UseInterceptors(FileInterceptor(''))
   @Post('my-shop')
-  createShop(@User('id') id: number, @Body(new AddressPipe()) body: createShopDto) {
+  createShop(
+    @User('id') id: number,
+    @Body(new AddressPipe()) body: createShopDto,
+  ) {
     return this.shopService.create(id, body);
   }
 
@@ -79,7 +80,7 @@ export class ShopController {
   @UseGuards(jwtGuard, VendorGuard)
   @UseInterceptors(FileInterceptor(''))
   @Post('add-payment-method')
-  addPayment(@Shop('id') id: number, @Body() body){
+  addPayment(@Shop('id') id: number, @Body() body) {
     return this.shopService.addPayment(id, body.email);
   }
 }

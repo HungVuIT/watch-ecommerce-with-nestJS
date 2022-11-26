@@ -1,12 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { addItemDto } from './dto/addItem.dto';
 import { updateItemDto } from './dto/updateItem.dto';
 
 @Injectable()
 export class CartService {
-
-
   constructor(private prisma: PrismaService) {}
 
   async getCart(userId: number) {

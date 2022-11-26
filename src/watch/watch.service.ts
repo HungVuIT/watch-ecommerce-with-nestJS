@@ -27,18 +27,19 @@ export class WatchService {
 
       query['where'] = { AND: [] };
 
-      if (option.shopId) query['where'].AND.push({ SID: Number(option.shopId) });
+      if (option.shopId)
+        query['where'].AND.push({ SID: Number(option.shopId) });
 
       if (option.price) {
         const value = option.price.split(':');
         query['where'].AND.push({
-         price: { gte: Number(value[0]),lte: Number(value[1]) },
+          price: { gte: Number(value[0]), lte: Number(value[1]) },
         });
       }
 
       if (option.orderBy) {
         const value = option.orderBy.split('.');
-        
+
         let sort = {};
 
         sort[value[0]] = value[1];
@@ -50,7 +51,7 @@ export class WatchService {
 
       return list;
     } catch (error) {
-      throw error
+      throw error;
       throw new HttpException(error, 500);
     }
   }
@@ -91,7 +92,6 @@ export class WatchService {
   async create(shopId: number, body: createWatchDto, imageFiles: any) {
     try {
       if (imageFiles) {
-        
         let image: string[] = [];
 
         imageFiles.forEach((v: any) => image.push(v.path));
@@ -105,8 +105,8 @@ export class WatchService {
 
       return watch;
     } catch (error) {
-      throw error
-      throw new BadRequestException(error)
+      throw error;
+      throw new BadRequestException(error);
     }
   }
 }

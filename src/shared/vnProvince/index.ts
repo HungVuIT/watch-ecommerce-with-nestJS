@@ -8,14 +8,12 @@ import * as vn from 'sub-vn';
 // getWardsByDistrictCode(districtCode)	Lấy danh sách phường/ xã theo mã huyện
 // getWardsByProvinceCode(provinceCode)	Lấy danh sách phường/ xã theo tỉnh
 
-const vnAddressFormatter = (
-  data: {
-    province: string,
-    district: string,
-    ward: string,
-    [index: string]: any
-  }
-) => {
+const vnAddressFormatter = (data: {
+  province: string;
+  district: string;
+  ward: string;
+  [index: string]: any;
+}) => {
   // Kiểm tra và format lại tên tỉnh
   vn.getProvinces().forEach((item) => {
     if ((item.name as string).includes(data.province)) {
@@ -40,7 +38,6 @@ const vnAddressFormatter = (
       }
     }
   });
-
 };
 
 export default vnAddressFormatter;

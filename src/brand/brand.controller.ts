@@ -8,7 +8,7 @@ import {
   Post,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';

@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
@@ -16,8 +16,7 @@ export class AdminGuard implements CanActivate {
     // // if (user.role in roles) return true;
     // else throw new ForbiddenException()
 
-    if (user.role === 'VENDOR') return true; 
-    else return false
+    if (user.role === 'VENDOR') return true;
+    else return false;
   }
-
 }

@@ -6,11 +6,11 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Query, UploadedFile,
+  Query,
+  UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';
@@ -21,9 +21,7 @@ import { UserService } from './user.service';
 @UseGuards(jwtGuard)
 @Controller('users')
 export class UserController {
-  constructor(
-    private userService: UserService
-  ) {}
+  constructor(private userService: UserService) {}
 
   @UseGuards(jwtGuard)
   @Get('me')
@@ -40,14 +38,18 @@ export class UserController {
 
   @UseGuards(jwtGuard)
   @Get('list')
-  getList(@Query() query){
+  getList(@Query() query) {
     return this.userService.getList(query);
   }
 
   @UseGuards(jwtGuard)
   @Patch('me')
   @UseInterceptors(fileUpload('avatar'))
-  editMe(@User('id') id: number, @Body(new AddressPipe()) body: userDto, @UploadedFile() file: Express.Multer.File) {
+  editMe(
+    @User('id') id: number,
+    @Body(new AddressPipe()) body: userDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.userService.editMe(id, body, file);
   }
 

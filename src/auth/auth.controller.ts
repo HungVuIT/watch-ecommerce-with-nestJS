@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpCode, Post, Req, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { ExtractJwt } from 'passport-jwt';
 import { AuthService } from './auth.service';
 import { authDto } from './dto/auth.dto';
 

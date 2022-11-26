@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
   Param,
   ParseIntPipe,
   Patch,
@@ -13,7 +12,7 @@ import {
   UploadedFile,
   UploadedFiles,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { filesUpload } from 'src/shared/cloudinary/storage';
 import { jwtGuard, VendorGuard } from 'src/shared/guard';
@@ -27,18 +26,18 @@ export class WatchController {
   constructor(private watchService: WatchService) {}
 
   @UseGuards(jwtGuard, VendorGuard)
-  @UseInterceptors(filesUpload('image',8))
+  @UseInterceptors(filesUpload('image', 8))
   @Post('/new')
   createWatch(
     @Req() req: tsRequest,
     @Body() body: createWatchDto,
-    @UploadedFiles() file: Array<Express.Multer.File>
+    @UploadedFiles() file: Array<Express.Multer.File>,
   ) {
     return this.watchService.create(req.shop['id'], body, file);
   }
 
   @UseGuards(jwtGuard, VendorGuard)
-  @UseInterceptors(filesUpload('image',8))
+  @UseInterceptors(filesUpload('image', 8))
   @Patch('/id/:id')
   editWatch(
     @Param('id', ParseIntPipe) id: number,
@@ -59,5 +58,4 @@ export class WatchController {
   deleteWatch(@Param('id', ParseIntPipe) id: number, @Req() req: tsRequest) {
     return this.watchService.delete(id);
   }
-
 }

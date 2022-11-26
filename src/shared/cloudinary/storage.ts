@@ -38,7 +38,7 @@ export const fileUpload = (name: string) => {
 };
 
 export const filesUpload = (name: string, maxCount: number) => {
-  return FilesInterceptor(name, maxCount , { storage: storage });
+  return FilesInterceptor(name, maxCount, { storage: storage });
 };
 
 export const fileFieldsUpload = (

@@ -19,6 +19,4 @@ export class SharedService {
       );
     }
   }
-
-  
 }

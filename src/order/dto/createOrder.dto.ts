@@ -4,38 +4,35 @@ import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class createOrderDto {
   // requiredDate:  dat
-  
+
   @IsNotEmpty()
-  @IsIn([
-    paymentMethod.online,
-    paymentMethod.offline
-  ])
-  paymentMethod: paymentMethod
+  @IsIn([paymentMethod.online, paymentMethod.offline])
+  paymentMethod: paymentMethod;
 
   @IsNotEmpty()
   @IsString()
-  province: string
+  province: string;
 
   @IsNotEmpty()
   @IsString()
-  district: string
+  district: string;
 
   @IsNotEmpty()
   @IsString()
-  ward   :  string
+  ward: string;
 
   @IsNotEmpty()
   @IsString()
-  address : string
+  address: string;
 
   @IsOptional()
   Note: string;
 
   @IsNotEmpty()
-  @Type(()=>Number)
+  @Type(() => Number)
   @IsInt()
-  @IsIn([1,2,3])
-  deliveryOption: number
+  @IsIn([1, 2, 3])
+  deliveryOption: number;
 }
 
 // model Order {

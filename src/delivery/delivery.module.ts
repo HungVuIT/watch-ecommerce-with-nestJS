@@ -7,6 +7,6 @@ import { DeliveryService } from './delivery.service';
   imports: [HttpModule],
   controllers: [DeliveryController],
   providers: [DeliveryService],
-  exports: [DeliveryService]
+  exports: [DeliveryService],
 })
 export class DeliveryModule {}

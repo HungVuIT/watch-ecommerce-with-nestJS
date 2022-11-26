@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, map } from 'rxjs';
-import { globalVariables } from 'src/shared/global.service';
 
 @Injectable()
 export class DeliveryService {
@@ -141,7 +140,7 @@ export class DeliveryService {
 
       return response['data'];
     } catch (error) {
-      console.log(error) ;
+      console.log(error);
     }
   }
 

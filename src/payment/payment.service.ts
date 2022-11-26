@@ -44,7 +44,7 @@ export class PaymentService {
     try {
       const host = globalVariables.paymentHost[userId];
       const { total, itemValue, shipFee } = globalVariables.orderDetail[userId];
-      const location = globalVariables.diliveryLocation[userId];
+      const location = globalVariables.deliveryLocation[userId];
 
       const create_payment_json = {
         intent: 'sale',
@@ -92,20 +92,17 @@ export class PaymentService {
 
       function paymentCreateAsync() {
         return new Promise(function (resolve, reject) {
-          paypal.payment.create(
-            create_payment_json,
-            function (error, payment) {
-              if (error) {
-                reject(error);
-              } else {
-                for (let i = 0; i < payment.links.length; i++) {
-                  if (payment.links[i].rel === 'approval_url') {
-                    resolve(payment.links[i].href);
-                  }
+          paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+              reject(error);
+            } else {
+              for (let i = 0; i < payment.links.length; i++) {
+                if (payment.links[i].rel === 'approval_url') {
+                  resolve(payment.links[i].href);
                 }
               }
-            },
-          );
+            }
+          });
         });
       }
 

@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import { PrismaModule } from 'src/prisma/prisma.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtStrategy } from '../shared/strategy';
-import { AdminGuard } from '../shared/guard/admin.guard';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [JwtModule.register({})],
