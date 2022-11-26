@@ -31,31 +31,32 @@ export class OrderController {
     @User('id') id: number,
     @Body() body: createOrderDto,
     @Req() req: Request,
-    @Res() res: Response,
   ) {
-    globalVariables.diliveryLocation[id] = body;
+    globalVariables.diliveryLocation[id] = {
+      address: body.address,
+      deliveryOption: body.deliveryOption,
+      district: body.district,
+      province: body.province,
+      ward: body.ward,
+    };
 
     globalVariables.paymentHost[id] =
       process.env.NODE_ENV === 'production'
-        ? req.protocol + '://' + req.hostname + '/order/' + id.toString()
-        : 'http://localhost:8000/order/' + id.toString();
+        ? req.protocol + '://' + req.hostname + '/api/order/' + id.toString()
+        : 'http://localhost:8000/api/order/' + id.toString();
 
-    const url = (await this.orderService.createLinkPaymant(id)) as string;
+    const order = await this.orderService.createLinkPaymant(id);
 
-    const result = { msg: url };
-
-    res.status(200).send(result);
-
-    return;
+    return order;
   }
 
   @Get(':id/success')
-  success(@Param('id') id: string, @Req() req: Request) {
+  success(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     globalVariables.other[id] = {
       payerId: req.query.PayerID,
       paymentId: req.query.paymentId,
     };
-    return;
+    return this.orderService.completeOrder(id);
   }
 
   @UseGuards(jwtGuard)

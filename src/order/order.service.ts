@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { deliveryOption } from '@prisma/client';
 import { Request, Response } from 'express';
+import { DeliveryService } from 'src/delivery/delivery.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { globalVariables } from 'src/shared/global.service';
@@ -7,7 +10,13 @@ import { createOrderDto } from './dto/createOrder.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService, private payment: PaymentService) {}
+  constructor(
+    private prisma: PrismaService,
+    private payment: PaymentService,
+    private delivery: DeliveryService,
+    private config: ConfigService,
+    private glo: globalVariables,
+  ) {}
 
   // Join bảng cart với bảng watch
   // lấy ra thông tin cart với thông tin watch đính kèm
@@ -19,16 +28,8 @@ export class OrderService {
 
   async createLinkPaymant(userId: number) {
     try {
-      // const listItem = await this.prisma.cart.findMany({
-      //   where: { UID: userId },
-      //   include: {
-      //     watch: true,
-      //   },
-      // });
-
       // trong postgresql table name nên để trong " " nếu không sẽ tự chuyển thành in thường -> lỗi ko tìm thấy
       // chi tiết đọc tại https://stackoverflow.com/questions/26631205/postgresql-error-42p01-relation-table-does-not-exist
-
       const listItem: {
         id: number;
         quantity: number;
@@ -45,6 +46,7 @@ export class OrderService {
           "Cart"."UID", 
           "Watch"."name", 
           "Watch"."price", 
+          "Watch"."SID",
           "Watch"."quantity" as "watchQuantity", 
           "ShopWallet"."paypalMethod"
           FROM "Cart" 
@@ -53,10 +55,15 @@ export class OrderService {
           LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
         `;
 
+      if (listItem.length === 0) throw new HttpException("Cart is emty", HttpStatus.BAD_REQUEST)
+
       globalVariables.cartList[userId] = listItem;
 
       let total: number = 0;
 
+      let quantiry: number = 0;
+
+      // Kiểm tra xem trng kho còn đủ hàng không
       listItem.forEach((item) => {
         if (item.quantity > item.watchQuantity)
           throw new HttpException(
@@ -69,7 +76,11 @@ export class OrderService {
           );
       });
 
-      listItem.forEach((v) => (total += v.quantity * v.price));
+      // Tính tổng tiền hàng và số lượng sản phẩm của đơn hàng
+      listItem.forEach((v) => {
+        total += v.quantity * v.price;
+        quantiry += v.quantity;
+      });
 
       const listItemInPaypal = listItem.map((item) => ({
         name: item.name,
@@ -77,71 +88,156 @@ export class OrderService {
         price: item.price,
       }));
 
-      globalVariables.paymentTotal[userId] = total;
+      // Tính chi phí ship hàng
+      const location = globalVariables.diliveryLocation[userId];
 
-      return this.payment.checkoutLink(userId, listItemInPaypal);
+      let shipFee = await this.delivery.diliveryFee({
+        toProvince: location.province,
+        toDistrict: location.district,
+        toWard: location.district,
+        value: total,
+        quantity: quantiry,
+      });
+
+      switch (globalVariables.diliveryLocation[userId].deliveryOption) {
+        case 1:
+          shipFee = Math.round(shipFee* 1.1);
+          break;
+        case 2:
+          break;
+        case 3:
+          shipFee = Math.round(shipFee* 0.8);
+          break;
+      }
+
+      globalVariables.orderDetail[userId] = {
+        shipFee: shipFee,
+        itemValue: total,
+        total: shipFee + total,
+      };
+
+      const result = {
+        href: await this.payment.checkoutLink(userId, listItemInPaypal),
+        total: total,
+        shipFee: shipFee,
+      };
+
+      return result;
     } catch (error) {
       throw error;
     }
   }
 
   async completeOrder(userId: number) {
-    //this.payment.succcessCheckout()
-    //     return await this.prisma.$transaction(async (tx) => {
-    //       const order = await tx.order.create({
-    //         data: {
-    //           UID: userId,
-    //           ...body,
-    //           total: total,
-    //         },
-    //       });
-    //       interface orderDetailData {
-    //         OID: number;
-    //         WID: number;
-    //         quantity: number;
-    //       }
-    //       // const validKey = ['WID', 'quantiry'];
-    //       // const data = listItem.map((v) => {
-    //       //   v['OID'] = order.id;
-    //       //   Object.keys(v).forEach(
-    //       //     (key) => validKey.includes(key) || delete v[key],
-    //       //   );
-    //       // });
-    //       let data: orderDetailData[] = [];
-    //       listItem.forEach((v) =>
-    //         data.push({
-    //           OID: order.id,
-    //           WID: v.WID,
-    //           quantity: v.quantity,
-    //         }),
-    //       );
-    //       const orderDetail = await tx.order_detail.createMany({
-    //         data: data,
-    //       });
-    //       // listItem.forEach(async (item) => {
-    //       //   await tx.watch.update({
-    //       //     where: { id: item.WID },
-    //       //     data: {
-    //       //       quantity: item.watch.quantity - item.quantity,
-    //       //       saled: item.watch.saled + item.quantity,
-    //       //     },
-    //       //   });
-    //       // });
-    //       const update = listItem.map((item) => {
-    //         tx.watch.update({
-    //           where: { id: item.WID },
-    //           data: {
-    //             quantity: item.watch.quantity - item.quantity,
-    //             saled: item.watch.saled + item.quantity,
-    //           },
-    //         });
-    //       });
-    //       await Promise.all(update);
-    //       await tx.cart.deleteMany({
-    //         where: { UID: userId },
-    //       });
-    //       return order;
-    //     });
+    try {
+      // Hoàn thiện checkout
+      await this.payment.succcessCheckout(userId);
+
+      // Tự động thanh toán cho các chủ shop dựa trên cart của người dùng
+      await this.payment.payoutSeller(userId);
+
+      return await this.prisma.$transaction(async (tx) => {
+        const { total } = globalVariables.orderDetail[userId];
+
+        const order = await tx.order.create({
+          data: {
+            UID: userId,
+            total: total,
+            paymentMethod: 'online',
+          },
+        });
+
+        // const validKey = ['WID', 'quantiry'];
+        // const data = listItem.map((v) => {
+        //   v['OID'] = order.id;
+        //   Object.keys(v).forEach(
+        //     (key) => validKey.includes(key) || delete v[key],
+        //   );
+        // });
+
+        interface orderDetailData {
+          OID: number;
+          WID: number;
+          quantity: number;
+          total: number;
+          fee: number;
+        }
+
+        let data: orderDetailData[] = [];
+
+        const listItem = globalVariables.cartList[userId];
+
+        listItem.forEach((v) =>
+          data.push({
+            OID: order.id,
+            WID: v.WID,
+            quantity: v.quantity,
+            total: v.price * v.quantity,
+            fee: v.price * v.quantity * Number(this.config.get('FEE')),
+          }),
+        );
+
+        await tx.order_detail.createMany({
+          data: data,
+        });
+
+        // listItem.forEach(async (item) => {
+        //   await tx.watch.update({
+        //     where: { id: item.WID },
+        //     data: {
+        //       quantity: item.watch.quantity - item.quantity,
+        //       saled: item.watch.saled + item.quantity,
+        //     },
+        //   });
+        // });
+
+        const update = listItem.map((item) => {
+          tx.watch.update({
+            where: { id: item.WID },
+            data: {
+              quantity: { increment: -item.quantity },
+              saled: { increment: item.quantity },
+            },
+          });
+        });
+
+        // Dùng promise all nhanh hơn for each
+        await Promise.all(update);
+
+        let deliveryType: deliveryOption = deliveryOption.standard;
+
+        switch (globalVariables.diliveryLocation[userId].deliveryOption) {
+          case 1:
+            deliveryType = deliveryOption.express;
+            break;
+          case 2:
+            deliveryType = deliveryOption.standard;
+            break;
+          case 3:
+            deliveryType = deliveryOption.saving;
+            break;
+        }
+
+        await tx.delivery_detail.create({
+          data: {
+            ...globalVariables.diliveryLocation[userId],
+            OID: order.id,
+            shipFee: globalVariables.orderDetail[userId].shipFee,
+            deliveryOption: deliveryType,
+          }
+        });
+
+        await tx.cart.deleteMany({
+          where: { UID: userId },
+        });
+
+        this.glo.deleteUserInfor(userId);
+
+        return order;
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getOrders(userId: number) {

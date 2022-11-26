@@ -4,18 +4,33 @@ import { Injectable } from '@nestjs/common';
 export class globalVariables {
   public static diliveryLocation: {
     [index: string]: {
-      province: string;
-      district: string;
-      ward: string;
-      address: string;
+      province: string,
+      district: string,
+      ward: string,
+      address: string,
+      deliveryOption: number,
     };
   } = {};
 
   public static cartList: { [index: string]: any } = {};
 
-  public static paymentTotal: { [index: string]: number } = {};
+  public static paymentHost: { [index: string]: string } = {};
 
-  public static paymentHost : { [index: string]: string } = {};
+  public static orderDetail: {
+    [index: string]: {
+      shipFee: number;
+      itemValue: number;
+      total: number;
+    };
+  } = {};
 
   public static other: { [index: string]: any } = {};
+
+  deleteUserInfor(userId: number){
+    delete globalVariables.diliveryLocation[userId]
+    delete globalVariables.cartList[userId]
+    delete globalVariables.paymentHost[userId]
+    delete globalVariables.orderDetail[userId]
+    delete globalVariables.other[userId]
+  }
 }

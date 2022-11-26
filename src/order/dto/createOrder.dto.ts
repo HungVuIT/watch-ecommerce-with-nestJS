@@ -1,5 +1,6 @@
 import { paymentMethod } from '@prisma/client';
-import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class createOrderDto {
   // requiredDate:  dat
@@ -29,6 +30,12 @@ export class createOrderDto {
 
   @IsOptional()
   Note: string;
+
+  @IsNotEmpty()
+  @Type(()=>Number)
+  @IsInt()
+  @IsIn([1,2,3])
+  deliveryOption: number
 }
 
 // model Order {

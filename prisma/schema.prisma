@@ -96,8 +96,7 @@ model ShopWallet {
   paypalMethod String
 
   shop Shop @relation(fields: [SID], references: [id])
-  SID  Int @unique
-
+  SID  Int  @unique
 }
 
 // ===========================================================================================================
@@ -131,6 +130,9 @@ model Watch {
   glassSurface String?
   glassSize    String?
   weight       Int?
+  height       Int?
+  length       Int?
+  width        Int?
   madeBy       String?
   image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
   warranty     DateTime?
@@ -230,8 +232,8 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  status orderProcess @default(created)
-  total  Float
+  status        orderProcess  @default(created)
+  total         Float
   paymentMethod paymentMethod
 
   user User @relation(fields: [UID], references: [id])
@@ -288,10 +290,17 @@ model Delivery_detail {
   address  String
   shipFee  Float
 
+  deliveryOption deliveryOption @default(standard)
+
   order Order @relation(fields: [OID], references: [id])
   OID   Int   @unique
 }
 
+enum deliveryOption {
+  express
+  standard
+  saving
+}
 // ===========================================================================================================
 // ===========================================================================================================
 
