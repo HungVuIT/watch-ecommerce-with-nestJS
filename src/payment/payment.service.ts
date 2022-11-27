@@ -29,8 +29,11 @@ export class PaymentService {
   }
 
   vndToUsd(vnd: number) {
-    const result = vnd * Number(this.config.get('vND_USD'));
-    return Math.round(result * 100) / 100;
+    const trans = vnd * Number(this.config.get('vND_USD'));
+    console.log(trans)
+    const result = Math.round(trans * 100) / 100
+    console.log(result)
+    return result
   }
 
   async checkoutLink(
@@ -47,7 +50,7 @@ export class PaymentService {
       const location = globalVariables.deliveryLocation[userId];
 
       console.log(total + "\n" + itemValue + "\n" + shipFee)
-      console.log(this.vndToUsd(total).toFixed(2))
+      console.log(this.vndToUsd(total))
       console.log(this.vndToUsd(itemValue).toFixed(2))
       console.log(this.vndToUsd(shipFee).toFixed(2))
   
