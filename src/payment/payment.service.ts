@@ -52,7 +52,7 @@ export class PaymentService {
           payment_method: 'paypal',
         },
         redirect_urls: {
-          return_url: host + '/success',
+          return_url:  + '/success',
           cancel_url: host + '/cancel',
         },
         transactions: [
@@ -109,7 +109,7 @@ export class PaymentService {
 
       return await paymentCreateAsync();
     } catch (error) {
-      console.log(error);
+      console.log(error.response.details[0]);
     }
   }
 
