@@ -29,10 +29,8 @@ export class PaymentService {
   }
 
   vndToUsd(vnd: number) {
-    const trans = vnd * Number(this.config.get('vND_USD'));
-    console.log(trans)
+    const trans = vnd * Number(this.config.get('VND_USD'));
     const result = Math.round(trans * 100) / 100
-    console.log(result)
     return result
   }
 
@@ -48,12 +46,6 @@ export class PaymentService {
       const host = globalVariables.paymentHost[userId];
       const { total, itemValue, shipFee } = globalVariables.orderDetail[userId];
       const location = globalVariables.deliveryLocation[userId];
-
-      console.log(total + "\n" + itemValue + "\n" + shipFee)
-      console.log(this.vndToUsd(total))
-      console.log(this.vndToUsd(itemValue).toFixed(2))
-      console.log(this.vndToUsd(shipFee).toFixed(2))
-  
 
       const create_payment_json = {
         intent: 'sale',
@@ -83,10 +75,10 @@ export class PaymentService {
             },
             amount: {
               currency: 'USD',
-              total: this.vndToUsd(total).toFixed(2),
+              total: this.vndToUsd(total),
               details: {
-                subtotal: this.vndToUsd(itemValue).toFixed(2),
-                shipping: this.vndToUsd(shipFee).toFixed(2),
+                subtotal: this.vndToUsd(itemValue),
+                shipping: this.vndToUsd(shipFee),
               },
             },
 
