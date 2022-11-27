@@ -46,6 +46,12 @@ export class PaymentService {
       const { total, itemValue, shipFee } = globalVariables.orderDetail[userId];
       const location = globalVariables.deliveryLocation[userId];
 
+      console.log(total + "\n" + itemValue + "\n" + shipFee)
+      console.log(this.vndToUsd(total).toFixed(2))
+      console.log(this.vndToUsd(itemValue).toFixed(2))
+      console.log(this.vndToUsd(shipFee).toFixed(2))
+  
+
       const create_payment_json = {
         intent: 'sale',
         payer: {
