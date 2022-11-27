@@ -42,6 +42,8 @@ export class OrderController {
         ? "https://dhwatch.onrender.com/api/order/" + id.toString()
         : "http://localhost:8000/api/order/" + id.toString();
 
+    console.log(globalVariables.paymentHost[id])
+
     const order = await this.orderService.createLinkPaymant(id);
 
     return order;
