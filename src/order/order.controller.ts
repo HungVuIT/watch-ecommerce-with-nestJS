@@ -39,8 +39,8 @@ export class OrderController {
 
     globalVariables.paymentHost[id] =
       process.env.NODE_ENV === 'production'
-        ? req.protocol + '://' + req.hostname + '/api/order/' + id.toString()
-        : 'http://localhost:8000/api/order/' + id.toString();
+        ? "https://dhwatch.onrender.com/api/order/" + id.toString()
+        : "http://localhost:8000/api/order/" + id.toString();
 
     const order = await this.orderService.createLinkPaymant(id);
 
