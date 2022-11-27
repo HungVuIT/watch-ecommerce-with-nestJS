@@ -52,7 +52,7 @@ export class PaymentService {
           payment_method: 'paypal',
         },
         redirect_urls: {
-          return_url:  + '/success',
+          return_url:  host + '/success',
           cancel_url: host + '/cancel',
         },
         transactions: [
