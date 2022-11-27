@@ -87,6 +87,7 @@ export class PaymentService {
         ],
       };
 
+      console.log(create_payment_json)
       //payment.create là một callback hàm checkout này sẽ trả về kq trức khi callback đc gọi
       //chuyển payment.create thành Promise paymentCreateAsync để đợi kết quà trược khi return
 
