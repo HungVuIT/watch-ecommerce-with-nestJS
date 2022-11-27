@@ -74,10 +74,10 @@ export class PaymentService {
             },
             amount: {
               currency: 'USD',
-              total: this.vndToUsd(total),
+              total: this.vndToUsd(total).toFixed(2),
               details: {
-                subtotal: this.vndToUsd(itemValue),
-                shipping: this.vndToUsd(shipFee),
+                subtotal: this.vndToUsd(itemValue).toFixed(2),
+                shipping: this.vndToUsd(shipFee).toFixed(2),
               },
             },
 
@@ -87,7 +87,7 @@ export class PaymentService {
         ],
       };
 
-      console.log(create_payment_json)
+      console.log( JSON.stringify(create_payment_json))
       //payment.create là một callback hàm checkout này sẽ trả về kq trức khi callback đc gọi
       //chuyển payment.create thành Promise paymentCreateAsync để đợi kết quà trược khi return
 
