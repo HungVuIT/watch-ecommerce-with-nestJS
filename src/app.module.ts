@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { ShopModule } from './shop/shop.module';
 import { UserModule } from './user/user.module';
 import { WatchModule } from './watch/watch.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { WatchModule } from './watch/watch.module';
     CommentModule,
     PaymentModule,
     DeliveryModule,
+    ChatModule,
   ],
   controllers: [AppController, OrderController],
   providers: [AppService, OrderService],

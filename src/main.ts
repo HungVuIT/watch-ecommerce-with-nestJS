@@ -1,9 +1,11 @@
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   //Thêm validator pipes global, đồng thời bỏ các trường ko cần thiết với whitelist true
   app.useGlobalPipes(
@@ -12,7 +14,13 @@ async function bootstrap() {
     }),
   );
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api',  { exclude: [
+    { path: '', method: RequestMethod.GET }
+  ]});
+
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'view'));
+  app.setViewEngine('hbs');
 
   await app.listen(process.env.PORT || 8000);
 }
