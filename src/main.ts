@@ -22,6 +22,8 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'view'));
   app.setViewEngine('hbs');
 
+  app.enableCors();
+
   await app.listen(process.env.PORT || 8000);
 }
 bootstrap();
