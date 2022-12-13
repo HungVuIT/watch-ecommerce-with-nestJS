@@ -22,15 +22,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'view'));
   app.setViewEngine('hbs');
 
-  app.enableCors();
-
-  app.use(function (res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
-    res.setHeader("content-type", "application/json");
-    next();
+  app.enableCors({
+    origin: true,
+    methods: ["GET", "POST", "DELETE", "UPDATE", "PATCH"],
+    credentials: true,
   });
 
   await app.listen(process.env.PORT || 8000);
