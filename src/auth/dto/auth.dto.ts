@@ -9,8 +9,8 @@ export class authDto {
   @IsString()
   @MinLength(4)
   @MaxLength(20)
-  @Matches(/\w+/,{
-    message: "username only contain a-z, A-Z, 0-9 and '_'"
+  @Matches(/^[a-zA-Z0-9_.-]+$/,{
+    message: "username only contain a-z, A-Z, 0-9, '.', '-' and '_'"
   })
   username: string;
 

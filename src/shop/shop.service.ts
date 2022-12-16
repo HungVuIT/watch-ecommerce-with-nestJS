@@ -104,7 +104,7 @@ export class ShopService {
   }
 
   myShop() {
-    throw new Error('Method not implemented.');
+    
   }
 
   async addPayment(shopId: number, email: string) {

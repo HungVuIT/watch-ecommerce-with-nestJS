@@ -72,9 +72,9 @@ export class ShopController {
   }
 
   @UseGuards(jwtGuard, VendorGuard)
-  @Get('me')
-  myShop() {
-    return this.shopService.myShop();
+  @Get('my-shop')
+  myShop(@Shop() shop: any) {
+    return shop;
   }
 
   @UseGuards(jwtGuard, VendorGuard)

@@ -1,37 +1,26 @@
-const users = []
+import { BadRequestException } from "@nestjs/common"
 
-const addUser = ({ id, username, room }) => {
-    // Clean the data
-    username = username.trim().toLowerCase()
-    room = room.trim().toLowerCase()
+
+const users:{
+    userId: number,
+    socketId: any,
+}[] = []
+
+function addUser({ userId, socketId }) {
 
     // Validate the data
-    if (!username || !room) {
-        return {
-            error: 'Username and room are required!'
-        }
-    }
-
-    // Check for existing user
-    const existingUser = users.find((user) => {
-        return user.room === room && user.username === username
-    })
-
-    // Validate username
-    if (existingUser) {
-        return {
-            error: 'Username is in use!'
-        }
+    if (!userId || !socketId) {
+        return new BadRequestException()
     }
 
     // Store user
-    const user = { id, username, room }
+    const user = { userId, socketId }
     users.push(user)
     return { user }
 }
 
 const removeUser = (id) => {
-    const index = users.findIndex((user) => user.id === id)
+    const index = users.findIndex((user) => user.userId === id)
 
     if (index !== -1) {
         return users.splice(index, 1)[0]
@@ -39,17 +28,11 @@ const removeUser = (id) => {
 }
 
 const getUser = (id) => {
-    return users.find((user) => user.id === id)
+    return users.find((user) => user.userId === id)
 }
 
-const getUsersInRoom = (room) => {
-    room = room.trim().toLowerCase()
-    return users.filter((user) => user.room === room)
-}
-
-module.exports = {
+export {
     addUser,
     removeUser,
-    getUser,
-    getUsersInRoom
+    getUser
 }

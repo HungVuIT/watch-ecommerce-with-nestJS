@@ -1,6 +1,8 @@
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
+  IsISO8601,
   IsNumberString,
   IsOptional,
   IsString,
@@ -38,7 +40,7 @@ export class userDto {
   @IsOptional()
   address: string;
 
-  @IsDate()
+  @Type(()=>Date)
   @IsOptional()
   birthDay: Date;
 

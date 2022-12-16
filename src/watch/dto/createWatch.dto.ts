@@ -76,8 +76,9 @@ export class createWatchDto {
   @IsOptional()
   image: any;
 
-  // @IsOptional()
-  // warranty     : date
+  @Type(() => Date)
+  @IsOptional()
+  warranty: Date
 }
 
 // model Watch {
