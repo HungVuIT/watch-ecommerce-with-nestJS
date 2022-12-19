@@ -1,4 +1,4 @@
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class authDto {
   @IsString()
@@ -17,4 +17,12 @@ export class authDto {
     message: 'password at least 1 upper case 1 lower case and 1 number',
   })
   password: string;
+
+  @IsString()
+  @IsOptional()
+  firstName: string;
+
+  @IsString()
+  @IsOptional()
+  lastName: string;
 }
