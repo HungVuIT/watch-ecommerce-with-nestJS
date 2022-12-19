@@ -15,11 +15,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard } from 'src/shared/guard';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { SharedService } from 'src/shared/shared.service';
 import { CommentService } from './comment.service';
 import { CommentDto } from './dto/comment.dto';
 
 @UseInterceptors(FileInterceptor(''))
+@UseInterceptors(TransResInterceptor)
 @Controller('comment')
 export class CommentController {
   constructor(private service: CommentService, private tool: SharedService) {}

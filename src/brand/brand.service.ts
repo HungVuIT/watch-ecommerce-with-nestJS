@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createBrandDto } from './dto/createBrand.dto';
 import { editBrandDto } from './dto/editBrand.dto';
@@ -15,7 +20,7 @@ export class BrandService {
         },
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -23,7 +28,7 @@ export class BrandService {
     try {
       return await this.prisma.category.findMany({});
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -38,7 +43,14 @@ export class BrandService {
         data: body,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
@@ -52,7 +64,7 @@ export class BrandService {
         data: body,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 }

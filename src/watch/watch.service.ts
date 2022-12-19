@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createWatchDto } from './dto/createWatch.dto';
 import { updateWatchDto } from './dto/updateWatch.dto';
@@ -13,7 +18,7 @@ export class WatchService {
         where: { id: prodcutId },
       });
     } catch (error) {
-      throw new HttpException(error, 500);
+      throw error;
     }
   }
 
@@ -52,7 +57,6 @@ export class WatchService {
       return list;
     } catch (error) {
       throw error;
-      throw new HttpException(error, 500);
     }
   }
 
@@ -65,7 +69,7 @@ export class WatchService {
       if (watch.SID === shopId) return;
       else throw new Error('you not own this product');
     } catch (error) {
-      throw new HttpException(error, 500);
+      throw error;
     }
   }
 
@@ -106,7 +110,6 @@ export class WatchService {
       return watch;
     } catch (error) {
       throw error;
-      throw new BadRequestException(error);
     }
   }
 }

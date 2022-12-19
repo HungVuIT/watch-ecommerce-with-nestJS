@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CommentDto } from './dto/comment.dto';
 
@@ -15,7 +20,7 @@ export class CommentService {
         take: query.take,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -28,7 +33,9 @@ export class CommentService {
           content: body.content,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteCmt(id: number) {
@@ -37,7 +44,7 @@ export class CommentService {
         where: { id: id },
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 }

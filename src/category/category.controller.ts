@@ -12,10 +12,12 @@ import {
 } from '@nestjs/common';
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { CategoryService } from './category.service';
 import { createCategoryDto } from './dto/createCategory.dto';
 import { editCategoryDto } from './dto/editCategory.dto';
 
+@UseInterceptors(TransResInterceptor)
 @Controller('category')
 export class CategoryController {
   constructor(private service: CategoryService) {}

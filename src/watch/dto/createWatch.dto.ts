@@ -78,7 +78,7 @@ export class createWatchDto {
 
   @Type(() => Date)
   @IsOptional()
-  warranty: Date
+  warranty: Date;
 }
 
 // model Watch {

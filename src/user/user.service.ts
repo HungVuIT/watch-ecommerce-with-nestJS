@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { userDto } from './dto/user.dto';
 
@@ -20,8 +20,7 @@ export class UserService {
       delete user['password'];
       return user;
     } catch (error) {
-      console.log(error);
-      throw new HttpException(error, 500);
+      throw error;
     }
   }
 
@@ -34,7 +33,7 @@ export class UserService {
       delete user['password'];
       return user;
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      throw error;
     }
   }
 
@@ -44,7 +43,7 @@ export class UserService {
         where: { id: id },
       });
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      throw error;
     }
   }
 
@@ -69,7 +68,6 @@ export class UserService {
       return list;
     } catch (error) {
       throw error;
-      throw new HttpException(error.message, 500);
     }
   }
 }

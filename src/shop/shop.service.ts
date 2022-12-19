@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createShopDto } from './dto/createShop.dto';
 
@@ -12,7 +12,14 @@ export class ShopService {
         where: { id: shopId },
       });
     } catch (error) {
-      throw error;
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
@@ -36,7 +43,14 @@ export class ShopService {
 
       return list;
     } catch (error) {
-      throw error;
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
@@ -51,7 +65,14 @@ export class ShopService {
         data: { role: 'USER' },
       });
     } catch (error) {
-      throw new HttpException(error.messeger, 500);
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
@@ -79,7 +100,14 @@ export class ShopService {
 
       return shop;
     } catch (error) {
-      throw error;
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
@@ -99,13 +127,18 @@ export class ShopService {
 
       return shop;
     } catch (error) {
-      throw new HttpException(error.messeger, 500);
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 
-  myShop() {
-    
-  }
+  myShop() {}
 
   async addPayment(shopId: number, email: string) {
     try {
@@ -116,7 +149,14 @@ export class ShopService {
         },
       });
     } catch (error) {
-      throw error;
+      console.log('===============ERROR==============');
+
+      console.log(error);
+
+      return new HttpException(
+        { message: 'server conflict', success: false },
+        HttpStatus.CONFLICT,
+      );
     }
   }
 }

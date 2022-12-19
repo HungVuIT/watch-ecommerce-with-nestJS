@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createCategoryDto } from './dto/createCategory.dto';
 import { editCategoryDto } from './dto/editCategory.dto';
@@ -15,7 +20,7 @@ export class CategoryService {
         },
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -23,7 +28,7 @@ export class CategoryService {
     try {
       return await this.prisma.category.findMany({});
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -38,7 +43,7 @@ export class CategoryService {
         data: body,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -52,7 +57,7 @@ export class CategoryService {
         data: body,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 }

@@ -8,14 +8,16 @@ import {
   Post,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { BrandService } from './brand.service';
 import { createBrandDto } from './dto/createBrand.dto';
 import { editBrandDto } from './dto/editBrand.dto';
 
+@UseInterceptors(TransResInterceptor)
 @Controller('brand')
 export class BrandController {
   constructor(private service: BrandService) {}

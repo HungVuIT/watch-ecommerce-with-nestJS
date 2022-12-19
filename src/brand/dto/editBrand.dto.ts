@@ -1,12 +1,12 @@
-import { IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 
 export class editBrandDto {
-    @IsOptional()
-    name: string
+  @IsOptional()
+  name: string;
 
-    @IsOptional()
-    description: string
+  @IsOptional()
+  description: string;
 
-    @IsOptional()
-    image: any
+  @IsOptional()
+  image: any;
 }

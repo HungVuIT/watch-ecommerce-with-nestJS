@@ -40,7 +40,7 @@ export class userDto {
   @IsOptional()
   address: string;
 
-  @Type(()=>Date)
+  @Type(() => Date)
   @IsOptional()
   birthDay: Date;
 

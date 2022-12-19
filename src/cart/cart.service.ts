@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { addItemDto } from './dto/addItem.dto';
 import { updateItemDto } from './dto/updateItem.dto';
@@ -56,7 +56,7 @@ export class CartService {
       //   data: { quantity: watch.quantity - (body.quantity || 1) },
       // });
     } catch (error) {
-      throw new HttpException(error, 500);
+      throw error;
     }
   }
 
@@ -67,7 +67,7 @@ export class CartService {
         data: { quantity: body.quantity },
       });
     } catch (error) {
-      throw new HttpException(error, 500);
+      throw error;
     }
   }
 }

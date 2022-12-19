@@ -36,6 +36,8 @@ export class AuthService {
 
       return user;
     } catch (error) {
+      console.log('================ERROR===============');
+      console.log(error);
       throw error;
     }
   }
@@ -66,20 +68,24 @@ export class AuthService {
   }
 
   async tokenByRefreshToken(refreshToken: string) {
-    const refresh_secret = this.config.get('REFRESH_TOKEN_SECRET');
-    const decoded = this.jwt.verify(refreshToken, { secret: refresh_secret });
-    const { id, username } = decoded;
-    const secret = this.config.get('TOKEN_SECRET');
-    const access_token = this.jwt.sign(
-      { id, username },
-      {
-        expiresIn: '1y',
-        secret: secret,
-      },
-    );
-    return {
-      access_token: access_token,
-    };
+    try {
+      const refresh_secret = this.config.get('REFRESH_TOKEN_SECRET');
+      const decoded = this.jwt.verify(refreshToken, { secret: refresh_secret });
+      const { id, username } = decoded;
+      const secret = this.config.get('TOKEN_SECRET');
+      const access_token = this.jwt.sign(
+        { id, username },
+        {
+          expiresIn: '1y',
+          secret: secret,
+        },
+      );
+      return {
+        access_token: access_token,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   signToken(

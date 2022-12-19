@@ -30,8 +30,8 @@ export class PaymentService {
 
   vndToUsd(vnd: number) {
     const trans = vnd * Number(this.config.get('VND_USD'));
-    const result = Math.round(trans * 100) / 100
-    return result
+    const result = Math.round(trans * 100) / 100;
+    return result;
   }
 
   async checkoutLink(
@@ -53,7 +53,7 @@ export class PaymentService {
           payment_method: 'paypal',
         },
         redirect_urls: {
-          return_url:  host + '/success',
+          return_url: host + '/success',
           cancel_url: host + '/cancel',
         },
         transactions: [
@@ -88,7 +88,7 @@ export class PaymentService {
         ],
       };
 
-      console.log( JSON.stringify(create_payment_json))
+      console.log(JSON.stringify(create_payment_json));
       //payment.create là một callback hàm checkout này sẽ trả về kq trức khi callback đc gọi
       //chuyển payment.create thành Promise paymentCreateAsync để đợi kết quà trược khi return
 
@@ -110,7 +110,7 @@ export class PaymentService {
 
       return await paymentCreateAsync();
     } catch (error) {
-      console.log(error.response.details[0]);
+      throw error;
     }
   }
 

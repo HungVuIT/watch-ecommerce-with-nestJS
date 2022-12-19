@@ -14,7 +14,7 @@ export class SharedService {
       if (userId === item.UID) return true;
       else return false;
     } catch (error) {
-      return new Error(
+      throw new Error(
         'check Permisson method only work with model that have UID feild',
       );
     }

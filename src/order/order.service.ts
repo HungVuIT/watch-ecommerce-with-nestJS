@@ -246,7 +246,7 @@ export class OrderService {
         orderBy: { createdAt: 'desc' },
       });
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      throw error;
     }
   }
 
@@ -256,7 +256,7 @@ export class OrderService {
         where: { OID: orderId },
       });
     } catch (error) {
-      throw new HttpException(error.message, 500);
+      throw error;
     }
   }
 }
