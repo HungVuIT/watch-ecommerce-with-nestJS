@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { jwtGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/res.interceptor';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { DeliveryService } from './delivery.service';
 
 @Controller('delivery')

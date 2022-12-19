@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { TransResInterceptor } from 'src/shared/res.interceptor';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { AuthService } from './auth.service';
 import { authDto } from './dto/auth.dto';
 

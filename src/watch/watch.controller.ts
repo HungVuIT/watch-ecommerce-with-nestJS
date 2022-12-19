@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { filesUpload } from 'src/shared/cloudinary/storage';
 import { jwtGuard, VendorGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/res.interceptor';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { tsRequest } from 'src/shared/requestModify/request.config';
 import { createWatchDto } from './dto/createWatch.dto';
 import { updateWatchDto } from './dto/updateWatch.dto';

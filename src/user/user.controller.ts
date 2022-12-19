@@ -14,7 +14,7 @@ import {
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/res.interceptor';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { AddressPipe } from '../shared/pipe/addressValidation.pipe';
 import { userDto } from './dto/user.dto';
 import { UserService } from './user.service';

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { fileUpload } from 'src/shared/cloudinary/storage';
 import { AdminGuard, jwtGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/res.interceptor';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { BrandService } from './brand.service';
 import { createBrandDto } from './dto/createBrand.dto';
 import { editBrandDto } from './dto/editBrand.dto';
