@@ -17,7 +17,7 @@ import { fileFieldsUpload } from 'src/shared/cloudinary/storage';
 import { Shop } from 'src/shared/customDecorator/shop.decorator';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard, VendorGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
+import { TransResInterceptor } from 'src/shared/res.interceptor';
 import { AddressPipe } from 'src/shared/pipe/addressValidation.pipe';
 import { createShopDto } from './dto/createShop.dto';
 import { ShopService } from './shop.service';

@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { globalVariables } from './global.service';
-import { TransResInterceptor } from './interceptor/res.interceptor';
+import { TransResInterceptor } from './res.interceptor';
 import { SharedService } from './shared.service';
 import { JwtStrategy } from './strategy';
 

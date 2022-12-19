@@ -14,7 +14,7 @@ import { Request } from 'express';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { globalVariables } from 'src/shared/global.service';
 import { jwtGuard } from 'src/shared/guard';
-import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
+import { TransResInterceptor } from 'src/shared/res.interceptor';
 import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 
