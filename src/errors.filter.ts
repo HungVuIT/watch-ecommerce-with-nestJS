@@ -9,6 +9,10 @@ import {
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
   catch(error: Error, host: ArgumentsHost) {
+    console.log("############################################################")
+    console.log("\n" + Date.now() + "\n")
+    console.log(error)
+    console.log("############################################################")
     let response = host.switchToHttp().getResponse();
     let status =
       error instanceof HttpException

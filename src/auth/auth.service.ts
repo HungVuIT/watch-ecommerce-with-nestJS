@@ -13,6 +13,66 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
+  async googleLogin(req) {
+    try {
+      if (!req.user) {
+        return 'No user from google';
+      }
+
+      const { id, email, firstName, lastName, picture } = req.user;
+
+      let user = await this.prisma.user.findUnique({
+        where: { username: id },
+      });
+
+      if (!user) {
+        user = await this.prisma.user.create({
+          data: {
+            username: id,
+            password: await hash('onetwothree'),
+            firstName: firstName,
+            lastName: lastName,
+            avatar: picture,
+          },
+        });
+      }
+
+      return this.signToken(user.id, user.username);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async facebookLogin(req) {
+    try {
+      if (!req.user) {
+        return 'No user from facebook';
+      }
+
+      const { id, email, firstName, lastName, picture } = req.user;
+
+      let user = await this.prisma.user.findUnique({
+        where: { username: id },
+      });
+
+      if (!user) {
+        user = await this.prisma.user.create({
+          data: {
+            username: id,
+            password: await hash('onetwothree'),
+            firstName: firstName,
+            lastName: lastName,
+            avatar: picture,
+          },
+        });
+      }
+
+      return this.signToken(user.id, user.username);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   //hash password trước khi lưu vào db
   //tạo record trong database
   //loai bỏ password trc khi phản hồi
