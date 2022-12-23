@@ -7,13 +7,9 @@ export class AppController {
 
   @Get()
   @Render('index')
-  root() {
-    return HttpStatus.OK;
-  }
+  root() {  }
 
   @Get('privacy-policy')
-  @Render('index')
-  root2() {
-    return HttpStatus.OK;
-  }
+  @Render('privacyPolicy')
+  root2() {  }
 }
