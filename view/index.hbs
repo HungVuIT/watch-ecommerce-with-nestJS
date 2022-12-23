@@ -1,103 +1,172 @@
 <html>
-  <head>
-    <meta name='viewport' content='width=device-width, initial-scale=1' />
-    <style>
-      * { box-sizing:border-box; } body { margin: 0; font-family: Arial,
-      Helvetica, sans-serif; } .container { padding: 64px; } .row:after {
-      content: ""; display: table; clear: both } .column-66 { float: left;
-      width: 66.66666%; padding: 20px; } .column-33 { float: left; width:
-      33.33333%; padding: 20px; } .large-font { font-size: 48px; } .xlarge-font
-      { font-size: 64px } .button { border: none; color: white; padding: 14px
-      28px; font-size: 16px; cursor: pointer; background-color: #04AA6D; } img {
-      display: block; height: auto; max-width: 100%; } @media screen and
-      (max-width: 1000px) { .column-66, .column-33 { width: 100%; text-align:
-      center; } img { margin: auto; } }
-    </style>
-  </head>
-  <body>
 
-    <!-- The App Section -->
-    <div class='container'>
-      <div class='row'>
-        <div class='column-66'>
-          <h1 class='large-font' style='color:MediumSeaGreen;'><b
-            >Summary</b></h1>
-          <p><span style='font-size:36px'>This API is designed for a customer to
-              customer ecommerce platform. Our main products are watches</span>
-          </p>
-        </div>
-        <div class='column-33'>
-          <img
-            src='https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MKUQ3_VW_PF+watch-45-alum-midnight-cell-8s_VW_PF_WF_SI?wid=2000&hei=2000&fmt=png-alpha&.v=1632171068000,1661968769320'
-            width='335'
-            height='471'
-          />
-        </div>
+<head>
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial,
+        Helvetica, sans-serif;
+    }
+
+    .container {
+      padding: 64px;
+    }
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both
+    }
+
+    .column-66 {
+      float: left;
+      width: 66.66666%;
+      padding: 20px;
+    }
+
+    .column-33 {
+      float: left;
+      width:
+        33.33333%;
+      padding: 20px;
+    }
+
+    .large-font {
+      font-size: 48px;
+    }
+
+    .xlarge-font {
+      font-size: 64px
+    }
+
+    .button {
+      border: none;
+      color: white;
+      padding: 14px 28px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #04AA6D;
+    }
+
+    img {
+      display: block;
+      height: auto;
+      max-width: 100%;
+    }
+
+    @media screen and (max-width: 1000px) {
+
+      .column-66,
+      .column-33 {
+        width: 100%;
+        text-align:
+          center;
+      }
+
+      img {
+        margin: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- The App Section -->
+  <div class='container'>
+    <div class='row'>
+      <div class='column-66'>
+        <h1 class='large-font' style='color:MediumSeaGreen;'><b>Summary</b></h1>
+        <p><span style='font-size:36px'>This API is designed for a customer to
+            customer ecommerce platform. Our main products are watches</span>
+        </p>
+      </div>
+      <div class='column-33'>
+        <img
+          src='https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MKUQ3_VW_PF+watch-45-alum-midnight-cell-8s_VW_PF_WF_SI?wid=2000&hei=2000&fmt=png-alpha&.v=1632171068000,1661968769320'
+          width='335' height='471' />
       </div>
     </div>
+  </div>
 
-    <!-- Clarity Section -->
-    <div class='container' style='background-color:#f1f1f1'>
-      <div class='row'>
-        <div class='column-33'>
-          <img
-            src='https://longvan.net/hinhanh/tintuc/uu-diem-khi-su-dung-api.jpg'
-            alt='App'
-            width='335'
-            height='471'
-          />
-        </div>
-        <div class='column-66'>
-          <h1 class='large-font' style='color:red;'><b>Feature</b></h1>
-          <ul>
-            <li><p><span style='font-size:24px'>Authentication</span> </p></li>
-            <li><p><span style='font-size:24px'>Paging, filtering, sorting</span>
-              </p></li>
-            <li><p><span style='font-size:24px'>CURD database</span> </p></li>
-            <li><p><span style='font-size:24px'>Payment with Paypal</span></p></li>
-            <li><p><span style='font-size:24px'>Delivery with GHN</span>
-              </p></li>
-              <li><p><span style='font-size:24px'>Chat with websocket</span></p></li>
-          </ul>
-
-          <button class='button' style='background-color:red'>Read More</button>
-        </div>
+  <!-- Clarity Section -->
+  <div class='container' style='background-color:#f1f1f1'>
+    <div class='row'>
+      <div class='column-33'>
+        <img src='https://longvan.net/hinhanh/tintuc/uu-diem-khi-su-dung-api.jpg' alt='App' width='335' height='471' />
+      </div>
+      <div class='column-66'>
+        <h1 class='large-font' style='color:red;'><b>Feature</b></h1>
+        <ul>
+          <li>
+            <p><span style='font-size:24px'>Authentication, Authorization</span> </p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>OAuth 2.0 with google, facebook</span> </p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>Paging, filtering, sorting</span>
+            </p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>CURD database</span> </p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>Payment process (checkout, payout) with Paypal</span></p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>Delivery with GHN</span>
+            </p>
+          </li>
+          <li>
+            <p><span style='font-size:24px'>Chat with websocket</span></p>
+          </li>
+                    <li>
+            <p><span style='font-size:24px'>Sending email</span></p>
+          </li>
+        </ul>
       </div>
     </div>
+  </div>
 
-    <!-- The App Section -->
-    <div class='container'>
-      <div class='row'>
-        <div class='column-66'>
-          <h1 class='large-font' style='color:MediumSeaGreen;'><b>How to use?</b></h1>
-          <p><span style='font-size:36px'>I use postman tool for testing. You
-              can click the button below to fork collection into your workspace
-              and testing by yourself. Or you can view it in the public
-              workspace (read only).</span></p>
-          <div
-            class='postman-run-button'
-            data-postman-action='collection/fork'
-            data-postman-var-1='20245879-e685b8fe-2115-485c-8a66-5a3642b96385'
-            data-postman-collection-url='entityId=20245879-e685b8fe-2115-485c-8a66-5a3642b96385&entityType=collection&workspaceId=25514ed1-b7b5-46a3-8e72-21cc57851da9'
-          ></div>
-          <script type='text/javascript'>
-            (function (p,o,s,t,m,a,n) { !p[s] && (p[s] = function () { (p[t] ||
-            (p[t] = [])).push(arguments); }); !o.getElementById(s+t) &&
-            o.getElementsByTagName("head")[0].appendChild(( (n =
-            o.createElement("script")), (n.id = s+t), (n.async = 1), (n.src =
-            m), n )); }(window, document, "_pm", "PostmanRunObject",
+  <!-- The App Section -->
+  <div class='container'>
+    <div class='row'>
+      <div class='column-66'>
+        <h1 class='large-font' style='color:MediumSeaGreen;'><b>How to use?</b></h1>
+        <p><span style='font-size:36px'>I use postman tool for testing. You
+            can click the button below to fork collection into your workspace
+            and testing by yourself. Or you can view it in the public
+            workspace (read only).</span></p>
+        <div class='postman-run-button' data-postman-action='collection/fork'
+          data-postman-var-1='20245879-e685b8fe-2115-485c-8a66-5a3642b96385'
+          data-postman-collection-url='entityId=20245879-e685b8fe-2115-485c-8a66-5a3642b96385&entityType=collection&workspaceId=25514ed1-b7b5-46a3-8e72-21cc57851da9'>
+        </div>
+        <script type='text/javascript'>
+          (function (p, o, s, t, m, a, n) {
+            !p[s] && (p[s] = function () {
+              (p[t] ||
+                (p[t] = [])).push(arguments);
+            }); !o.getElementById(s + t) &&
+              o.getElementsByTagName("head")[0].appendChild(((n =
+                o.createElement("script")), (n.id = s + t), (n.async = 1), (n.src =
+                  m), n));
+          }(window, document, "_pm", "PostmanRunObject",
             "https://run.pstmn.io/button.js"));
-          </script>
-        </div>
-        <div class='column-33'>
-          <img
-            src='https://speedscale.com/wp-content/uploads/2022/04/Postman-Load-Test-Tutorial2.png'
-            width='335'
-            height='471'
-          />
-        </div>
+        </script>
+      </div>
+      <div class='column-33'>
+        <img src='https://speedscale.com/wp-content/uploads/2022/04/Postman-Load-Test-Tutorial2.png' width='335'
+          height='471' />
       </div>
     </div>
+  </div>
 
-  </body>
+</body>
+
 </html>
