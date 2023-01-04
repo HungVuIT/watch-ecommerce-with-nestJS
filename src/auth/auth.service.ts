@@ -2,15 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
+import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { authDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
+  
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
+    private mail: MailService,
   ) {}
 
   async googleLogin(req) {
@@ -147,6 +150,39 @@ export class AuthService {
       throw error;
     }
   }
+
+  async changePassword(id: number, password: string) {
+    try {
+      await this.prisma.user.update({
+        where: { id: id },
+        data: { password: await hash(password) },
+      });
+
+      return HttpStatus.OK;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  async sendResetPassMail(email: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email: email },
+      });
+
+      if (!user)
+        throw new HttpException('email not found', HttpStatus.NOT_FOUND);
+
+      const token = this.signToken(user.id, user.username);
+
+      await this.mail.sendUserConfirmation(email, token.access_token);
+
+      return HttpStatus.OK;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   signToken(
     id: number,

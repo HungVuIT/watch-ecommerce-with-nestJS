@@ -57,7 +57,12 @@ export class WatchController {
 
   @UseGuards(jwtGuard, VendorGuard)
   @Delete('/id/:id')
-  deleteWatch(@Param('id', ParseIntPipe) id: number, @Req() req: tsRequest) {
+  deleteWatch(@Param('id', ParseIntPipe) id: number) {
     return this.watchService.delete(id);
+  }
+
+  @Get('id/:id')
+  getWatch(@Param('id', ParseIntPipe) id: number){
+    return this.watchService.findOne(id)
   }
 }

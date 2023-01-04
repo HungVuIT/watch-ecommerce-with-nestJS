@@ -18,6 +18,8 @@ import { ShopModule } from './shop/shop.module';
 import { UserModule } from './user/user.module';
 import { WatchModule } from './watch/watch.module';
 import { ChatModule } from './chat/chat.module';
+import { MailModule } from './mail/mail.module';
+import { RatingModule } from './rating/rating.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { ChatModule } from './chat/chat.module';
     PaymentModule,
     DeliveryModule,
     ChatModule,
+    MailModule,
+    RatingModule,
   ],
   controllers: [AppController, OrderController],
   providers: [AppService, OrderService],

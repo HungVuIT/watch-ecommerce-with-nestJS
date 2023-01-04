@@ -60,6 +60,16 @@ export class WatchService {
     }
   }
 
+  async findOne(watchID: number){
+    try {
+      return this.prisma.watch.findUnique({
+        where: { id: watchID}
+      })
+    } catch (error) {
+      throw error
+    }
+  }
+
   async isOwner(shopId: number, productId: number) {
     try {
       const watch = await this.prisma.watch.findUnique({
