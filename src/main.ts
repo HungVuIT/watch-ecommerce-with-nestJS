@@ -16,7 +16,7 @@ async function bootstrap() {
   );
 
   app.setGlobalPrefix('api', {
-    exclude: [{ path: '', method: RequestMethod.GET }],
+    exclude: [{ path: '', method: RequestMethod.GET },{ path: 'favicon.ico', method: RequestMethod.GET }],
   });
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
