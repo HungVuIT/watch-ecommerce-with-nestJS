@@ -1,12 +1,14 @@
 import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
-import { Get, Param } from '@nestjs/common/decorators';
+import { Get, Param, UseInterceptors } from '@nestjs/common/decorators';
 import { HttpStatus } from '@nestjs/common/enums';
 import { ParseIntPipe } from '@nestjs/common/pipes';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Type } from 'class-transformer';
 import { IsIn, IsNotEmpty, IsNumber } from 'class-validator';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard } from 'src/shared/guard';
+import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { RatingService } from './rating.service';
 
 class rateBody{
@@ -23,6 +25,8 @@ class rateBody{
     score: number
 }
 
+@UseInterceptors(TransResInterceptor)
+@UseInterceptors(FileInterceptor(''))
 @Controller('rating')
 export class RatingController {
     constructor(private ratingService: RatingService){}
@@ -43,28 +47,26 @@ export class RatingController {
 
     @Get('shop/:id')
     getRateShop(@Param('id', ParseIntPipe) id: number){
-        this.ratingService.getShopRate(id)
-        return HttpStatus.OK
+        return this.ratingService.getShopRate(id)
     }
 
     @UseGuards(jwtGuard)
     @Post('watch')
     rateWatch(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.rateShop(userID, body.targetID, body.score)
+        this.ratingService.rateProduct(userID, body.targetID, body.score)
         return HttpStatus.OK
     }
 
     @UseGuards(jwtGuard)
     @Patch('watch')
     updateRateWatch(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.updateRateShop(userID, body.targetID, body.score)
+        this.ratingService.updateRateProduct(userID, body.targetID, body.score)
         return HttpStatus.OK
     }
 
     @Get('watch/:id')
     getRateWatch(@Param('id', ParseIntPipe) id: number){
-        this.ratingService.getShopRate(id)
-        return HttpStatus.OK
+        return this.ratingService.getProductRate(id)
     }
     
 }

@@ -6,9 +6,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class RatingService {
     constructor(config: ConfigService, private prisma: PrismaService){}
 
-    rateProduct(userID: number, productID: number, score:number){
+    async rateProduct(userID: number, productID: number, score:number){
         try {
-            this.prisma.watch_rating.create({
+            await this.prisma.watch_rating.create({
                 data:{
                     UID: userID,
                     WID: productID,
@@ -21,26 +21,22 @@ export class RatingService {
         
     }
 
-    updateRateProduct(userID: number, productID: number, score:number){
+    async updateRateProduct(userID: number, productID: number, score:number){
         try {
-            this.prisma.watch_rating.updateMany({
-                where:{
-                    UID: userID,
-                    WID: productID,
-                },
-                data:{
-                    score: score
-                }
-            })
+            await this.prisma.$queryRaw`
+            update "Watch_rating"
+            set "score" = ${score}
+            where "UID" = ${userID} and "WID" = ${productID}
+            `
         } catch (error) {
             throw error
         }
         
     }
 
-    rateShop(userID: number, shopID: number, score:number){
+    async rateShop(userID: number, shopID: number, score:number){
         try {
-            this.prisma.shop_rating.create({
+            await this.prisma.shop_rating.create({
                 data:{
                     UID: userID,
                     SID: shopID,
@@ -53,9 +49,9 @@ export class RatingService {
         
     }
 
-    updateRateShop(userID: number, shopID: number, score:number){
+    async updateRateShop(userID: number, shopID: number, score:number){
         try {
-            this.prisma.shop_rating.updateMany({
+            await this.prisma.shop_rating.updateMany({
                 where:{
                     UID: userID,
                     SID: shopID,
@@ -72,7 +68,7 @@ export class RatingService {
 
     async getProdcutRate(watchID: number){
         try {
-            return this.prisma.watch_rating.aggregate({
+            await this.prisma.watch_rating.aggregate({
                 _avg: {
                     score: true
                 },
@@ -96,7 +92,7 @@ export class RatingService {
                 }
             });
 
-            return Math.round(score._avg.score);
+            return score._avg.score;
         } catch (error) {
             throw error
         }
@@ -113,7 +109,7 @@ export class RatingService {
                 }
             });
 
-            return Math.round(score._avg.score);
+            return score._avg.score;
         } catch (error) {
             throw error
         }
