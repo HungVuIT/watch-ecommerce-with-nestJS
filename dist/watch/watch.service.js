@@ -112,6 +112,17 @@ let WatchService = class WatchService {
             throw error;
         }
     }
+    async search(txt) {
+        txt = txt.trim();
+        return await this.prisma.watch.findMany({
+            where: {
+                name: {
+                    contains: txt
+                }
+            },
+            take: 10
+        });
+    }
 };
 WatchService = __decorate([
     (0, common_1.Injectable)(),

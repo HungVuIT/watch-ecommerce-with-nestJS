@@ -16,7 +16,7 @@ export class RecommendService {
 
       const baseItem = await this.watch_and_rating(base_item_id);
 
-      let arr: { id: number; khoangCach: number }[];
+      let arr: { id: number; khoangCach: number }[] = [];
 
       listItem.forEach((element) => {
         const { item, recItem } = this.chuanhoa(baseItem, element);
@@ -60,6 +60,7 @@ export class RecommendService {
 
       return [item1, item2, item3, item4];
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -108,8 +109,8 @@ export class RecommendService {
   }
 
   chuanhoa(baseItem: Item, recItem: Item) {
-    let newBitem: Item;
-    let newRitem: Item;
+    let newBitem: Item = {id: 0, Watch_rating: []};
+    let newRitem: Item = {id: 0, Watch_rating: []};
     newBitem.id = baseItem.id;
     newRitem.id = recItem.id;
 

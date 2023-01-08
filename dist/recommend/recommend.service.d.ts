@@ -9,7 +9,7 @@ interface Item {
 export declare class RecommendService {
     private prisma;
     constructor(prisma: PrismaService);
-    recommend_item_list(base_item_id: number): Promise<void>;
+    recommend_item_list(base_item_id: number): Promise<import(".prisma/client").Watch[]>;
     list_watch_and_rating(): Promise<{
         id: number;
         Watch_rating: {

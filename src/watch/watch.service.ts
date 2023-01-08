@@ -122,4 +122,17 @@ export class WatchService {
       throw error;
     }
   }
+
+  async search(txt: string) {
+    txt = txt.trim();
+    
+    return await this.prisma.watch.findMany({
+      where:{
+        name: {
+          contains: txt
+        }
+      },
+      take: 10
+    })
+  }
 }

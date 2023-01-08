@@ -17,20 +17,47 @@ let RecommendService = class RecommendService {
         this.prisma = prisma;
     }
     async recommend_item_list(base_item_id) {
-        const listItem = await this.list_watch_and_rating();
-        const baseItem = await this.watch_and_rating(base_item_id);
-        let arr;
-        listItem.forEach((element) => {
-            const { item, recItem } = this.chuanhoa(baseItem, element);
-            const tuongDong = {
-                id: element.id,
-                khoangCach: this.khoangcach(item, recItem),
-            };
-            arr.push(tuongDong);
-        });
-        arr.sort(function (a, b) {
-            return b.khoangCach - a.khoangCach;
-        });
+        try {
+            const listItem = await this.list_watch_and_rating();
+            const baseItem = await this.watch_and_rating(base_item_id);
+            let arr = [];
+            listItem.forEach((element) => {
+                const { item, recItem } = this.chuanhoa(baseItem, element);
+                const tuongDong = {
+                    id: element.id,
+                    khoangCach: this.khoangcach(item, recItem),
+                };
+                arr.push(tuongDong);
+            });
+            arr.sort(function (a, b) {
+                return b.khoangCach - a.khoangCach;
+            });
+            const item1 = await this.prisma.watch.findUnique({
+                where: {
+                    id: arr[0].id,
+                },
+            });
+            const item2 = await this.prisma.watch.findUnique({
+                where: {
+                    id: arr[1].id,
+                },
+            });
+            const item3 = await this.prisma.watch.findUnique({
+                where: {
+                    id: arr[2].id,
+                },
+            });
+            const item4 = await this.prisma.watch.findUnique({
+                where: {
+                    id: arr[3].id,
+                },
+            });
+            return [item1, item2, item3, item4];
+        }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
     async list_watch_and_rating() {
         try {
@@ -76,8 +103,8 @@ let RecommendService = class RecommendService {
         }
     }
     chuanhoa(baseItem, recItem) {
-        let newBitem;
-        let newRitem;
+        let newBitem = { id: 0, Watch_rating: [] };
+        let newRitem = { id: 0, Watch_rating: [] };
         newBitem.id = baseItem.id;
         newRitem.id = recItem.id;
         baseItem.Watch_rating.forEach((rating) => {
@@ -97,6 +124,8 @@ let RecommendService = class RecommendService {
         let tu;
         let mau1;
         let mau2;
+        if (item.Watch_rating.length === 0)
+            return 0;
         for (let index = 0; index < item.Watch_rating.length; index++) {
             tu += item.Watch_rating[index].score * recItem.Watch_rating[index].score;
             mau1 += Math.pow(item.Watch_rating[index].score, 2);

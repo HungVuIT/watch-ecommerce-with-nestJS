@@ -11,4 +11,5 @@ export declare class WatchController {
     getList(query: any): Promise<import(".prisma/client").Watch[]>;
     deleteWatch(id: number): void;
     getWatch(id: number): Promise<import(".prisma/client").Watch>;
+    search(searchTxt: string): Promise<import(".prisma/client").Watch[]>;
 }

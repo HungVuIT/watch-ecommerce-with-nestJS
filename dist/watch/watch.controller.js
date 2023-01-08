@@ -39,6 +39,9 @@ let WatchController = class WatchController {
     getWatch(id) {
         return this.watchService.findOne(id);
     }
+    search(searchTxt) {
+        return this.watchService.search(searchTxt);
+    }
 };
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.VendorGuard),
@@ -86,6 +89,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], WatchController.prototype, "getWatch", null);
+__decorate([
+    (0, common_1.Get)('search/:value'),
+    __param(0, (0, common_1.Param)('value')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], WatchController.prototype, "search", null);
 WatchController = __decorate([
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),
     (0, common_1.Controller)('watchs'),

@@ -10,4 +10,5 @@ export declare class WatchService {
     isOwner(shopId: number, productId: number): Promise<void>;
     update(productId: number, body: updateWatchDto, imageFiles: any): Promise<import(".prisma/client").Watch>;
     create(shopId: number, body: createWatchDto, imageFiles: any): Promise<import(".prisma/client").Watch>;
+    search(txt: string): Promise<import(".prisma/client").Watch[]>;
 }

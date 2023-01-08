@@ -65,4 +65,9 @@ export class WatchController {
   getWatch(@Param('id', ParseIntPipe) id: number){
     return this.watchService.findOne(id)
   }
+
+  @Get('search/:value')
+  search(@Param('value') searchTxt: string){
+    return this.watchService.search(searchTxt)
+  }
 }
