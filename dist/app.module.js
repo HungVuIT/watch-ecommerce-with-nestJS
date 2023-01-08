@@ -29,6 +29,7 @@ const watch_module_1 = require("./watch/watch.module");
 const chat_module_1 = require("./chat/chat.module");
 const mail_module_1 = require("./mail/mail.module");
 const rating_module_1 = require("./rating/rating.module");
+const recommend_module_1 = require("./recommend/recommend.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -53,6 +54,7 @@ AppModule = __decorate([
             chat_module_1.ChatModule,
             mail_module_1.MailModule,
             rating_module_1.RatingModule,
+            recommend_module_1.RecommendModule,
         ],
         controllers: [app_controller_1.AppController, order_controller_1.OrderController],
         providers: [app_service_1.AppService, order_service_1.OrderService],

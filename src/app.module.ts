@@ -20,6 +20,7 @@ import { WatchModule } from './watch/watch.module';
 import { ChatModule } from './chat/chat.module';
 import { MailModule } from './mail/mail.module';
 import { RatingModule } from './rating/rating.module';
+import { RecommendModule } from './recommend/recommend.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { RatingModule } from './rating/rating.module';
     ChatModule,
     MailModule,
     RatingModule,
+    RecommendModule,
   ],
   controllers: [AppController, OrderController],
   providers: [AppService, OrderService],

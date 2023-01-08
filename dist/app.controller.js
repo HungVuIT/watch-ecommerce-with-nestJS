@@ -18,6 +18,9 @@ let AppController = class AppController {
     }
     root() { }
     root2() { }
+    root3() {
+        return common_1.HttpStatus.OK;
+    }
 };
 __decorate([
     (0, common_1.Get)(),
@@ -33,6 +36,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "root2", null);
+__decorate([
+    (0, common_1.Get)("favicon.ico"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "root3", null);
 AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

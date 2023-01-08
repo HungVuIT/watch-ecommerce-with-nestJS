@@ -1,0 +1,36 @@
+cur_item = [ {1,5},{3,4},{6,2}]
+item= [ {2,4},{3,5}]
+
+rec_list(){
+    cur_item, rec_item = chuanhoa(cur_item,rec_item)
+    tuongdong = rec_item, khoangcach(cur_item,rec_item)
+    arr[].push tuongdong
+    
+    arr.sort
+    return arr1, arr2, arr3
+}
+
+chuanhoa(cur_item,rec_item){
+    for each cur_item
+        for each rec_item
+            if cur_item.id = rec_item.id
+                new_cur_item = cur_item
+                new_rec_item = rec_item
+    return new_cur_item, new_rec_item
+}
+
+khoangcach(cur_item, rec_item){
+    for each cur_item
+        tu +=cur_item.score * rec_item.score
+        mau1 += bình(cur_item.score)
+        mau2 += bình(rec_item.score)
+
+    return tu / (căn(mẫu1) * căn(mẫu2))
+}
+
+
+
+
+
+
+
