@@ -23,9 +23,7 @@ let ChatGateway = class ChatGateway {
     }
     createRoom(socket, data) {
         const user = (0, ulti_1.getUser)(data.receiverId);
-        socket
-            .to(user.socketId)
-            .emit('server-send-data', { messenger: data.messenger });
+        socket.to(user.socketId).emit('server-send-data', { messenger: data.messenger });
     }
     handleDisconnection(client, userId) {
         const device = {

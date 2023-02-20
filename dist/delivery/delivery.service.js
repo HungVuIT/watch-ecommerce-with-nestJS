@@ -26,7 +26,9 @@ let DeliveryService = class DeliveryService {
                 token: this.config.get('GHN_TOKEN'),
             };
             const response = await (0, rxjs_1.firstValueFrom)(this.http
-                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', { headers: headersRequest })
+                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+                headers: headersRequest,
+            })
                 .pipe((0, rxjs_1.map)((response) => response.data)));
             let result;
             response['data'].forEach((element) => {
@@ -46,8 +48,7 @@ let DeliveryService = class DeliveryService {
                 token: this.config.get('GHN_TOKEN'),
             };
             const response = await (0, rxjs_1.firstValueFrom)(this.http
-                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=' +
-                provinceId, { headers: headersRequest })
+                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=' + provinceId, { headers: headersRequest })
                 .pipe((0, rxjs_1.map)((response) => response.data)));
             let result;
             response['data'].forEach((element) => {
@@ -67,8 +68,9 @@ let DeliveryService = class DeliveryService {
                 token: this.config.get('GHN_TOKEN'),
             };
             const response = await (0, rxjs_1.firstValueFrom)(this.http
-                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=' +
-                districtId, { headers: headersRequest })
+                .get('https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=' + districtId, {
+                headers: headersRequest,
+            })
                 .pipe((0, rxjs_1.map)((response) => response.data)));
             let result;
             response['data'].forEach((element) => {

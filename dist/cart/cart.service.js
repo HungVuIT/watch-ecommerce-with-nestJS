@@ -20,6 +20,9 @@ let CartService = class CartService {
         try {
             const cart = await this.prisma.cart.findMany({
                 where: { UID: userId },
+                include: {
+                    watch: true
+                },
                 orderBy: {
                     createdAt: 'desc',
                 },

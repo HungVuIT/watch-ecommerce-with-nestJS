@@ -1,54 +1,48 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class createShopDto {
-  @IsNotEmpty()
-  @IsString()
-  name: string;
+    @IsNotEmpty()
+    @IsString()
+    name: string;
 
-  @IsNotEmpty()
-  @IsString()
-  description: string;
+    @IsNotEmpty()
+    @IsString()
+    description: string;
 
-  @IsString()
-  @IsOptional()
-  content: string;
+    @IsString()
+    @IsOptional()
+    content: string;
 
-  @IsNotEmpty()
-  @IsString()
-  province: string;
+    @IsNotEmpty()
+    @IsString()
+    province: string;
 
-  @IsNotEmpty()
-  @IsString()
-  district: string;
+    @IsNotEmpty()
+    @IsString()
+    district: string;
 
-  @IsNotEmpty()
-  @IsString()
-  ward: string;
+    @IsNotEmpty()
+    @IsString()
+    ward: string;
 
-  @IsNotEmpty()
-  @IsString()
-  address: string;
+    @IsNotEmpty()
+    @IsString()
+    address: string;
 
-  @IsString()
-  @IsEmail()
-  @IsOptional()
-  email: string;
+    @IsString()
+    @IsEmail()
+    @IsOptional()
+    email: string;
 
-  @IsNotEmpty()
-  @IsNumberString()
-  phoneNumber: string;
+    @IsNotEmpty()
+    @IsNumberString()
+    phoneNumber: string;
 
-  @IsOptional()
-  logo: string;
+    @IsOptional()
+    logo: string;
 
-  @IsOptional()
-  banner: string;
+    @IsOptional()
+    banner: string;
 }
 
 // model Shop {

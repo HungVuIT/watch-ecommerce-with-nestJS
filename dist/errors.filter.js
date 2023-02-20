@@ -10,14 +10,12 @@ exports.ErrorFilter = void 0;
 const common_1 = require("@nestjs/common");
 let ErrorFilter = class ErrorFilter {
     catch(error, host) {
-        console.log("############################################################");
-        console.log("\n" + Date.now() + "\n");
+        console.log('############################################################');
+        console.log('\n' + Date.now() + '\n');
         console.log(error);
-        console.log("############################################################");
+        console.log('############################################################');
         let response = host.switchToHttp().getResponse();
-        let status = error instanceof common_1.HttpException
-            ? error.getStatus()
-            : common_1.HttpStatus.INTERNAL_SERVER_ERROR;
+        let status = error instanceof common_1.HttpException ? error.getStatus() : common_1.HttpStatus.INTERNAL_SERVER_ERROR;
         if (error.name === 'BadRequestException') {
             return response.status(status).send(Object.assign(Object.assign({}, error['response']), { success: false }));
         }

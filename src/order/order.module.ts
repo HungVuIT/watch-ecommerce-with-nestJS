@@ -6,8 +6,8 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 
 @Module({
-  providers: [OrderService],
-  controllers: [OrderController],
-  imports: [CartModule, PaymentModule, DeliveryModule],
+    providers: [OrderService],
+    controllers: [OrderController],
+    imports: [CartModule, PaymentModule, DeliveryModule],
 })
 export class OrderModule {}

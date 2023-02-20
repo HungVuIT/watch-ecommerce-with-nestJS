@@ -58,7 +58,7 @@ let WatchService = class WatchService {
     async findOne(watchID) {
         try {
             return this.prisma.watch.findUnique({
-                where: { id: watchID }
+                where: { id: watchID },
             });
         }
         catch (error) {
@@ -117,10 +117,10 @@ let WatchService = class WatchService {
         return await this.prisma.watch.findMany({
             where: {
                 name: {
-                    contains: txt
-                }
+                    contains: txt,
+                },
             },
-            take: 10
+            take: 10,
         });
     }
 };

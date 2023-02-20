@@ -15,7 +15,7 @@ let RecommendModule = class RecommendModule {
 RecommendModule = __decorate([
     (0, common_1.Module)({
         controllers: [recommend_controller_1.RecommendController],
-        providers: [recommend_service_1.RecommendService]
+        providers: [recommend_service_1.RecommendService],
     })
 ], RecommendModule);
 exports.RecommendModule = RecommendModule;

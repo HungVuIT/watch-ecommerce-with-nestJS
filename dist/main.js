@@ -11,7 +11,10 @@ async function bootstrap() {
         whitelist: true,
     }));
     app.setGlobalPrefix('api', {
-        exclude: [{ path: '', method: common_1.RequestMethod.GET }, { path: 'favicon.ico', method: common_1.RequestMethod.GET }],
+        exclude: [
+            { path: '', method: common_1.RequestMethod.GET },
+            { path: 'favicon.ico', method: common_1.RequestMethod.GET },
+        ],
     });
     app.useStaticAssets((0, path_1.join)(__dirname, '..', 'public'));
     app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'view'));

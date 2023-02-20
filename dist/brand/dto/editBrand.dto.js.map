@@ -1,1 +1,1 @@
-{"version":3,"file":"editBrand.dto.js","sourceRoot":"","sources":["../../../src/brand/dto/editBrand.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA6C;AAE7C,MAAa,YAAY;CASxB;AARC;IAAC,IAAA,4BAAU,GAAE;;0CACA;AAEb;IAAC,IAAA,4BAAU,GAAE;;iDACO;AAEpB;IAAC,IAAA,4BAAU,GAAE;;2CACF;AARb,oCASC"}
+{"version":3,"file":"editBrand.dto.js","sourceRoot":"","sources":["../../../src/brand/dto/editBrand.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA6C;AAE7C,MAAa,YAAY;CASxB;AARG;IAAC,IAAA,4BAAU,GAAE;;0CACA;AAEb;IAAC,IAAA,4BAAU,GAAE;;iDACO;AAEpB;IAAC,IAAA,4BAAU,GAAE;;2CACF;AARf,oCASC"}

@@ -116,21 +116,21 @@ __decorate([
 ], AuthController.prototype, "facebookAuthRedirect", null);
 __decorate([
     (0, common_1.Get)('reset-password'),
-    __param(0, (0, decorators_1.Query)("email")),
+    __param(0, (0, decorators_1.Query)('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "resetPassword", null);
 __decorate([
-    (0, common_1.Get)("change-password-page"),
-    (0, decorators_1.Render)("changePassword"),
-    __param(0, (0, decorators_1.Query)("token")),
+    (0, common_1.Get)('change-password-page'),
+    (0, decorators_1.Render)('changePassword'),
+    __param(0, (0, decorators_1.Query)('token')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "renderPage", null);
 __decorate([
-    (0, common_1.Post)("change-password"),
+    (0, common_1.Post)('change-password'),
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     __param(0, (0, user_decorator_1.User)('id')),
     __param(1, (0, common_1.Body)()),

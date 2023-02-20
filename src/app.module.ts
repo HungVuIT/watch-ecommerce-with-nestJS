@@ -23,29 +23,29 @@ import { RatingModule } from './rating/rating.module';
 import { RecommendModule } from './recommend/recommend.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    UserModule,
-    PrismaModule,
-    AuthModule,
-    ShopModule,
-    SharedModule,
-    WatchModule,
-    CartModule,
-    OrderModule,
-    CategoryModule,
-    BrandModule,
-    CommentModule,
-    PaymentModule,
-    DeliveryModule,
-    ChatModule,
-    MailModule,
-    RatingModule,
-    RecommendModule,
-  ],
-  controllers: [AppController, OrderController],
-  providers: [AppService, OrderService],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        UserModule,
+        PrismaModule,
+        AuthModule,
+        ShopModule,
+        SharedModule,
+        WatchModule,
+        CartModule,
+        OrderModule,
+        CategoryModule,
+        BrandModule,
+        CommentModule,
+        PaymentModule,
+        DeliveryModule,
+        ChatModule,
+        MailModule,
+        RatingModule,
+        RecommendModule,
+    ],
+    controllers: [AppController, OrderController],
+    providers: [AppService, OrderService],
 })
 export class AppModule {}

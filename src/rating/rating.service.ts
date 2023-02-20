@@ -4,114 +4,110 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RatingService {
-    constructor(config: ConfigService, private prisma: PrismaService){}
+    constructor(config: ConfigService, private prisma: PrismaService) {}
 
-    async rateProduct(userID: number, productID: number, score:number){
+    async rateProduct(userID: number, productID: number, score: number) {
         try {
             await this.prisma.watch_rating.create({
-                data:{
+                data: {
                     UID: userID,
                     WID: productID,
-                    score: score
-                }
-            })
+                    score: score,
+                },
+            });
         } catch (error) {
-            throw error
+            throw error;
         }
-        
     }
 
-    async updateRateProduct(userID: number, productID: number, score:number){
+    async updateRateProduct(userID: number, productID: number, score: number) {
         try {
             await this.prisma.$queryRaw`
             update "Watch_rating"
             set "score" = ${score}
             where "UID" = ${userID} and "WID" = ${productID}
-            `
+            `;
         } catch (error) {
-            throw error
+            throw error;
         }
-        
     }
 
-    async rateShop(userID: number, shopID: number, score:number){
+    async rateShop(userID: number, shopID: number, score: number) {
         try {
             await this.prisma.shop_rating.create({
-                data:{
+                data: {
                     UID: userID,
                     SID: shopID,
-                    score: score
-                }
-            })
+                    score: score,
+                },
+            });
         } catch (error) {
-            throw error
+            throw error;
         }
-        
     }
 
-    async updateRateShop(userID: number, shopID: number, score:number){
+    async updateRateShop(userID: number, shopID: number, score: number) {
         try {
             await this.prisma.shop_rating.updateMany({
-                where:{
+                where: {
                     UID: userID,
                     SID: shopID,
                 },
-                data:{
-                    score: score
-                }
-            })
+                data: {
+                    score: score,
+                },
+            });
         } catch (error) {
-            throw error
+            throw error;
         }
-        
     }
 
-    async getProdcutRate(watchID: number){
+    async getProdcutRate(watchID: number) {
         try {
             await this.prisma.watch_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    WID: watchID
-                }
-            })
+                    WID: watchID,
+                },
+            });
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 
-    async getShopRate(shopID: number){
+    async getShopRate(shopID: number) {
         try {
             const score = await this.prisma.shop_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    SID: shopID
-                }
+                    SID: shopID,
+                },
             });
 
             return score._avg.score;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 
-    async getProductRate(watchID: number){
+    async getProductRate(watchID: number) {
         try {
             const score = await this.prisma.watch_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    WID: watchID
-                }
+                    WID: watchID,
+                },
             });
 
             return score._avg.score;
         } catch (error) {
-            throw error
+            throw error;
         }
     }
 }

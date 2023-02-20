@@ -3,36 +3,36 @@ import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class createOrderDto {
-  // requiredDate:  dat
+    // requiredDate:  dat
 
-  @IsNotEmpty()
-  @IsIn([paymentMethod.online, paymentMethod.offline])
-  paymentMethod: paymentMethod;
+    @IsNotEmpty()
+    @IsIn([paymentMethod.online, paymentMethod.offline])
+    paymentMethod: paymentMethod;
 
-  @IsNotEmpty()
-  @IsString()
-  province: string;
+    @IsNotEmpty()
+    @IsString()
+    province: string;
 
-  @IsNotEmpty()
-  @IsString()
-  district: string;
+    @IsNotEmpty()
+    @IsString()
+    district: string;
 
-  @IsNotEmpty()
-  @IsString()
-  ward: string;
+    @IsNotEmpty()
+    @IsString()
+    ward: string;
 
-  @IsNotEmpty()
-  @IsString()
-  address: string;
+    @IsNotEmpty()
+    @IsString()
+    address: string;
 
-  @IsOptional()
-  Note: string;
+    @IsOptional()
+    Note: string;
 
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsInt()
-  @IsIn([1, 2, 3])
-  deliveryOption: number;
+    @IsNotEmpty()
+    @Type(() => Number)
+    @IsInt()
+    @IsIn([1, 2, 3])
+    deliveryOption: number;
 }
 
 // model Order {

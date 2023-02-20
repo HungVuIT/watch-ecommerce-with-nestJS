@@ -16,9 +16,7 @@ const passport_1 = require("@nestjs/passport");
 const passport_facebook_1 = require("passport-facebook");
 let FacebookStrategy = class FacebookStrategy extends (0, passport_1.PassportStrategy)(passport_facebook_1.Strategy, 'facebook') {
     constructor(config) {
-        const host = process.env.NODE_ENV === 'production'
-            ? 'https://dhwatch.onrender.com'
-            : 'http://localhost:8000';
+        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
         super({
             clientID: config.get('FACEBOOK_CLIENT_ID'),
             clientSecret: config.get('FACEBOOK_CLIENT_SECRET'),
@@ -36,7 +34,7 @@ let FacebookStrategy = class FacebookStrategy extends (0, passport_1.PassportStr
                 firstName: name.givenName,
                 lastName: name.familyName,
                 accessToken,
-                refreshToken
+                refreshToken,
             };
             done(null, user);
         }

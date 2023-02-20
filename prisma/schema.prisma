@@ -4,7 +4,6 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
-
 }
 
 datasource db {
@@ -33,6 +32,7 @@ model User {
   district String?
   ward     String?
   address  String?
+  gender   String?
   birthDay DateTime?
 
   avatar String   @default("https://res.cloudinary.com/vhh/image/upload/v1665845758/watch-ecommerce/istockphoto-476085198-612x612_bt6y0m.jpg")
@@ -40,11 +40,11 @@ model User {
 
   role Role @default(USER)
 
-  Shop     Shop?
-  Favorite Favorite[]
-  Cart     Cart[]
-  Order    Order[]
-  Shop_rating   Shop_rating[]
+  Shop         Shop?
+  Favorite     Favorite[]
+  Cart         Cart[]
+  Order        Order[]
+  Shop_rating  Shop_rating[]
   Watch_rating Watch_rating[]
 
   isActive Boolean   @default(true)
@@ -86,7 +86,7 @@ model Shop {
 
   ShopWallet ShopWallet?
 
-  Watchs Watch[]
+  Watchs      Watch[]
   Shop_rating Shop_rating[]
 
   isActive Boolean @default(true)
@@ -140,10 +140,10 @@ model Watch {
   madeBy       String?
   image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
   warranty     DateTime?
-  isActive     Boolean        @default(true)
-  
-  Favorite Favorite[]
-  Cart     Cart[]
+  isActive     Boolean   @default(true)
+
+  Favorite     Favorite[]
+  Cart         Cart[]
   Order_detail Order_detail[]
   Comment      Comment[]
   Watch_rating Watch_rating[]
@@ -305,6 +305,7 @@ enum deliveryOption {
   standard
   saving
 }
+
 // ===========================================================================================================
 // ===========================================================================================================
 
@@ -326,7 +327,7 @@ model Comment {
 // ===========================================================================================================
 
 model Watch_rating {
-    id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -348,7 +349,7 @@ model Shop_rating {
   UID  Int
 
   shop Shop @relation(fields: [SID], references: [id])
-  SID   Int
+  SID  Int
 
   score Int @default(0)
 }

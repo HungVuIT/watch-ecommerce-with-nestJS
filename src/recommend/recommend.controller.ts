@@ -3,11 +3,10 @@ import { RecommendService } from './recommend.service';
 
 @Controller('recommend')
 export class RecommendController {
+    constructor(private service: RecommendService) {}
 
-    constructor(private service:RecommendService){}
-
-    @Get("/:id")
-    runcode(@Param('id', ParseIntPipe) id:number){
-        return this.service.recommend_item_list(id)
+    @Get('/:id')
+    runcode(@Param('id', ParseIntPipe) id: number) {
+        return this.service.recommend_item_list(id);
     }
 }

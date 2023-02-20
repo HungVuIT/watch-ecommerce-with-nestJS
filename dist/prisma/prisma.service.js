@@ -15,9 +15,7 @@ const config_1 = require("@nestjs/config");
 const client_1 = require("@prisma/client");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor(config) {
-        const url = process.env.NODE_ENV === 'production'
-            ? config.get('DATABASE_URL_PROD')
-            : config.get('DATABASE_URL_LOCAL');
+        const url = process.env.NODE_ENV === 'production' ? config.get('DATABASE_URL_PROD') : config.get('DATABASE_URL_LOCAL');
         super({
             datasources: {
                 db: {

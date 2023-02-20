@@ -4,9 +4,9 @@ import { DeliveryController } from './delivery.controller';
 import { DeliveryService } from './delivery.service';
 
 @Module({
-  imports: [HttpModule],
-  controllers: [DeliveryController],
-  providers: [DeliveryService],
-  exports: [DeliveryService],
+    imports: [HttpModule],
+    controllers: [DeliveryController],
+    providers: [DeliveryService],
+    exports: [DeliveryService],
 })
 export class DeliveryModule {}

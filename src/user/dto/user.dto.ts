@@ -1,51 +1,44 @@
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsEmail,
-  IsISO8601,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsEmail, IsISO8601, IsNumberString, IsOptional, IsString } from 'class-validator';
 export class userDto {
-  @IsEmail()
-  @IsOptional()
-  email: string;
+    @IsEmail()
+    @IsOptional()
+    email: string;
 
-  @IsOptional()
-  @IsNumberString()
-  phoneNumber: string;
+    @IsOptional()
+    @IsNumberString()
+    phoneNumber: string;
 
-  @IsString()
-  @IsOptional()
-  firstName: string;
+    @IsString()
+    @IsOptional()
+    firstName: string;
 
-  @IsString()
-  @IsOptional()
-  lastName: string;
+    @IsString()
+    @IsOptional()
+    lastName: string;
 
-  @IsString()
-  @IsOptional()
-  province: string;
+    @IsString()
+    @IsOptional()
+    province: string;
 
-  @IsString()
-  @IsOptional()
-  district: string;
+    @IsString()
+    @IsOptional()
+    district: string;
 
-  @IsString()
-  @IsOptional()
-  ward: string;
+    @IsString()
+    @IsOptional()
+    ward: string;
 
-  @IsString()
-  @IsOptional()
-  address: string;
+    @IsString()
+    @IsOptional()
+    address: string;
 
-  @Type(() => Date)
-  @IsOptional()
-  birthDay: Date;
+    @Type(() => Date)
+    @IsOptional()
+    birthDay: Date;
 
-  @IsOptional()
-  avatar: string;
+    @IsOptional()
+    avatar: string;
 }
 
 // model User {

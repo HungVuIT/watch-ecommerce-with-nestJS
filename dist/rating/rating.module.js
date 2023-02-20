@@ -16,7 +16,7 @@ RatingModule = __decorate([
     (0, common_1.Module)({
         controllers: [rating_controller_1.RatingController],
         providers: [rating_service_1.RatingService],
-        exports: [rating_service_1.RatingService]
+        exports: [rating_service_1.RatingService],
     })
 ], RatingModule);
 exports.RatingModule = RatingModule;

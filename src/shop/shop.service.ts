@@ -4,159 +4,141 @@ import { createShopDto } from './dto/createShop.dto';
 
 @Injectable()
 export class ShopService {
-  constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService) {}
 
-  findById(shopId: number) {
-    try {
-      return this.prisma.shop.findUnique({
-        where: { id: shopId },
-      });
-    } catch (error) {
-      console.log('===============ERROR==============');
+    findById(shopId: number) {
+        try {
+            return this.prisma.shop.findUnique({
+                where: { id: shopId },
+            });
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 
-  async findMany(option: any) {
-    try {
-      let query = {};
+    async findMany(option: any) {
+        try {
+            let query = {};
 
-      if (option.skip) query['skip'] = Number(option.skip);
+            if (option.skip) query['skip'] = Number(option.skip);
 
-      if (option.take) query['take'] = Number(option.take);
+            if (option.take) query['take'] = Number(option.take);
 
-      if (option.orderBy) {
-        let sort = {};
+            if (option.orderBy) {
+                let sort = {};
 
-        sort[option.orderBy] = 'asc';
+                sort[option.orderBy] = 'asc';
 
-        query['orderBy'] = sort;
-      }
+                query['orderBy'] = sort;
+            }
 
-      const list = await this.prisma.shop.findMany(query);
+            const list = await this.prisma.shop.findMany(query);
 
-      return list;
-    } catch (error) {
-      console.log('===============ERROR==============');
+            return list;
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 
-  async deleteByUserId(userId: number) {
-    try {
-      await this.prisma.shop.delete({
-        where: { UID: userId },
-      });
+    async deleteByUserId(userId: number) {
+        try {
+            await this.prisma.shop.delete({
+                where: { UID: userId },
+            });
 
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { role: 'USER' },
-      });
-    } catch (error) {
-      console.log('===============ERROR==============');
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { role: 'USER' },
+            });
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 
-  async updateByUserId(
-    id: number,
-    body: createShopDto,
-    files: {
-      logo?: Express.Multer.File[];
-      banner?: Express.Multer.File[];
-    },
-  ) {
-    try {
-      if (files.logo) {
-        body.logo = files.logo[0].path;
-      }
+    async updateByUserId(
+        id: number,
+        body: createShopDto,
+        files: {
+            logo?: Express.Multer.File[];
+            banner?: Express.Multer.File[];
+        }
+    ) {
+        try {
+            if (files.logo) {
+                body.logo = files.logo[0].path;
+            }
 
-      if (files.banner) {
-        body.banner = files.banner[0].path;
-      }
+            if (files.banner) {
+                body.banner = files.banner[0].path;
+            }
 
-      const shop = await this.prisma.shop.update({
-        where: { UID: id },
-        data: body,
-      });
+            const shop = await this.prisma.shop.update({
+                where: { UID: id },
+                data: body,
+            });
 
-      return shop;
-    } catch (error) {
-      console.log('===============ERROR==============');
+            return shop;
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 
-  async create(userId: number, body: createShopDto) {
-    try {
-      const shop = await this.prisma.shop.create({
-        data: {
-          UID: userId,
-          ...body,
-        },
-      });
+    async create(userId: number, body: createShopDto) {
+        try {
+            const shop = await this.prisma.shop.create({
+                data: {
+                    UID: userId,
+                    ...body,
+                },
+            });
 
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: { role: 'VENDOR' },
-      });
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { role: 'VENDOR' },
+            });
 
-      return shop;
-    } catch (error) {
-      console.log('===============ERROR==============');
+            return shop;
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 
-  myShop() {}
+    myShop() {}
 
-  async addPayment(shopId: number, email: string) {
-    try {
-      return await this.prisma.shopWallet.create({
-        data: {
-          paypalMethod: email,
-          SID: shopId,
-        },
-      });
-    } catch (error) {
-      console.log('===============ERROR==============');
+    async addPayment(shopId: number, email: string) {
+        try {
+            return await this.prisma.shopWallet.create({
+                data: {
+                    paypalMethod: email,
+                    SID: shopId,
+                },
+            });
+        } catch (error) {
+            console.log('===============ERROR==============');
 
-      console.log(error);
+            console.log(error);
 
-      return new HttpException(
-        { message: 'server conflict', success: false },
-        HttpStatus.CONFLICT,
-      );
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
     }
-  }
 }

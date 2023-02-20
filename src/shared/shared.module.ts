@@ -6,7 +6,7 @@ import { JwtStrategy } from './strategy';
 
 @Global()
 @Module({
-  providers: [JwtStrategy, SharedService, globalVariables],
-  exports: [SharedService, globalVariables],
+    providers: [JwtStrategy, SharedService, globalVariables],
+    exports: [SharedService, globalVariables],
 })
 export class SharedModule {}

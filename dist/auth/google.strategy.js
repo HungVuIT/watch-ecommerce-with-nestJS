@@ -16,10 +16,10 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 let GoogleStrategy = class GoogleStrategy extends (0, passport_1.PassportStrategy)(passport_google_oauth20_1.Strategy) {
     constructor(config) {
-        const host = process.env.NODE_ENV === 'production' ? "https://dhwatch.onrender.com" : "http://localhost:8000";
+        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
         super({
-            clientID: config.get("GOOGLE_CLIENT_ID"),
-            clientSecret: config.get("GOOGLE_CLIENT_SECRET"),
+            clientID: config.get('GOOGLE_CLIENT_ID'),
+            clientSecret: config.get('GOOGLE_CLIENT_SECRET'),
             callbackURL: host + '/api/auth/redirect-google',
             scope: ['email', 'profile'],
         });
@@ -32,7 +32,7 @@ let GoogleStrategy = class GoogleStrategy extends (0, passport_1.PassportStrateg
             firstName: name.givenName,
             lastName: name.familyName,
             picture: photos[0].value,
-            accessToken
+            accessToken,
         };
         done(null, user);
     }

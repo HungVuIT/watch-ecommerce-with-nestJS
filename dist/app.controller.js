@@ -37,7 +37,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "root2", null);
 __decorate([
-    (0, common_1.Get)("favicon.ico"),
+    (0, common_1.Get)('favicon.ico'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

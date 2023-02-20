@@ -7,8 +7,8 @@ import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 
 @Module({
-  imports: [JwtModule.register({}), MailModule],
-  providers: [AuthService, GoogleStrategy, FacebookStrategy],
-  controllers: [AuthController],
+    imports: [JwtModule.register({}), MailModule],
+    providers: [AuthService, GoogleStrategy, FacebookStrategy],
+    controllers: [AuthController],
 })
 export class AuthModule {}

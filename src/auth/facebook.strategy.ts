@@ -7,10 +7,7 @@ import { VerifiedCallback } from 'passport-jwt';
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     constructor(config: ConfigService) {
-        const host =
-            process.env.NODE_ENV === 'production'
-                ? 'https://dhwatch.onrender.com'
-                : 'http://localhost:8000';
+        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
 
         super({
             clientID: config.get('FACEBOOK_CLIENT_ID'),
@@ -23,20 +20,19 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
 
     async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifiedCallback): Promise<any> {
         try {
-            const { name, emails, id} = profile;
-        const user = {
-            id: id,
-            email: emails[0].value,
-            firstName: name.givenName,
-            lastName: name.familyName,
-            accessToken,
-            refreshToken
-        };
+            const { name, emails, id } = profile;
+            const user = {
+                id: id,
+                email: emails[0].value,
+                firstName: name.givenName,
+                lastName: name.familyName,
+                accessToken,
+                refreshToken,
+            };
 
-        done(null, user);
+            done(null, user);
         } catch (error) {
-            throw error
+            throw error;
         }
-        
     }
 }

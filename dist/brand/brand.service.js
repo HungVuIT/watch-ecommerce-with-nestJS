@@ -18,7 +18,7 @@ let BrandService = class BrandService {
     }
     async getById(BrandId) {
         try {
-            return await this.prisma.category.findUnique({
+            return await this.prisma.brand.findUnique({
                 where: {
                     id: BrandId,
                 },
@@ -30,19 +30,19 @@ let BrandService = class BrandService {
     }
     async getList() {
         try {
-            return await this.prisma.category.findMany({});
+            return await this.prisma.brand.findMany({});
         }
         catch (error) {
             throw error;
         }
     }
-    async editBrand(categoryId, body, file) {
+    async editBrand(brandId, body, file) {
         try {
             if (file) {
                 body.image = file.path;
             }
-            return await this.prisma.category.update({
-                where: { id: categoryId },
+            return await this.prisma.brand.update({
+                where: { id: brandId },
                 data: body,
             });
         }
@@ -57,7 +57,7 @@ let BrandService = class BrandService {
             if (file) {
                 body.image = file.path;
             }
-            return await this.prisma.category.create({
+            return await this.prisma.brand.create({
                 data: body,
             });
         }

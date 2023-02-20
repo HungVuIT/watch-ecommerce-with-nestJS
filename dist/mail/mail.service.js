@@ -19,9 +19,7 @@ let MailService = class MailService {
         this.prisma = prisma;
     }
     async sendUserConfirmation(to_email, token) {
-        const host = process.env.NODE_ENV === 'production'
-            ? 'https://dhwatch.onrender.com'
-            : 'http://localhost:8000';
+        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
         const url = host + `/api/auth/change-password-page?token=` + token;
         await this.mailerService.sendMail({
             to: to_email,

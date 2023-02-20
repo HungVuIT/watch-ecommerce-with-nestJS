@@ -24,8 +24,8 @@ MailModule = __decorate([
                     host: 'smtp.gmail.com',
                     secure: false,
                     auth: {
-                        user: config.get("EMAIL_USERNAME"),
-                        pass: config.get("EMAIL_PASSWORD"),
+                        user: config.get('EMAIL_USERNAME'),
+                        pass: config.get('EMAIL_PASSWORD'),
                     },
                 },
                 defaults: {

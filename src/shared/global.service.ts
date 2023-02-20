@@ -2,35 +2,35 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class globalVariables {
-  public static deliveryLocation: {
-    [index: string]: {
-      province: string;
-      district: string;
-      ward: string;
-      address: string;
-      deliveryOption: number;
-    };
-  } = {};
+    public static deliveryLocation: {
+        [index: string]: {
+            province: string;
+            district: string;
+            ward: string;
+            address: string;
+            deliveryOption: number;
+        };
+    } = {};
 
-  public static cartList: { [index: string]: any } = {};
+    public static cartList: { [index: string]: any } = {};
 
-  public static paymentHost: { [index: string]: string } = {};
+    public static paymentHost: { [index: string]: string } = {};
 
-  public static orderDetail: {
-    [index: string]: {
-      shipFee: number;
-      itemValue: number;
-      total: number;
-    };
-  } = {};
+    public static orderDetail: {
+        [index: string]: {
+            shipFee: number;
+            itemValue: number;
+            total: number;
+        };
+    } = {};
 
-  public static other: { [index: string]: any } = {};
+    public static other: { [index: string]: any } = {};
 
-  deleteUserInfor(userId: number) {
-    delete globalVariables.deliveryLocation[userId];
-    delete globalVariables.cartList[userId];
-    delete globalVariables.paymentHost[userId];
-    delete globalVariables.orderDetail[userId];
-    delete globalVariables.other[userId];
-  }
+    deleteUserInfor(userId: number) {
+        delete globalVariables.deliveryLocation[userId];
+        delete globalVariables.cartList[userId];
+        delete globalVariables.paymentHost[userId];
+        delete globalVariables.orderDetail[userId];
+        delete globalVariables.other[userId];
+    }
 }

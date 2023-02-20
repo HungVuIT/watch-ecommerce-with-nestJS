@@ -11,62 +11,61 @@ import { jwtGuard } from 'src/shared/guard';
 import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { RatingService } from './rating.service';
 
-class rateBody{
+class rateBody {
     @IsNotEmpty()
-    @Type(()=>Number)
+    @Type(() => Number)
     @IsNumber()
-    targetID: number
+    targetID: number;
 
     @IsNotEmpty()
     @IsNotEmpty()
-    @Type(()=>Number)
+    @Type(() => Number)
     @IsNumber()
-    @IsIn([1,2,3,4,5])
-    score: number
+    @IsIn([1, 2, 3, 4, 5])
+    score: number;
 }
 
 @UseInterceptors(TransResInterceptor)
 @UseInterceptors(FileInterceptor(''))
 @Controller('rating')
 export class RatingController {
-    constructor(private ratingService: RatingService){}
+    constructor(private ratingService: RatingService) {}
 
     @UseGuards(jwtGuard)
     @Post('shop')
-    rateShop(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.rateShop(userID, body.targetID, body.score)
-        return HttpStatus.OK
+    rateShop(@User('id') userID: number, @Body() body: rateBody) {
+        this.ratingService.rateShop(userID, body.targetID, body.score);
+        return HttpStatus.OK;
     }
 
     @UseGuards(jwtGuard)
     @Patch('shop')
-    updateRateShop(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.updateRateShop(userID, body.targetID, body.score)
-        return HttpStatus.OK
+    updateRateShop(@User('id') userID: number, @Body() body: rateBody) {
+        this.ratingService.updateRateShop(userID, body.targetID, body.score);
+        return HttpStatus.OK;
     }
 
     @Get('shop/:id')
-    getRateShop(@Param('id', ParseIntPipe) id: number){
-        return this.ratingService.getShopRate(id)
+    getRateShop(@Param('id', ParseIntPipe) id: number) {
+        return this.ratingService.getShopRate(id);
     }
 
     @UseGuards(jwtGuard)
     @Post('watch')
-    rateWatch(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.rateProduct(userID, body.targetID, body.score)
-        return HttpStatus.OK
+    rateWatch(@User('id') userID: number, @Body() body: rateBody) {
+        this.ratingService.rateProduct(userID, body.targetID, body.score);
+        return HttpStatus.OK;
     }
 
     @UseGuards(jwtGuard)
     @Patch('watch')
-    updateRateWatch(@User('id') userID: number, @Body() body:rateBody){
-        this.ratingService.updateRateProduct(userID, body.targetID, body.score)
-        return HttpStatus.OK
+    updateRateWatch(@User('id') userID: number, @Body() body: rateBody) {
+        this.ratingService.updateRateProduct(userID, body.targetID, body.score);
+        return HttpStatus.OK;
     }
 
     @Get('watch/:id')
-    getRateWatch(@Param('id', ParseIntPipe) id: number){
-        return this.ratingService.getProductRate(id)
+    getRateWatch(@Param('id', ParseIntPipe) id: number) {
+        return this.ratingService.getProductRate(id);
     }
-    
 }

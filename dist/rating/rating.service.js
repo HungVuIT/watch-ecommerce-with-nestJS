@@ -23,8 +23,8 @@ let RatingService = class RatingService {
                 data: {
                     UID: userID,
                     WID: productID,
-                    score: score
-                }
+                    score: score,
+                },
             });
         }
         catch (error) {
@@ -49,8 +49,8 @@ let RatingService = class RatingService {
                 data: {
                     UID: userID,
                     SID: shopID,
-                    score: score
-                }
+                    score: score,
+                },
             });
         }
         catch (error) {
@@ -65,8 +65,8 @@ let RatingService = class RatingService {
                     SID: shopID,
                 },
                 data: {
-                    score: score
-                }
+                    score: score,
+                },
             });
         }
         catch (error) {
@@ -77,11 +77,11 @@ let RatingService = class RatingService {
         try {
             await this.prisma.watch_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    WID: watchID
-                }
+                    WID: watchID,
+                },
             });
         }
         catch (error) {
@@ -92,11 +92,11 @@ let RatingService = class RatingService {
         try {
             const score = await this.prisma.shop_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    SID: shopID
-                }
+                    SID: shopID,
+                },
             });
             return score._avg.score;
         }
@@ -108,11 +108,11 @@ let RatingService = class RatingService {
         try {
             const score = await this.prisma.watch_rating.aggregate({
                 _avg: {
-                    score: true
+                    score: true,
                 },
                 where: {
-                    WID: watchID
-                }
+                    WID: watchID,
+                },
             });
             return score._avg.score;
         }
