@@ -1,9 +1,31 @@
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import { WsAdapter } from '@nestjs/platform-ws';
+import { ServerOptions } from 'http';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors.filter';
+
+export class SocketAdapter extends IoAdapter {
+    createIOServer(
+        port: number,
+        options?: ServerOptions & {
+            namespace?: string;
+            server?: any;
+        }
+    ) {
+        const server = super.createIOServer(port, {
+            ...options,
+            cors: {
+                origin: true,
+                methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH'],
+            },
+        });
+        return server;
+    }
+}
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -27,11 +49,19 @@ async function bootstrap() {
     app.setViewEngine('hbs');
     app.useGlobalFilters(new ErrorFilter());
 
+    // app.useWebSocketAdapter(new WsAdapter(app));
+
     app.enableCors({
         origin: true,
         methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH'],
         credentials: true,
     });
+
+    // app.enableCors({
+    //     origin: 'http://localhost:3000',
+    //   });
+    
+    app.useWebSocketAdapter(new SocketAdapter(app));
 
     await app.listen(process.env.PORT || 8000);
 }

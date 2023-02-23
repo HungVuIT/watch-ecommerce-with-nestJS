@@ -12,18 +12,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
+const prisma_service_1 = require("../prisma/prisma.service");
 const ulti_1 = require("./ulti");
 let ChatGateway = class ChatGateway {
-    handleConnection(client, userId) {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    handleConnection(client) {
+        const userId = Number(client.handshake.query.userId);
         const device = {
             userId: userId,
             socketId: client.id,
         };
+        console.log('connection');
         (0, ulti_1.addUser)(device);
     }
-    createRoom(socket, data) {
-        const user = (0, ulti_1.getUser)(data.receiverId);
-        socket.to(user.socketId).emit('server-send-data', { messenger: data.messenger });
+    async handleMessage(socket, data) {
+        const receiver = (0, ulti_1.getUser)(data.receiverId);
+        if (receiver) {
+            this.server.to(receiver.socketId).emit('server-send-data', data);
+        }
+        await this.prisma.conversation.create({
+            data: {
+                senderId: data.senderId,
+                receiverId: data.receiverId,
+                content: data.message,
+            },
+        });
     }
     handleDisconnection(client, userId) {
         const device = {
@@ -36,15 +51,16 @@ let ChatGateway = class ChatGateway {
 __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
-], ChatGateway.prototype, "Sever", void 0);
+], ChatGateway.prototype, "server", void 0);
 __decorate([
     (0, websockets_1.SubscribeMessage)('client-send-data'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", void 0)
-], ChatGateway.prototype, "createRoom", null);
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleMessage", null);
 ChatGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)()
+    (0, websockets_1.WebSocketGateway)({ namespace: '/chat-gate-way' }),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], ChatGateway);
 exports.ChatGateway = ChatGateway;
 //# sourceMappingURL=chat.gateway.js.map

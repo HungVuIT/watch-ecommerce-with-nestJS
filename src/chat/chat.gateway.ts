@@ -1,26 +1,41 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { addUser, getUser, removeUser } from './ulti';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: '/chat-gate-way' })
 export class ChatGateway {
     @WebSocketServer()
-    Sever: Server;
+    server: Server;
 
-    handleConnection(client: Socket, userId: number) {
+    constructor(private prisma: PrismaService) {}
+
+    handleConnection(client: Socket) {
+        const userId = Number(client.handshake.query.userId);
+
         const device = {
             userId: userId,
             socketId: client.id,
         };
-
+        console.log('connection');
         addUser(device);
     }
 
     @SubscribeMessage('client-send-data')
-    createRoom(socket: Socket, data: { messenger: string; receiverId: number }) {
-        const user = getUser(data.receiverId);
+    async handleMessage(socket: Socket, data: { message: string; receiverId: number; senderId: number }) {
+        const receiver = getUser(data.receiverId);
 
-        socket.to(user.socketId).emit('server-send-data', { messenger: data.messenger });
+        if (receiver) {
+            this.server.to(receiver.socketId).emit('server-send-data', data);
+        }
+
+        await this.prisma.conversation.create({
+            data: {
+                senderId: data.senderId,
+                receiverId: data.receiverId,
+                content: data.message,
+            },
+        });
     }
 
     handleDisconnection(client: Socket, userId: number) {

@@ -1,10 +1,14 @@
 import { Socket, Server } from 'socket.io';
+import { PrismaService } from 'src/prisma/prisma.service';
 export declare class ChatGateway {
-    Sever: Server;
-    handleConnection(client: Socket, userId: number): void;
-    createRoom(socket: Socket, data: {
-        messenger: string;
+    private prisma;
+    server: Server;
+    constructor(prisma: PrismaService);
+    handleConnection(client: Socket): void;
+    handleMessage(socket: Socket, data: {
+        message: string;
         receiverId: number;
-    }): void;
+        senderId: number;
+    }): Promise<void>;
     handleDisconnection(client: Socket, userId: number): void;
 }

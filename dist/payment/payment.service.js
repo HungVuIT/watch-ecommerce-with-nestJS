@@ -14,6 +14,9 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const paypal = require('paypal-rest-sdk');
 const global_service_1 = require("../shared/global.service");
+const vn_payments_1 = require("vn-payments");
+const querystring = require("qs");
+const crypto = require("crypto");
 let PaymentService = class PaymentService {
     constructor(config) {
         this.config = config;
@@ -157,6 +160,36 @@ let PaymentService = class PaymentService {
         catch (error) {
             throw error;
         }
+    }
+    async vnPay() {
+        const vnpay = new vn_payments_1.VNPay({
+            merchant: '891L1NN1',
+            paymentGateway: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+            secureSecret: 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT',
+        });
+        let date = new Date();
+        let signData = querystring.stringify('VNBANK', { encode: false });
+        let hmac = crypto.createHmac("sha512", 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT');
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");
+        let createDate = date.toDateString;
+        let orderId = '122224';
+        const checkoutData = {
+            createdDate: '31180112172309',
+            amount: 500000,
+            clientIp: '127.0.0.1',
+            locale: 'vn',
+            currency: 'VND',
+            orderId: orderId,
+            orderInfo: 'Thanh toan cho ma GD:' + orderId,
+            orderType: 'fashion',
+            returnUrl: 'http://localhost:8000/payment/callback',
+            transactionId: '985623145',
+            customerId: 'thanhvt',
+            bankCode: 'VNBANK',
+            vnpSecretKey: signed
+        };
+        const checkout = await vnpay.buildCheckoutUrl(checkoutData);
+        return checkout;
     }
 };
 PaymentService = __decorate([

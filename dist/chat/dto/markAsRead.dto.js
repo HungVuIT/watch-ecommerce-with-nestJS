@@ -9,26 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PaymentController = void 0;
-const common_1 = require("@nestjs/common");
-const payment_service_1 = require("./payment.service");
-let PaymentController = class PaymentController {
-    constructor(pay) {
-        this.pay = pay;
-    }
-    gngkt() {
-        return this.pay.vnPay();
-    }
-};
+exports.MarkAsReadConversationDTO = void 0;
+const class_validator_1 = require("class-validator");
+class MarkAsReadConversationDTO {
+}
 __decorate([
-    (0, common_1.Get)(''),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], PaymentController.prototype, "gngkt", null);
-PaymentController = __decorate([
-    (0, common_1.Controller)('payment'),
-    __metadata("design:paramtypes", [payment_service_1.PaymentService])
-], PaymentController);
-exports.PaymentController = PaymentController;
-//# sourceMappingURL=payment.controller.js.map
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], MarkAsReadConversationDTO.prototype, "senderId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], MarkAsReadConversationDTO.prototype, "receiverId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Date)
+], MarkAsReadConversationDTO.prototype, "createdAt", void 0);
+exports.MarkAsReadConversationDTO = MarkAsReadConversationDTO;
+//# sourceMappingURL=markAsRead.dto.js.map

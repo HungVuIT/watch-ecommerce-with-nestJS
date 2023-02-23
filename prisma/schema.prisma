@@ -353,3 +353,15 @@ model Shop_rating {
 
   score Int @default(0)
 }
+
+model Conversation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  senderId  Int
+
+  receiverId Int
+
+  content String
+}
