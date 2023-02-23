@@ -3,10 +3,9 @@ import { ConfigService } from '@nestjs/config';
 const paypal = require('paypal-rest-sdk');
 // const payout = require('@paypal/payouts-sdk');
 import { globalVariables } from 'src/shared/global.service';
-import * as querystring from 'qs'
-import * as crypto from 'crypto'
+import * as querystring from 'qs';
+import * as crypto from 'crypto';
 import { format } from 'date-fns';
-
 
 @Injectable()
 export class PaymentService {
@@ -269,25 +268,23 @@ export class PaymentService {
         }
     }
 
-    async vnPay() {
-
-
+    async VNPayCheckoutUrl() {
         let date = new Date();
-        
-        let tmnCode ="891L1NN1";
-        let secretKey = "DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT";
-        let vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        let returnUrl = "http://localhost:8000/api/payment/return";
-        let createDate =format(date, 'yyyyMMddHHmmss');
+
+        let tmnCode = '891L1NN1';
+        let secretKey = 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT';
+        let vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+        let returnUrl = 'http://localhost:8000/api/payment/return';
+        let createDate = format(date, 'yyyyMMddHHmmss');
         let orderId = date.getTime();
         let amount = 50000;
-        let bankCode = "VNBANK";
+        let bankCode = 'VNBANK';
         // VNPAYQR - VNBANK - INTCARD
-        
+
         let locale = 'vn';
         // vn - en
 
-        if(locale === null || locale === ''){
+        if (locale === null || locale === '') {
             locale = 'vn';
         }
         let currCode = 'VND';
@@ -304,17 +301,16 @@ export class PaymentService {
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
         vnp_Params['vnp_IpAddr'] = '118.70.192.52';
         vnp_Params['vnp_CreateDate'] = createDate;
-        if(bankCode !== null && bankCode !== ''){
+        if (bankCode !== null && bankCode !== '') {
             vnp_Params['vnp_BankCode'] = bankCode;
         }
-    
+
         vnp_Params = this.sortObject(vnp_Params);
-    
 
         let signData = querystring.stringify(vnp_Params, { encode: false });
-  
-        let hmac = crypto.createHmac("sha512", secretKey);
-        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
+
+        let hmac = crypto.createHmac('sha512', secretKey);
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
         vnp_Params['vnp_SecureHash'] = signed;
         vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
@@ -325,15 +321,29 @@ export class PaymentService {
         let sorted = {};
         let str = [];
         let key;
-        for (key in obj){
+        for (key in obj) {
             if (obj.hasOwnProperty(key)) {
-            str.push(encodeURIComponent(key));
+                str.push(encodeURIComponent(key));
             }
         }
         str.sort();
         for (key = 0; key < str.length; key++) {
-            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
         }
         return sorted;
+    }
+
+    VNPayReturn(req: any) {
+        let vnp_Params = req.query;
+
+        let secureHash = vnp_Params['vnp_SecureHash'];
+
+        delete vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHashType'];
+
+        vnp_Params = this.sortObject(vnp_Params);
+
+        console.log(vnp_Params['vnp_ResponseCode'])
+        return
     }
 }

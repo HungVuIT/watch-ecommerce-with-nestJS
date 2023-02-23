@@ -161,16 +161,16 @@ let PaymentService = class PaymentService {
             throw error;
         }
     }
-    async vnPay() {
+    async VNPayCheckoutUrl() {
         let date = new Date();
-        let tmnCode = "891L1NN1";
-        let secretKey = "DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT";
-        let vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        let returnUrl = "http://localhost:8000/api/payment/return";
+        let tmnCode = '891L1NN1';
+        let secretKey = 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT';
+        let vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+        let returnUrl = 'http://localhost:8000/api/payment/return';
         let createDate = (0, date_fns_1.format)(date, 'yyyyMMddHHmmss');
         let orderId = date.getTime();
         let amount = 50000;
-        let bankCode = "VNPAYQR";
+        let bankCode = 'VNBANK';
         let locale = 'vn';
         if (locale === null || locale === '') {
             locale = 'vn';
@@ -194,8 +194,8 @@ let PaymentService = class PaymentService {
         }
         vnp_Params = this.sortObject(vnp_Params);
         let signData = querystring.stringify(vnp_Params, { encode: false });
-        let hmac = crypto.createHmac("sha512", secretKey);
-        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");
+        let hmac = crypto.createHmac('sha512', secretKey);
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
         vnp_Params['vnp_SecureHash'] = signed;
         vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
         return vnpUrl;
@@ -211,9 +211,18 @@ let PaymentService = class PaymentService {
         }
         str.sort();
         for (key = 0; key < str.length; key++) {
-            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
         }
         return sorted;
+    }
+    VNPayReturn(req) {
+        let vnp_Params = req.query;
+        let secureHash = vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHashType'];
+        vnp_Params = this.sortObject(vnp_Params);
+        console.log(vnp_Params['vnp_ResponseCode']);
+        return;
     }
 };
 PaymentService = __decorate([

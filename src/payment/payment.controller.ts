@@ -1,4 +1,5 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { PaymentService } from './payment.service';
 
 @Controller('payment')
@@ -7,6 +8,11 @@ export class PaymentController {
     
     @Get('')
     gngkt(){
-        return this.pay.vnPay()
+        return this.pay.VNPayCheckoutUrl()
+    }
+
+    @Get('return')
+    gagrrg(@Req() req:Request){
+        return this.pay.VNPayReturn(req)
     }
 }
