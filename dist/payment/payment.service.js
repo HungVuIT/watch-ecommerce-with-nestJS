@@ -14,9 +14,9 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const paypal = require('paypal-rest-sdk');
 const global_service_1 = require("../shared/global.service");
-const vn_payments_1 = require("vn-payments");
 const querystring = require("qs");
 const crypto = require("crypto");
+const date_fns_1 = require("date-fns");
 let PaymentService = class PaymentService {
     constructor(config) {
         this.config = config;
@@ -162,34 +162,58 @@ let PaymentService = class PaymentService {
         }
     }
     async vnPay() {
-        const vnpay = new vn_payments_1.VNPay({
-            merchant: '891L1NN1',
-            paymentGateway: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-            secureSecret: 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT',
-        });
         let date = new Date();
-        let signData = querystring.stringify('VNBANK', { encode: false });
-        let hmac = crypto.createHmac("sha512", 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT');
+        let tmnCode = "891L1NN1";
+        let secretKey = "DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT";
+        let vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        let returnUrl = "http://localhost:8000/api/payment/return";
+        let createDate = (0, date_fns_1.format)(date, 'yyyyMMddHHmmss');
+        let orderId = date.getTime();
+        let amount = 50000;
+        let bankCode = "VNPAYQR";
+        let locale = 'vn';
+        if (locale === null || locale === '') {
+            locale = 'vn';
+        }
+        let currCode = 'VND';
+        let vnp_Params = {};
+        vnp_Params['vnp_Version'] = '2.1.0';
+        vnp_Params['vnp_Command'] = 'pay';
+        vnp_Params['vnp_TmnCode'] = tmnCode;
+        vnp_Params['vnp_Locale'] = locale;
+        vnp_Params['vnp_CurrCode'] = currCode;
+        vnp_Params['vnp_TxnRef'] = orderId;
+        vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
+        vnp_Params['vnp_OrderType'] = 'other';
+        vnp_Params['vnp_Amount'] = amount * 100;
+        vnp_Params['vnp_ReturnUrl'] = returnUrl;
+        vnp_Params['vnp_IpAddr'] = '118.70.192.52';
+        vnp_Params['vnp_CreateDate'] = createDate;
+        if (bankCode !== null && bankCode !== '') {
+            vnp_Params['vnp_BankCode'] = bankCode;
+        }
+        vnp_Params = this.sortObject(vnp_Params);
+        let signData = querystring.stringify(vnp_Params, { encode: false });
+        let hmac = crypto.createHmac("sha512", secretKey);
         let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");
-        let createDate = date.toDateString;
-        let orderId = '122224';
-        const checkoutData = {
-            createdDate: '31180112172309',
-            amount: 500000,
-            clientIp: '127.0.0.1',
-            locale: 'vn',
-            currency: 'VND',
-            orderId: orderId,
-            orderInfo: 'Thanh toan cho ma GD:' + orderId,
-            orderType: 'fashion',
-            returnUrl: 'http://localhost:8000/payment/callback',
-            transactionId: '985623145',
-            customerId: 'thanhvt',
-            bankCode: 'VNBANK',
-            vnpSecretKey: signed
-        };
-        const checkout = await vnpay.buildCheckoutUrl(checkoutData);
-        return checkout;
+        vnp_Params['vnp_SecureHash'] = signed;
+        vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+        return vnpUrl;
+    }
+    sortObject(obj) {
+        let sorted = {};
+        let str = [];
+        let key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                str.push(encodeURIComponent(key));
+            }
+        }
+        str.sort();
+        for (key = 0; key < str.length; key++) {
+            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+        }
+        return sorted;
     }
 };
 PaymentService = __decorate([

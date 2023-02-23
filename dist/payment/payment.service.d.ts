@@ -10,5 +10,6 @@ export declare class PaymentService {
     }[]): Promise<unknown>;
     succcessCheckout(userId: number): Promise<void>;
     payoutSeller(userId: number): Promise<void>;
-    vnPay(): Promise<URL>;
+    vnPay(): Promise<string>;
+    sortObject(obj: any): {};
 }
