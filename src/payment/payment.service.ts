@@ -343,7 +343,19 @@ export class PaymentService {
 
         vnp_Params = this.sortObject(vnp_Params);
 
-        console.log(vnp_Params['vnp_ResponseCode'])
-        return
+        let secretKey = 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT';
+
+        let signData = querystring.stringify(vnp_Params, { encode: false });
+
+        let hmac = crypto.createHmac('sha512', secretKey);
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+
+        if (secureHash === signed) {
+            //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+
+            return { code: vnp_Params['vnp_ResponseCode'] };
+        } else {
+            return { code: 97 };
+        }
     }
 }
