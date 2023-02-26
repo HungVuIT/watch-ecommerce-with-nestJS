@@ -49,7 +49,6 @@ export class WatchService {
             }
 
             query['include'] = { sale_off: true };
-            await this.prisma.watch.findMany({include:{}})
 
             const list = await this.prisma.watch.findMany(query);
 
