@@ -73,21 +73,6 @@ let RatingService = class RatingService {
             throw error;
         }
     }
-    async getProdcutRate(watchID) {
-        try {
-            await this.prisma.watch_rating.aggregate({
-                _avg: {
-                    score: true,
-                },
-                where: {
-                    WID: watchID,
-                },
-            });
-        }
-        catch (error) {
-            throw error;
-        }
-    }
     async getShopRate(shopID) {
         try {
             const score = await this.prisma.shop_rating.aggregate({

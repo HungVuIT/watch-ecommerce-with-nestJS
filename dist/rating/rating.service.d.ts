@@ -7,7 +7,6 @@ export declare class RatingService {
     updateRateProduct(userID: number, productID: number, score: number): Promise<void>;
     rateShop(userID: number, shopID: number, score: number): Promise<void>;
     updateRateShop(userID: number, shopID: number, score: number): Promise<void>;
-    getProdcutRate(watchID: number): Promise<void>;
     getShopRate(shopID: number): Promise<number>;
     getProductRate(watchID: number): Promise<number>;
 }

@@ -147,6 +147,7 @@ model Watch {
   Order_detail Order_detail[]
   Comment      Comment[]
   Watch_rating Watch_rating[]
+  Sale_off Sale_off?
 }
 
 enum Gender {
@@ -281,6 +282,8 @@ model Order_detail {
   quantity Int
   total    Float
   fee      Float
+
+  
 }
 
 model Delivery_detail {
@@ -358,10 +361,34 @@ model Conversation {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  senderId  Int
+
+  senderId Int
 
   receiverId Int
 
   content String
+}
+
+model Sale_off {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type saleType
+
+  amount Int
+
+  quantity Int
+
+  start DateTime
+
+  end  DateTime
+
+  watch Watch @relation(fields: [WID], references: [id])
+  WID Int  @unique
+}
+
+enum saleType {
+  fix
+  percent
 }

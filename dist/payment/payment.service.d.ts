@@ -12,5 +12,7 @@ export declare class PaymentService {
     payoutSeller(userId: number): Promise<void>;
     VNPayCheckoutUrl(): Promise<string>;
     sortObject(obj: any): {};
-    VNPayReturn(req: any): void;
+    VNPayReturn(req: any): {
+        code: any;
+    };
 }

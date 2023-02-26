@@ -4,5 +4,7 @@ export declare class PaymentController {
     private pay;
     constructor(pay: PaymentService);
     gngkt(): Promise<string>;
-    gagrrg(req: Request): void;
+    gagrrg(req: Request): {
+        code: any;
+    };
 }

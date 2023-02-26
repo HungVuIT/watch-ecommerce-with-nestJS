@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WatchService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const rating_service_1 = require("../rating/rating.service");
 let WatchService = class WatchService {
-    constructor(prisma) {
+    constructor(prisma, ratingService) {
         this.prisma = prisma;
+        this.ratingService = ratingService;
     }
     delete(prodcutId) {
         try {
@@ -48,7 +50,13 @@ let WatchService = class WatchService {
                 sort[value[0]] = value[1];
                 query['orderBy'] = sort;
             }
+            query['include'] = { Sale_off: true };
             const list = await this.prisma.watch.findMany(query);
+            await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
+                list.map((watch, index) => {
+                    watch['rating'] = rates[index];
+                });
+            });
             return list;
         }
         catch (error) {
@@ -57,9 +65,12 @@ let WatchService = class WatchService {
     }
     async findOne(watchID) {
         try {
-            return this.prisma.watch.findUnique({
+            const watch = await this.prisma.watch.findUnique({
                 where: { id: watchID },
             });
+            const rating = await this.ratingService.getProductRate(watchID);
+            watch['rating'] = rating;
+            return watch;
         }
         catch (error) {
             throw error;
@@ -126,7 +137,7 @@ let WatchService = class WatchService {
 };
 WatchService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService, rating_service_1.RatingService])
 ], WatchService);
 exports.WatchService = WatchService;
 //# sourceMappingURL=watch.service.js.map

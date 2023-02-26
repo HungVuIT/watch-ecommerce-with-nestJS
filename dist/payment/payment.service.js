@@ -221,8 +221,16 @@ let PaymentService = class PaymentService {
         delete vnp_Params['vnp_SecureHash'];
         delete vnp_Params['vnp_SecureHashType'];
         vnp_Params = this.sortObject(vnp_Params);
-        console.log(vnp_Params['vnp_ResponseCode']);
-        return;
+        let secretKey = 'DYCWCOMEWPNAOXLIXYELMZVJCYAXYWJT';
+        let signData = querystring.stringify(vnp_Params, { encode: false });
+        let hmac = crypto.createHmac('sha512', secretKey);
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+        if (secureHash === signed) {
+            return { code: vnp_Params['vnp_ResponseCode'] };
+        }
+        else {
+            return { code: 97 };
+        }
     }
 };
 PaymentService = __decorate([

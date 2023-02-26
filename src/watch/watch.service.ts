@@ -1,11 +1,13 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { watch } from 'fs';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { RatingService } from 'src/rating/rating.service';
 import { createWatchDto } from './dto/createWatch.dto';
 import { updateWatchDto } from './dto/updateWatch.dto';
 
 @Injectable()
 export class WatchService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private ratingService: RatingService) {}
 
     delete(prodcutId: number) {
         try {
@@ -46,7 +48,15 @@ export class WatchService {
                 query['orderBy'] = sort;
             }
 
+            query['include'] = { Sale_off: true };
+
             const list = await this.prisma.watch.findMany(query);
+
+            await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
+                list.map((watch, index) => {
+                    watch['rating'] = rates[index];
+                });
+            });
 
             return list;
         } catch (error) {
@@ -56,9 +66,15 @@ export class WatchService {
 
     async findOne(watchID: number) {
         try {
-            return this.prisma.watch.findUnique({
+            const watch = await this.prisma.watch.findUnique({
                 where: { id: watchID },
             });
+
+            const rating = await this.ratingService.getProductRate(watchID);
+
+            watch['rating'] = rating;
+
+            return watch;
         } catch (error) {
             throw error;
         }
