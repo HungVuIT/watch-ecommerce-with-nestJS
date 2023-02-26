@@ -50,7 +50,8 @@ let WatchService = class WatchService {
                 sort[value[0]] = value[1];
                 query['orderBy'] = sort;
             }
-            query['include'] = { Sale_off: true };
+            query['include'] = { sale_off: true };
+            await this.prisma.watch.findMany({ include: {} });
             const list = await this.prisma.watch.findMany(query);
             await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
                 list.map((watch, index) => {
