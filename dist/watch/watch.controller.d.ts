@@ -10,6 +10,8 @@ export declare class WatchController {
     editWatch(id: number, req: tsRequest, body: updateWatchDto, file: Express.Multer.File[]): Promise<import(".prisma/client").Watch>;
     getList(query: any): Promise<import(".prisma/client").Watch[]>;
     deleteWatch(id: number): void;
-    getWatch(id: number): Promise<import(".prisma/client").Watch>;
+    getWatch(id: number): Promise<import(".prisma/client").Watch & {
+        sale_off: import(".prisma/client").Sale_off;
+    }>;
     search(searchTxt: string): Promise<import(".prisma/client").Watch[]>;
 }

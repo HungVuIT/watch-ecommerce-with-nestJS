@@ -147,7 +147,7 @@ model Watch {
   Order_detail Order_detail[]
   Comment      Comment[]
   Watch_rating Watch_rating[]
-  sale_off Sale_off? 
+  sale_off Sale_off?
 }
 
 enum Gender {

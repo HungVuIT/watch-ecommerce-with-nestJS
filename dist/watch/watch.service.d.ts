@@ -8,7 +8,9 @@ export declare class WatchService {
     constructor(prisma: PrismaService, ratingService: RatingService);
     delete(prodcutId: number): void;
     findMany(option: any): Promise<import(".prisma/client").Watch[]>;
-    findOne(watchID: number): Promise<import(".prisma/client").Watch>;
+    findOne(watchID: number): Promise<import(".prisma/client").Watch & {
+        sale_off: import(".prisma/client").Sale_off;
+    }>;
     isOwner(shopId: number, productId: number): Promise<void>;
     update(productId: number, body: updateWatchDto, imageFiles: any): Promise<import(".prisma/client").Watch>;
     create(shopId: number, body: createWatchDto, imageFiles: any): Promise<import(".prisma/client").Watch>;

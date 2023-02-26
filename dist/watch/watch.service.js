@@ -67,6 +67,7 @@ let WatchService = class WatchService {
         try {
             const watch = await this.prisma.watch.findUnique({
                 where: { id: watchID },
+                include: { sale_off: true },
             });
             const rating = await this.ratingService.getProductRate(watchID);
             watch['rating'] = rating;
