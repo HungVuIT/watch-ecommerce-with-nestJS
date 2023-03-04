@@ -21,7 +21,7 @@ let CartService = class CartService {
             const cart = await this.prisma.cart.findMany({
                 where: { UID: userId },
                 include: {
-                    watch: true
+                    watch: true,
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -47,11 +47,27 @@ let CartService = class CartService {
     }
     async addItem(userId, body) {
         try {
-            await this.prisma.cart.create({
-                data: {
+            const cart = await this.prisma.cart.findFirst({
+                where: {
                     UID: userId,
                     WID: body.itemId,
-                    quantity: body.quantity || 1,
+                },
+            });
+            if (!cart) {
+                return await this.prisma.cart.create({
+                    data: {
+                        UID: userId,
+                        WID: body.itemId,
+                        quantity: body.quantity || 1,
+                    },
+                });
+            }
+            return await this.prisma.cart.update({
+                data: {
+                    quantity: { increment: body.quantity },
+                },
+                where: {
+                    id: cart.id,
                 },
             });
         }

@@ -13,15 +13,15 @@ export declare class RecommendService {
     list_watch_and_rating(): Promise<{
         id: number;
         Watch_rating: {
-            score: number;
             UID: number;
+            score: number;
         }[];
     }[]>;
     watch_and_rating(id: number): Promise<{
         id: number;
         Watch_rating: {
-            score: number;
             UID: number;
+            score: number;
         }[];
     }>;
     chuanhoa(baseItem: Item, recItem: Item): {

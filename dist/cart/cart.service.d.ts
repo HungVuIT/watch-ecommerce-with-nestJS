@@ -8,6 +8,6 @@ export declare class CartService {
         watch: import(".prisma/client").Watch;
     })[]>;
     deleteItem(cartId: number): Promise<void>;
-    addItem(userId: number, body: addItemDto): Promise<void>;
+    addItem(userId: number, body: addItemDto): Promise<import(".prisma/client").Cart>;
     updateItem(userId: number, body: updateItemDto): Promise<void>;
 }
