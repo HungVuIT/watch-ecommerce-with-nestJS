@@ -1,3 +1,4 @@
+import { Gender } from '@prisma/client';
 export declare class userDto {
     email: string;
     phoneNumber: string;
@@ -7,6 +8,7 @@ export declare class userDto {
     district: string;
     ward: string;
     address: string;
+    gender: Gender;
     birthDay: Date;
     avatar: string;
 }

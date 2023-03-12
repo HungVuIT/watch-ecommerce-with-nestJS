@@ -1,5 +1,6 @@
+import { Gender } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsDate, IsEmail, IsISO8601, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsISO8601, IsNumberString, IsOptional, IsString } from 'class-validator';
 export class userDto {
     @IsEmail()
     @IsOptional()
@@ -32,6 +33,10 @@ export class userDto {
     @IsString()
     @IsOptional()
     address: string;
+
+    @IsEnum([Gender.female, Gender.male, Gender.none])
+    @IsOptional()
+    gender: Gender;
 
     @Type(() => Date)
     @IsOptional()

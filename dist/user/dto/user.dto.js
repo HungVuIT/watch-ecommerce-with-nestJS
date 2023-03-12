@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userDto = void 0;
+const client_1 = require("@prisma/client");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class userDto {
@@ -54,6 +55,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], userDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)([client_1.Gender.female, client_1.Gender.male, client_1.Gender.none]),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], userDto.prototype, "gender", void 0);
 __decorate([
     (0, class_transformer_1.Type)(() => Date),
     (0, class_validator_1.IsOptional)(),

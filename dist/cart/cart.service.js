@@ -64,7 +64,7 @@ let CartService = class CartService {
             }
             return await this.prisma.cart.update({
                 data: {
-                    quantity: { increment: body.quantity },
+                    quantity: { increment: body.quantity || 1 },
                 },
                 where: {
                     id: cart.id,

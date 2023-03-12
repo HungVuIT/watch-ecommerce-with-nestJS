@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
+  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
 }
 
 datasource db {
@@ -32,7 +32,7 @@ model User {
   district String?
   ward     String?
   address  String?
-  gender   String?
+  gender   Gender?
   birthDay DateTime?
 
   avatar String   @default("https://res.cloudinary.com/vhh/image/upload/v1665845758/watch-ecommerce/istockphoto-476085198-612x612_bt6y0m.jpg")
@@ -121,13 +121,13 @@ model Watch {
   CID Int[]
 
   sku         String?
+  slug    String?
   description String?
   content     String?
 
   quantity   Int
   saled      Int @default(0)
   price      Int
-  priceFloor Int
 
   gender       Gender    @default(none)
   materialCord String?
@@ -140,6 +140,15 @@ model Watch {
   madeBy       String?
   image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
   warranty     DateTime?
+
+  isOld        Boolean  @default(false)
+  status        String?
+  include       String?
+  used          String?
+  resalePrice   Int?
+
+  prioritize  Boolean @default(false)
+  
   isActive     Boolean   @default(true)
 
   Favorite     Favorite[]
@@ -149,6 +158,7 @@ model Watch {
   Watch_rating Watch_rating[]
   sale_off Sale_off?
 }
+
 
 enum Gender {
   male
