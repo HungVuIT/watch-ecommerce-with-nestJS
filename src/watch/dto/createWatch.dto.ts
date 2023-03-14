@@ -36,11 +36,6 @@ export class createWatchDto {
     @IsInt()
     price: number;
 
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsInt()
-    priceFloor: number;
-
     @IsOptional()
     @IsString()
     @IsIn([Gender.female, Gender.male, Gender.none])

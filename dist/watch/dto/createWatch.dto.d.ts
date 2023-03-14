@@ -8,7 +8,6 @@ export declare class createWatchDto {
     content: string;
     quantity: number;
     price: number;
-    priceFloor: number;
     gender: Gender;
     materialCord: string;
     glassSurface: string;
