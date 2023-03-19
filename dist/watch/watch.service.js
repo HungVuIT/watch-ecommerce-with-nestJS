@@ -35,9 +35,9 @@ let WatchService = class WatchService {
                 query['skip'] = Number(option.skip);
             if (option.take)
                 query['take'] = Number(option.take);
-            if (option.search)
-                query['where'].AND.push({ name: { search: option.search, } });
             query['where'] = { AND: [] };
+            if (option.search)
+                query['where'].AND.push({ name: { contains: option.search, mode: 'insensitive' } });
             if (option.shopId)
                 query['where'].AND.push({ SID: Number(option.shopId) });
             if (option.price) {
