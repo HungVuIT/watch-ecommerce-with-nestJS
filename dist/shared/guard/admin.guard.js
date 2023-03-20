@@ -19,7 +19,7 @@ let AdminGuard = class AdminGuard {
     canActivate(context) {
         const request = context.switchToHttp().getRequest();
         const user = request.user;
-        if (user.role === 'VENDOR')
+        if (user.role === 'ADMIN')
             return true;
         else
             return false;
