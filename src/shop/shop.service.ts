@@ -76,13 +76,15 @@ export class ShopService {
         }
     ) {
         try {
-            if (files.logo) {
-                body.logo = files.logo[0].path;
-            }
+            if(files){
+                if (files.logo) {
+                    body.logo = files.logo[0].path;
+                }
 
-            if (files.banner) {
-                body.banner = files.banner[0].path;
-            }
+                if (files.banner) {
+                    body.banner = files.banner[0].path;
+                }
+            }  
 
             const shop = await this.prisma.shop.update({
                 where: { UID: id },
@@ -122,8 +124,6 @@ export class ShopService {
             return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
         }
     }
-
-    myShop() {}
 
     async addPayment(shopId: number, email: string) {
         try {

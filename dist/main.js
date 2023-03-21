@@ -7,6 +7,7 @@ const platform_socket_io_1 = require("@nestjs/platform-socket.io");
 const path_1 = require("path");
 const app_module_1 = require("./app.module");
 const errors_filter_1 = require("./errors.filter");
+const cors = require('cors');
 class SocketAdapter extends platform_socket_io_1.IoAdapter {
     createIOServer(port, options) {
         const server = super.createIOServer(port, Object.assign(Object.assign({}, options), { cors: {

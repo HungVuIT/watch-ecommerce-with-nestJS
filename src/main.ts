@@ -7,6 +7,7 @@ import { ServerOptions } from 'http';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors.filter';
+const cors = require('cors');
 
 export class SocketAdapter extends IoAdapter {
     createIOServer(
@@ -56,11 +57,13 @@ async function bootstrap() {
         methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH'],
         credentials: true,
     });
-
+    
+    // app.use(cors());
     // app.enableCors({
     //     origin: 'http://localhost:3000',
-    //   });
-    
+    //     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH'],
+    // });
+
     app.useWebSocketAdapter(new SocketAdapter(app));
 
     await app.listen(process.env.PORT || 8000);

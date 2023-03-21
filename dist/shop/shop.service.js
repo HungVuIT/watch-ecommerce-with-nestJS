@@ -67,11 +67,13 @@ let ShopService = class ShopService {
     }
     async updateByUserId(id, body, files) {
         try {
-            if (files.logo) {
-                body.logo = files.logo[0].path;
-            }
-            if (files.banner) {
-                body.banner = files.banner[0].path;
+            if (files) {
+                if (files.logo) {
+                    body.logo = files.logo[0].path;
+                }
+                if (files.banner) {
+                    body.banner = files.banner[0].path;
+                }
             }
             const shop = await this.prisma.shop.update({
                 where: { UID: id },
@@ -102,7 +104,6 @@ let ShopService = class ShopService {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
         }
     }
-    myShop() { }
     async addPayment(shopId, email) {
         try {
             return await this.prisma.shopWallet.create({

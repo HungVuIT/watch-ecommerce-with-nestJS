@@ -13,6 +13,5 @@ export declare class ShopService {
         banner?: Express.Multer.File[];
     }): Promise<import(".prisma/client").Shop | HttpException>;
     create(userId: number, body: createShopDto): Promise<import(".prisma/client").Shop | HttpException>;
-    myShop(): void;
     addPayment(shopId: number, email: string): Promise<HttpException | import(".prisma/client").ShopWallet>;
 }
