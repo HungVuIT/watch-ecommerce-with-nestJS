@@ -5,24 +5,26 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Type } from 'class-transformer';
-import { IsIn, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { jwtGuard } from 'src/shared/guard';
 import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { RatingService } from './rating.service';
 
-class rateBody {
+export class rateBody {
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     targetID: number;
 
     @IsNotEmpty()
-    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsIn([1, 2, 3, 4, 5])
     score: number;
+
+    @IsOptional()
+    content: string;
 }
 
 @UseInterceptors(TransResInterceptor)
@@ -34,14 +36,14 @@ export class RatingController {
     @UseGuards(jwtGuard)
     @Post('shop')
     rateShop(@User('id') userID: number, @Body() body: rateBody) {
-        this.ratingService.rateShop(userID, body.targetID, body.score);
+        this.ratingService.rateShop(userID, body);
         return HttpStatus.OK;
     }
 
     @UseGuards(jwtGuard)
     @Patch('shop')
     updateRateShop(@User('id') userID: number, @Body() body: rateBody) {
-        this.ratingService.updateRateShop(userID, body.targetID, body.score);
+        this.ratingService.updateRateShop(userID, body);
         return HttpStatus.OK;
     }
 
@@ -53,14 +55,14 @@ export class RatingController {
     @UseGuards(jwtGuard)
     @Post('watch')
     rateWatch(@User('id') userID: number, @Body() body: rateBody) {
-        this.ratingService.rateProduct(userID, body.targetID, body.score);
+        this.ratingService.rateProduct(userID, body);
         return HttpStatus.OK;
     }
 
     @UseGuards(jwtGuard)
     @Patch('watch')
     updateRateWatch(@User('id') userID: number, @Body() body: rateBody) {
-        this.ratingService.updateRateProduct(userID, body.targetID, body.score);
+        this.ratingService.updateRateProduct(userID, body);
         return HttpStatus.OK;
     }
 

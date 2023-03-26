@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { rateBody } from './rating.controller';
 
 @Injectable()
 export class RatingService {
     constructor(config: ConfigService, private prisma: PrismaService) {}
 
-    async rateProduct(userID: number, productID: number, score: number) {
+    async rateProduct(userID: number, body: rateBody) {
         try {
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,
-                    WID: productID,
-                    score: score,
+                    WID: body.targetID,
+                    score: body.score,
+                    content: body.content,
                 },
             });
         } catch (error) {
@@ -20,25 +22,40 @@ export class RatingService {
         }
     }
 
-    async updateRateProduct(userID: number, productID: number, score: number) {
+    async updateRateProduct(userID: number,  body: rateBody) {
+        // try {
+        //     await this.prisma.$queryRaw`
+        //     update "Watch_rating"
+        //     set "score" = ${score}
+        //     where "UID" = ${userID} and "WID" = ${productID}
+        //     `;
+        // } catch (error) {
+        //     throw error;
+        // }
         try {
-            await this.prisma.$queryRaw`
-            update "Watch_rating"
-            set "score" = ${score}
-            where "UID" = ${userID} and "WID" = ${productID}
-            `;
+            await this.prisma.watch_rating.updateMany({
+                where: {
+                    UID: userID,
+                    WID: body.targetID
+                },
+                data: {
+                    score: body.score,
+                    content: body.content
+                },
+            });
         } catch (error) {
             throw error;
         }
     }
 
-    async rateShop(userID: number, shopID: number, score: number) {
+    async rateShop(userID: number, body: rateBody) {
         try {
             await this.prisma.shop_rating.create({
                 data: {
                     UID: userID,
-                    SID: shopID,
-                    score: score,
+                    SID: body.targetID,
+                    score: body.score,
+                    content: body.content,
                 },
             });
         } catch (error) {
@@ -46,15 +63,16 @@ export class RatingService {
         }
     }
 
-    async updateRateShop(userID: number, shopID: number, score: number) {
+    async updateRateShop(userID: number,  body: rateBody) {
         try {
             await this.prisma.shop_rating.updateMany({
                 where: {
                     UID: userID,
-                    SID: shopID,
+                    SID: body.targetID
                 },
                 data: {
-                    score: score,
+                    score: body.score,
+                    content: body.content
                 },
             });
         } catch (error) {

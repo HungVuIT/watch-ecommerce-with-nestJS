@@ -17,13 +17,14 @@ let RatingService = class RatingService {
     constructor(config, prisma) {
         this.prisma = prisma;
     }
-    async rateProduct(userID, productID, score) {
+    async rateProduct(userID, body) {
         try {
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,
-                    WID: productID,
-                    score: score,
+                    WID: body.targetID,
+                    score: body.score,
+                    content: body.content,
                 },
             });
         }
@@ -31,25 +32,31 @@ let RatingService = class RatingService {
             throw error;
         }
     }
-    async updateRateProduct(userID, productID, score) {
+    async updateRateProduct(userID, body) {
         try {
-            await this.prisma.$queryRaw `
-            update "Watch_rating"
-            set "score" = ${score}
-            where "UID" = ${userID} and "WID" = ${productID}
-            `;
+            await this.prisma.watch_rating.updateMany({
+                where: {
+                    UID: userID,
+                    WID: body.targetID
+                },
+                data: {
+                    score: body.score,
+                    content: body.content
+                },
+            });
         }
         catch (error) {
             throw error;
         }
     }
-    async rateShop(userID, shopID, score) {
+    async rateShop(userID, body) {
         try {
             await this.prisma.shop_rating.create({
                 data: {
                     UID: userID,
-                    SID: shopID,
-                    score: score,
+                    SID: body.targetID,
+                    score: body.score,
+                    content: body.content,
                 },
             });
         }
@@ -57,15 +64,16 @@ let RatingService = class RatingService {
             throw error;
         }
     }
-    async updateRateShop(userID, shopID, score) {
+    async updateRateShop(userID, body) {
         try {
             await this.prisma.shop_rating.updateMany({
                 where: {
                     UID: userID,
-                    SID: shopID,
+                    SID: body.targetID
                 },
                 data: {
-                    score: score,
+                    score: body.score,
+                    content: body.content
                 },
             });
         }

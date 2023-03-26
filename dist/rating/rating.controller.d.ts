@@ -1,8 +1,9 @@
 import { HttpStatus } from '@nestjs/common/enums';
 import { RatingService } from './rating.service';
-declare class rateBody {
+export declare class rateBody {
     targetID: number;
     score: number;
+    content: string;
 }
 export declare class RatingController {
     private ratingService;
@@ -14,4 +15,3 @@ export declare class RatingController {
     updateRateWatch(userID: number, body: rateBody): HttpStatus;
     getRateWatch(id: number): Promise<number>;
 }
-export {};

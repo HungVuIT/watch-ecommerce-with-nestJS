@@ -351,6 +351,7 @@ model Watch_rating {
   WID   Int
 
   score Int @default(0)
+  content String?
 }
 
 model Shop_rating {
@@ -365,6 +366,7 @@ model Shop_rating {
   SID  Int
 
   score Int @default(0)
+  content String?
 }
 
 model Conversation {

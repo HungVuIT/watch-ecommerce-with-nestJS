@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RatingController = void 0;
+exports.RatingController = exports.rateBody = void 0;
 const common_1 = require("@nestjs/common");
 const decorators_1 = require("@nestjs/common/decorators");
 const enums_1 = require("@nestjs/common/enums");
@@ -34,33 +34,37 @@ __decorate([
 ], rateBody.prototype, "targetID", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNotEmpty)(),
     (0, class_transformer_1.Type)(() => Number),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsIn)([1, 2, 3, 4, 5]),
     __metadata("design:type", Number)
 ], rateBody.prototype, "score", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], rateBody.prototype, "content", void 0);
+exports.rateBody = rateBody;
 let RatingController = class RatingController {
     constructor(ratingService) {
         this.ratingService = ratingService;
     }
     rateShop(userID, body) {
-        this.ratingService.rateShop(userID, body.targetID, body.score);
+        this.ratingService.rateShop(userID, body);
         return enums_1.HttpStatus.OK;
     }
     updateRateShop(userID, body) {
-        this.ratingService.updateRateShop(userID, body.targetID, body.score);
+        this.ratingService.updateRateShop(userID, body);
         return enums_1.HttpStatus.OK;
     }
     getRateShop(id) {
         return this.ratingService.getShopRate(id);
     }
     rateWatch(userID, body) {
-        this.ratingService.rateProduct(userID, body.targetID, body.score);
+        this.ratingService.rateProduct(userID, body);
         return enums_1.HttpStatus.OK;
     }
     updateRateWatch(userID, body) {
-        this.ratingService.updateRateProduct(userID, body.targetID, body.score);
+        this.ratingService.updateRateProduct(userID, body);
         return enums_1.HttpStatus.OK;
     }
     getRateWatch(id) {
