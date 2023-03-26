@@ -4,7 +4,7 @@ import { OrderService } from './order.service';
 export declare class OrderController {
     private orderService;
     constructor(orderService: OrderService);
-    createOrder(id: number, body: createOrderDto, req: Request): Promise<{
+    createOrder(id: number, body: createOrderDto, req: Request): Promise<import(".prisma/client").Order | {
         href: unknown;
         total: number;
         shipFee: number;

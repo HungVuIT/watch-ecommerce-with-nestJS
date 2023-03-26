@@ -16,6 +16,7 @@ export declare class OrderService {
         shipFee: number;
     }>;
     completeOrder(userId: number): Promise<import(".prisma/client").Order>;
+    cashOnDelivery(userId: number): Promise<import(".prisma/client").Order>;
     getOrders(userId: number): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(orderId: number): Promise<import(".prisma/client").Order_detail[]>;
 }

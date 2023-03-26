@@ -37,7 +37,10 @@ let OrderController = class OrderController {
             process.env.NODE_ENV === 'production'
                 ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
                 : 'http://localhost:8000/api/order/' + id.toString();
-        console.log(global_service_1.globalVariables.paymentHost[id]);
+        if (body.paymentMethod === 'offline') {
+            const order = await this.orderService.cashOnDelivery(id);
+            return order;
+        }
         const order = await this.orderService.createLinkPaymant(id);
         return order;
     }

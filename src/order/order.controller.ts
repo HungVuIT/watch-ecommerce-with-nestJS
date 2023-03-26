@@ -30,8 +30,12 @@ export class OrderController {
                 ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
                 : 'http://localhost:8000/api/order/' + id.toString();
 
-        console.log(globalVariables.paymentHost[id]);
+        if (body.paymentMethod === 'offline') {
+            const order = await this.orderService.cashOnDelivery(id);
 
+            return order;
+        }
+        
         const order = await this.orderService.createLinkPaymant(id);
 
         return order;
