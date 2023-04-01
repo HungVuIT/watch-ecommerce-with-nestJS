@@ -7,7 +7,7 @@ import { VerifiedCallback } from 'passport-jwt';
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     constructor(config: ConfigService) {
-        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
+        const host  = 'https://dhwatch.onrender.com' ;
 
         super({
             clientID: config.get('FACEBOOK_CLIENT_ID'),
