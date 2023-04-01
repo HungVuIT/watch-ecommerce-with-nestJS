@@ -9,9 +9,9 @@ import { updateWatchDto } from './dto/updateWatch.dto';
 export class WatchService {
     constructor(private prisma: PrismaService, private ratingService: RatingService) {}
 
-    delete(prodcutId: number) {
+    async delete(prodcutId: number) {
         try {
-            this.prisma.watch.delete({
+            return await this.prisma.watch.delete({
                 where: { id: prodcutId },
             });
         } catch (error) {

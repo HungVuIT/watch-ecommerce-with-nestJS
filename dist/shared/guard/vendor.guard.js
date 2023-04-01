@@ -28,8 +28,10 @@ let VendorGuard = class VendorGuard {
             request.shop = shop;
             return true;
         }
-        else
-            return false;
+        else if (user.role === "ADMIN") {
+            return true;
+        }
+        return false;
     }
 };
 VendorGuard = __decorate([

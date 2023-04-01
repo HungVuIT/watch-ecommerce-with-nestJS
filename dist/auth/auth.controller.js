@@ -39,13 +39,15 @@ let AuthController = class AuthController {
         return common_1.HttpStatus.OK;
     }
     googleAuthRedirect(req) {
-        return this.authService.googleLogin(req);
+        const result = this.authService.googleLogin(req);
+        return result;
     }
     async facebookAuth(req) {
         return common_1.HttpStatus.OK;
     }
     facebookAuthRedirect(req) {
-        return this.authService.facebookLogin(req);
+        const result = this.authService.facebookLogin(req);
+        return result;
     }
     resetPassword(email) {
         return this.authService.sendResetPassMail(email);
@@ -93,6 +95,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('redirect-google'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
+    (0, decorators_1.Render)('signOauth2'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -109,6 +112,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('redirect-facebook'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('facebook')),
+    (0, decorators_1.Render)('signOauth2'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

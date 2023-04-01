@@ -13,6 +13,9 @@ export class CommentService {
                 orderBy: { createdAt: 'desc' },
                 skip: query.skip,
                 take: query.take,
+                include: {
+                    user: true
+                }
             });
         } catch (error) {
             throw error;

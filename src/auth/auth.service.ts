@@ -35,6 +35,7 @@ export class AuthService {
                         firstName: firstName,
                         lastName: lastName,
                         avatar: picture,
+                        email: email
                     },
                 });
             }

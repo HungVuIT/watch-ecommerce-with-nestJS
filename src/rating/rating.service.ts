@@ -91,7 +91,16 @@ export class RatingService {
                 },
             });
 
-            return score._avg.score;
+            const list = await this.prisma.shop_rating.findMany({
+                where: {
+                    SID: shopID
+                },
+                include: {
+                    user: true
+                }
+            })
+
+            return {score: score._avg.score, list: list}
         } catch (error) {
             throw error;
         }
@@ -108,7 +117,16 @@ export class RatingService {
                 },
             });
 
-            return score._avg.score;
+            const list = await this.prisma.watch_rating.findMany({
+                where: {
+                    WID: watchID
+                },
+                include: {
+                    user: true
+                }
+            })
+
+            return {score: score._avg.score, list: list}
         } catch (error) {
             throw error;
         }

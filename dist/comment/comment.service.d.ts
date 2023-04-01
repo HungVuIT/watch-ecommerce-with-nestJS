@@ -3,7 +3,9 @@ import { CommentDto } from './dto/comment.dto';
 export declare class CommentService {
     private prisma;
     constructor(prisma: PrismaService);
-    getCmtOfWatch(watchId: number, query: any): Promise<import(".prisma/client").Comment[]>;
+    getCmtOfWatch(watchId: number, query: any): Promise<(import(".prisma/client").Comment & {
+        user: import(".prisma/client").User;
+    })[]>;
     cmtOnWatch(userId: number, body: CommentDto): Promise<void>;
     deleteCmt(id: number): Promise<import(".prisma/client").Comment>;
 }

@@ -9,36 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommentService = void 0;
+exports.FavoriteService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
-let CommentService = class CommentService {
+let FavoriteService = class FavoriteService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async getCmtOfWatch(watchId, query) {
+    async getList(userId) {
         try {
-            return await this.prisma.comment.findMany({
-                where: { WID: watchId },
-                orderBy: { createdAt: 'desc' },
-                skip: query.skip,
-                take: query.take,
+            const favorite = await this.prisma.favorite.findMany({
+                where: { UID: userId },
                 include: {
-                    user: true
-                }
+                    watch: true,
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
             });
+            return favorite;
         }
         catch (error) {
             throw error;
         }
     }
-    async cmtOnWatch(userId, body) {
+    async deleteItem(favoriteId) {
         try {
-            await this.prisma.comment.create({
-                data: {
-                    UID: userId,
-                    WID: body.watchId,
-                    content: body.content,
+            await this.prisma.favorite.delete({
+                where: {
+                    id: favoriteId,
                 },
             });
         }
@@ -46,20 +45,31 @@ let CommentService = class CommentService {
             throw error;
         }
     }
-    async deleteCmt(id) {
+    async addItem(userId, body) {
         try {
-            return this.prisma.comment.delete({
-                where: { id: id },
+            const favorite = await this.prisma.favorite.findFirst({
+                where: {
+                    UID: userId,
+                    WID: body.itemId,
+                },
             });
+            if (!favorite) {
+                return await this.prisma.favorite.create({
+                    data: {
+                        UID: userId,
+                        WID: body.itemId
+                    },
+                });
+            }
         }
         catch (error) {
             throw error;
         }
     }
 };
-CommentService = __decorate([
+FavoriteService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
-], CommentService);
-exports.CommentService = CommentService;
-//# sourceMappingURL=comment.service.js.map
+], FavoriteService);
+exports.FavoriteService = FavoriteService;
+//# sourceMappingURL=favorite.service.js.map

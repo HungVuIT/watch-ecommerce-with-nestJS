@@ -10,8 +10,18 @@ export declare class RatingController {
     constructor(ratingService: RatingService);
     rateShop(userID: number, body: rateBody): HttpStatus;
     updateRateShop(userID: number, body: rateBody): HttpStatus;
-    getRateShop(id: number): Promise<number>;
+    getRateShop(id: number): Promise<{
+        score: number;
+        list: (import(".prisma/client").Shop_rating & {
+            user: import(".prisma/client").User;
+        })[];
+    }>;
     rateWatch(userID: number, body: rateBody): HttpStatus;
     updateRateWatch(userID: number, body: rateBody): HttpStatus;
-    getRateWatch(id: number): Promise<number>;
+    getRateWatch(id: number): Promise<{
+        score: number;
+        list: (import(".prisma/client").Watch_rating & {
+            user: import(".prisma/client").User;
+        })[];
+    }>;
 }

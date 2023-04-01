@@ -55,7 +55,7 @@ export class WatchController {
         return this.watchService.findMany(query);
     }
 
-    @UseGuards(jwtGuard, VendorGuard)
+    @UseGuards(jwtGuard,VendorGuard)
     @Delete('/id/:id')
     deleteWatch(@Param('id', ParseIntPipe) id: number) {
         return this.watchService.delete(id);

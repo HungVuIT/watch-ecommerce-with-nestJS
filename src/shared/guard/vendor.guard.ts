@@ -25,6 +25,8 @@ export class VendorGuard implements CanActivate {
             request.shop = shop;
 
             return true;
-        } else return false;
+        } else if (user.role === "ADMIN") {
+            return true
+        } return false
     }
 }

@@ -18,9 +18,9 @@ let WatchService = class WatchService {
         this.prisma = prisma;
         this.ratingService = ratingService;
     }
-    delete(prodcutId) {
+    async delete(prodcutId) {
         try {
-            this.prisma.watch.delete({
+            return await this.prisma.watch.delete({
                 where: { id: prodcutId },
             });
         }

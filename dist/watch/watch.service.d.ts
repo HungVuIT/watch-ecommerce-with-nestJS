@@ -6,7 +6,7 @@ export declare class WatchService {
     private prisma;
     private ratingService;
     constructor(prisma: PrismaService, ratingService: RatingService);
-    delete(prodcutId: number): void;
+    delete(prodcutId: number): Promise<import(".prisma/client").Watch>;
     findMany(option: any): Promise<import(".prisma/client").Watch[]>;
     findOne(watchID: number): Promise<import(".prisma/client").Watch & {
         sale_off: import(".prisma/client").Sale_off;

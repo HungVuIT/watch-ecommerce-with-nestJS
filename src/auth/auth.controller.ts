@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
-import { Patch, Query, Render } from '@nestjs/common/decorators';
+import { Patch, Query, Render, Res } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
@@ -40,8 +40,10 @@ export class AuthController {
 
     @Get('redirect-google')
     @UseGuards(AuthGuard('google'))
+    @Render('signOauth2')
     googleAuthRedirect(@Req() req) {
-        return this.authService.googleLogin(req);
+        const result = this.authService.googleLogin(req);
+        return result;
     }
 
     @Get('facebook')
@@ -52,8 +54,10 @@ export class AuthController {
 
     @Get('redirect-facebook')
     @UseGuards(AuthGuard('facebook'))
+    @Render('signOauth2')
     facebookAuthRedirect(@Req() req) {
-        return this.authService.facebookLogin(req);
+        const result = this.authService.facebookLogin(req);
+        return result;
     }
 
     @Get('reset-password')
