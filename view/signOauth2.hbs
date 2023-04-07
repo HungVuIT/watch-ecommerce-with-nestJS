@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <html>
+
 <head>
 	<title>Example Page</title>
 	<style>
@@ -14,8 +14,10 @@
 			font-size: 18px;
 			background-color: #f0f0f0;
 		}
+
 		button {
-			padding: 12px 24px;
+			padding:
+				12px 24px;
 			background-color: #007bff;
 			color: #fff;
 			border: none;
@@ -24,13 +26,22 @@
 			cursor: pointer;
 			transition: background-color 0.3s ease;
 		}
+
 		button:hover {
 			background-color: #0062cc;
 		}
 	</style>
 </head>
+
 <body>
-	<h1>Welcome to Example Page</h1>
-	<button onclick="window.location.href=`http://localhost:3000/oauth2?access-token={{data.access_token}}&refresh-token={{data.refresh_token}}`">Tiếp tục</button>
+
+	<script>
+		var accessToken = "{{data.access_token}}";
+		var refreshToken = "{{data.refresh_token}}";
+		var url = "http://localhost:3000/oauth2?access-token=" + accessToken + "&refresh-token=" + refreshToken;
+		window.location.href = url;
+	</script>
+
 </body>
+
 </html>
