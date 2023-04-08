@@ -20,4 +20,4 @@ FavoriteModule = __decorate([
     })
 ], FavoriteModule);
 exports.FavoriteModule = FavoriteModule;
-//# sourceMappingURL=cart.module.js.map
+//# sourceMappingURL=favorite.module.js.map

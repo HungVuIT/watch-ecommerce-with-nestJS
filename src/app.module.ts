@@ -21,6 +21,7 @@ import { ChatModule } from './chat/chat.module';
 import { MailModule } from './mail/mail.module';
 import { RatingModule } from './rating/rating.module';
 import { RecommendModule } from './recommend/recommend.module';
+import { FavoriteModule } from './favorite/favorite.module';
 
 @Module({
     imports: [
@@ -44,6 +45,7 @@ import { RecommendModule } from './recommend/recommend.module';
         MailModule,
         RatingModule,
         RecommendModule,
+        FavoriteModule,
     ],
     controllers: [AppController, OrderController],
     providers: [AppService, OrderService],
