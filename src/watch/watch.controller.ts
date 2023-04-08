@@ -33,7 +33,7 @@ export class WatchController {
     createWatch(
         @Req() req: tsRequest,
         @Body() body: createWatchDto,
-        @UploadedFiles() file: Array<Express.Multer.File>
+        @UploadedFiles() file: Array<Express.Multer.File[]>
     ) {
         return this.watchService.create(req.shop['id'], body, file);
     }

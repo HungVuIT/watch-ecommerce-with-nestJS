@@ -6,7 +6,7 @@ import { WatchService } from './watch.service';
 export declare class WatchController {
     private watchService;
     constructor(watchService: WatchService);
-    createWatch(req: tsRequest, body: createWatchDto, file: Array<Express.Multer.File>): Promise<import(".prisma/client").Watch>;
+    createWatch(req: tsRequest, body: createWatchDto, file: Array<Express.Multer.File[]>): Promise<import(".prisma/client").Watch>;
     editWatch(id: number, req: tsRequest, body: updateWatchDto, file: Express.Multer.File[]): Promise<import(".prisma/client").Watch>;
     getList(query: any): Promise<import(".prisma/client").Watch[]>;
     deleteWatch(id: number): Promise<import(".prisma/client").Watch>;
