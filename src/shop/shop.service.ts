@@ -94,9 +94,39 @@ export class ShopService {
             return shop;
         } catch (error) {
             console.log('===============ERROR==============');
-
             console.log(error);
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
+    }
 
+    async updateByShopId(
+        id: number,
+        body: createShopDto,
+        files: {
+            logo?: Express.Multer.File[];
+            banner?: Express.Multer.File[];
+        }
+    ) {
+        try {
+            if(files){
+                if (files.logo) {
+                    body.logo = files.logo[0].path;
+                }
+
+                if (files.banner) {
+                    body.banner = files.banner[0].path;
+                }
+            }  
+
+            const shop = await this.prisma.shop.update({
+                where: { id: id },
+                data: body,
+            });
+
+            return shop;
+        } catch (error) {
+            console.log('===============ERROR==============');
+            console.log(error);
             return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
         }
     }

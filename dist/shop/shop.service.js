@@ -87,6 +87,28 @@ let ShopService = class ShopService {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
         }
     }
+    async updateByShopId(id, body, files) {
+        try {
+            if (files) {
+                if (files.logo) {
+                    body.logo = files.logo[0].path;
+                }
+                if (files.banner) {
+                    body.banner = files.banner[0].path;
+                }
+            }
+            const shop = await this.prisma.shop.update({
+                where: { id: id },
+                data: body,
+            });
+            return shop;
+        }
+        catch (error) {
+            console.log('===============ERROR==============');
+            console.log(error);
+            return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
+        }
+    }
     async create(userId, body) {
         try {
             const shop = await this.prisma.shop.create({

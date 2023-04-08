@@ -64,7 +64,8 @@ __decorate([
     __param(2, (0, common_1.Body)()),
     __param(3, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, updateWatch_dto_1.updateWatchDto, Array]),
+    __metadata("design:paramtypes", [Number, Object, updateWatch_dto_1.updateWatchDto,
+        Array]),
     __metadata("design:returntype", void 0)
 ], WatchController.prototype, "editWatch", null);
 __decorate([

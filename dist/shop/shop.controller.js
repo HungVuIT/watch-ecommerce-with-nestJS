@@ -30,8 +30,11 @@ let ShopController = class ShopController {
     createShop(id, body) {
         return this.shopService.create(id, body);
     }
-    updateShop(id, body, files) {
+    updateMyShop(id, body, files) {
         return this.shopService.updateByUserId(id, body, files);
+    }
+    updateShop(id, body, files) {
+        return this.shopService.updateByShopId(id, body, files);
     }
     deleteShop(id) {
         return this.shopService.deleteByUserId(id);
@@ -67,6 +70,20 @@ __decorate([
     ])),
     (0, common_1.Patch)('my-shop'),
     __param(0, (0, user_decorator_1.User)('id')),
+    __param(1, (0, common_1.Body)(new addressValidation_pipe_1.AddressPipe())),
+    __param(2, (0, common_1.UploadedFiles)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object, Object]),
+    __metadata("design:returntype", void 0)
+], ShopController.prototype, "updateMyShop", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.AdminGuard),
+    (0, common_1.UseInterceptors)((0, storage_1.fileFieldsUpload)([
+        { name: 'logo', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+    ])),
+    (0, common_1.Patch)('/id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)(new addressValidation_pipe_1.AddressPipe())),
     __param(2, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),

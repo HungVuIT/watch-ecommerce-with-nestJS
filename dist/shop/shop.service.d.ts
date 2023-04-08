@@ -12,6 +12,10 @@ export declare class ShopService {
         logo?: Express.Multer.File[];
         banner?: Express.Multer.File[];
     }): Promise<import(".prisma/client").Shop | HttpException>;
+    updateByShopId(id: number, body: createShopDto, files: {
+        logo?: Express.Multer.File[];
+        banner?: Express.Multer.File[];
+    }): Promise<import(".prisma/client").Shop | HttpException>;
     create(userId: number, body: createShopDto): Promise<import(".prisma/client").Shop | HttpException>;
     addPayment(shopId: number, email: string): Promise<HttpException | import(".prisma/client").ShopWallet>;
 }

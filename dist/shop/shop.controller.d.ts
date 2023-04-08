@@ -5,6 +5,10 @@ export declare class ShopController {
     private shopService;
     constructor(shopService: ShopService);
     createShop(id: number, body: createShopDto): Promise<import(".prisma/client").Shop | import("@nestjs/common").HttpException>;
+    updateMyShop(id: number, body: any, files: {
+        logo?: Express.Multer.File[];
+        banner?: Express.Multer.File[];
+    }): Promise<import(".prisma/client").Shop | import("@nestjs/common").HttpException>;
     updateShop(id: number, body: any, files: {
         logo?: Express.Multer.File[];
         banner?: Express.Multer.File[];

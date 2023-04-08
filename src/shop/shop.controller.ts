@@ -16,7 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fileFieldsUpload } from 'src/shared/cloudinary/storage';
 import { Shop } from 'src/shared/customDecorator/shop.decorator';
 import { User } from 'src/shared/customDecorator/user.decorator';
-import { jwtGuard, VendorGuard } from 'src/shared/guard';
+import { AdminGuard, jwtGuard, VendorGuard } from 'src/shared/guard';
 import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { AddressPipe } from 'src/shared/pipe/addressValidation.pipe';
 import { createShopDto } from './dto/createShop.dto';
@@ -42,7 +42,7 @@ export class ShopController {
         ])
     )
     @Patch('my-shop')
-    updateShop(
+    updateMyShop(
         @User('id') id: number,
         @Body(new AddressPipe()) body,
         @UploadedFiles()
@@ -52,6 +52,26 @@ export class ShopController {
         }
     ) {
         return this.shopService.updateByUserId(id, body, files);
+    }
+
+    @UseGuards(AdminGuard)
+    @UseInterceptors(
+        fileFieldsUpload([
+            { name: 'logo', maxCount: 1 },
+            { name: 'banner', maxCount: 1 },
+        ])
+    )
+    @Patch('/id/:id')
+    updateShop(
+        @Param('id', ParseIntPipe) id: number,
+        @Body(new AddressPipe()) body,
+        @UploadedFiles()
+        files: {
+            logo?: Express.Multer.File[];
+            banner?: Express.Multer.File[];
+        }
+    ) {
+        return this.shopService.updateByShopId(id, body, files);
     }
 
     @UseGuards(jwtGuard, VendorGuard)

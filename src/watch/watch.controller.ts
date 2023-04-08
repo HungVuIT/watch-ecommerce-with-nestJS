@@ -33,7 +33,7 @@ export class WatchController {
     createWatch(
         @Req() req: tsRequest,
         @Body() body: createWatchDto,
-        @UploadedFiles() file: Array<Express.Multer.File[]>
+        @UploadedFiles() file: Array<Express.Multer.File>
     ) {
         return this.watchService.create(req.shop['id'], body, file);
     }
@@ -45,7 +45,7 @@ export class WatchController {
         @Param('id', ParseIntPipe) id: number,
         @Req() req: tsRequest,
         @Body() body: updateWatchDto,
-        @UploadedFile() file: Express.Multer.File[]
+        @UploadedFile() file: Array<Express.Multer.File>
     ) {
         return this.watchService.update(id, body, file);
     }
