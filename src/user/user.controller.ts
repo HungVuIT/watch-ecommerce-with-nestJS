@@ -52,6 +52,13 @@ export class UserController {
     }
 
     @UseGuards(jwtGuard, AdminGuard)
+    @Patch('/id/:id')
+    @UseInterceptors(fileUpload('avatar'))
+    editUser(@Param('id', ParseIntPipe) id: number, @Body(new AddressPipe()) body: userDto, @UploadedFile() file: Express.Multer.File) {
+        return this.userService.editMe(id, body, file);
+    }
+
+    @UseGuards(jwtGuard, AdminGuard)
     @Delete('id/:id')
     delete(@Param('id', ParseIntPipe) id) {
         return this.userService.delete(id);

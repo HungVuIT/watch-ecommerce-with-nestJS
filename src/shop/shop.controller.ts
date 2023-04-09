@@ -54,7 +54,7 @@ export class ShopController {
         return this.shopService.updateByUserId(id, body, files);
     }
 
-    @UseGuards(AdminGuard)
+    @UseGuards(jwtGuard, AdminGuard)
     @UseInterceptors(
         fileFieldsUpload([
             { name: 'logo', maxCount: 1 },

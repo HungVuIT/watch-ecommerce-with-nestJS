@@ -1,17 +1,30 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Req,
+    UseGuards,
+    UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { globalVariables } from 'src/shared/global.service';
-import { jwtGuard } from 'src/shared/guard';
+import { AdminGuard, jwtGuard } from 'src/shared/guard';
 import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
+import { DeliveryService } from 'src/delivery/delivery.service';
 
 @Controller('order')
 @UseInterceptors(TransResInterceptor)
 export class OrderController {
-    constructor(private orderService: OrderService) {}
+    constructor(private orderService: OrderService, private glo: globalVariables) {}
 
     @UseGuards(jwtGuard)
     @UseInterceptors(FileInterceptor(''))
@@ -35,7 +48,7 @@ export class OrderController {
 
             return order;
         }
-        
+
         const order = await this.orderService.createLinkPaymant(id);
 
         return order;
@@ -60,5 +73,28 @@ export class OrderController {
     @Get('/order-detail/:orderId')
     getOrderDetail(@Param('orderId', ParseIntPipe) id: number) {
         return this.orderService.getOrderDetail(id);
+    }
+
+    @UseGuards(jwtGuard, AdminGuard)
+    @Delete('/id/:id')
+    deleteOrder(@Param('id', ParseIntPipe) id: number) {
+        return this.orderService.deleteOrder(id);
+    }
+
+    @UseGuards(jwtGuard)
+    @Get('/ship-fee')
+    async getShipFee(@User('id') id: number, @Body() body: createOrderDto) {
+        globalVariables.deliveryLocation[id] = {
+            address: body.address,
+            deliveryOption: body.deliveryOption,
+            district: body.district,
+            province: body.province,
+            ward: body.ward,
+        };
+        const Fee = await this.orderService.getDeliveryFree(id);
+
+        this.glo.deleteUserInfor(id);
+
+        return Fee;
     }
 }

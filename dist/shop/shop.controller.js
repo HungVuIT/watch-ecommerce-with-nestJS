@@ -77,7 +77,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ShopController.prototype, "updateMyShop", null);
 __decorate([
-    (0, common_1.UseGuards)(guard_1.AdminGuard),
+    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
     (0, common_1.UseInterceptors)((0, storage_1.fileFieldsUpload)([
         { name: 'logo', maxCount: 1 },
         { name: 'banner', maxCount: 1 },

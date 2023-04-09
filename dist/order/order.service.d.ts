@@ -19,4 +19,6 @@ export declare class OrderService {
     cashOnDelivery(userId: number): Promise<import(".prisma/client").Order>;
     getOrders(userId: number): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(orderId: number): Promise<import(".prisma/client").Order_detail[]>;
+    getDeliveryFree(userId: number): Promise<number>;
+    deleteOrder(id: number): Promise<void>;
 }

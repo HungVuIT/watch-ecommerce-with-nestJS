@@ -452,4 +452,85 @@ export class OrderService {
             throw error;
         }
     }
+
+    async getDeliveryFree(userId: number) {
+        try {
+            // trong postgresql table name nên để trong " " nếu không sẽ tự chuyển thành in thường -> lỗi ko tìm thấy
+            // chi tiết đọc tại https://stackoverflow.com/questions/26631205/postgresql-error-42p01-relation-table-does-not-exist
+            const listItem: {
+                id: number;
+                quantity: number;
+                WID: number;
+                UID: number;
+                name: string;
+                price: number;
+                watchQuantity: number;
+                paypalMethod: string;
+            }[] = await this.prisma.$queryRaw`
+          SELECT "Cart"."id", 
+          "Cart"."quantity", 
+          "Cart"."WID", 
+          "Cart"."UID", 
+          "Watch"."name", 
+          "Watch"."price", 
+          "Watch"."SID",
+          "Watch"."quantity" as "watchQuantity", 
+          "ShopWallet"."paypalMethod"
+          FROM "Cart" 
+          LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
+          LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
+          LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+        `;
+
+            if (listItem.length === 0) throw new HttpException('Cart is emty', HttpStatus.BAD_REQUEST);
+
+            globalVariables.cartList[userId] = listItem;
+
+            let total: number = 0;
+
+            let quantiry: number = 0;
+
+            // Tính tổng tiền hàng và số lượng sản phẩm của đơn hàng
+            listItem.forEach((v) => {
+                total += v.quantity * v.price;
+                quantiry += v.quantity;
+            });
+
+            // Tính chi phí ship hàng
+            const location = globalVariables.deliveryLocation[userId];
+
+            let shipFee = await this.delivery.diliveryFee({
+                toProvince: location.province,
+                toDistrict: location.district,
+                toWard: location.district,
+                value: total,
+                quantity: quantiry,
+            });
+
+            switch (globalVariables.deliveryLocation[userId].deliveryOption) {
+                case 1:
+                    shipFee = Math.round(shipFee * 1.1);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    shipFee = Math.round(shipFee * 0.8);
+                    break;
+            }
+
+            return shipFee;
+        } catch (error) {
+            throw Error();
+        }
+    }
+
+    async deleteOrder(id: number) {
+        try {
+            await this.prisma.order.delete({
+                where: { id: id },
+            });
+        } catch (error) {
+            throw Error('cant delete');
+        }
+    }
 }

@@ -299,6 +299,66 @@ let OrderService = class OrderService {
             throw error;
         }
     }
+    async getDeliveryFree(userId) {
+        try {
+            const listItem = await this.prisma.$queryRaw `
+          SELECT "Cart"."id", 
+          "Cart"."quantity", 
+          "Cart"."WID", 
+          "Cart"."UID", 
+          "Watch"."name", 
+          "Watch"."price", 
+          "Watch"."SID",
+          "Watch"."quantity" as "watchQuantity", 
+          "ShopWallet"."paypalMethod"
+          FROM "Cart" 
+          LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
+          LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
+          LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+        `;
+            if (listItem.length === 0)
+                throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
+            global_service_1.globalVariables.cartList[userId] = listItem;
+            let total = 0;
+            let quantiry = 0;
+            listItem.forEach((v) => {
+                total += v.quantity * v.price;
+                quantiry += v.quantity;
+            });
+            const location = global_service_1.globalVariables.deliveryLocation[userId];
+            let shipFee = await this.delivery.diliveryFee({
+                toProvince: location.province,
+                toDistrict: location.district,
+                toWard: location.district,
+                value: total,
+                quantity: quantiry,
+            });
+            switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                case 1:
+                    shipFee = Math.round(shipFee * 1.1);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    shipFee = Math.round(shipFee * 0.8);
+                    break;
+            }
+            return shipFee;
+        }
+        catch (error) {
+            throw Error();
+        }
+    }
+    async deleteOrder(id) {
+        try {
+            await this.prisma.order.delete({
+                where: { id: id },
+            });
+        }
+        catch (error) {
+            throw Error('cant delete');
+        }
+    }
 };
 OrderService = __decorate([
     (0, common_1.Injectable)(),

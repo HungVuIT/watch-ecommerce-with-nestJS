@@ -22,8 +22,9 @@ const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
 const createOrder_dto_1 = require("./dto/createOrder.dto");
 const order_service_1 = require("./order.service");
 let OrderController = class OrderController {
-    constructor(orderService) {
+    constructor(orderService, glo) {
         this.orderService = orderService;
+        this.glo = glo;
     }
     async createOrder(id, body, req) {
         global_service_1.globalVariables.deliveryLocation[id] = {
@@ -56,6 +57,21 @@ let OrderController = class OrderController {
     }
     getOrderDetail(id) {
         return this.orderService.getOrderDetail(id);
+    }
+    deleteOrder(id) {
+        return this.orderService.deleteOrder(id);
+    }
+    async getShipFee(id, body) {
+        global_service_1.globalVariables.deliveryLocation[id] = {
+            address: body.address,
+            deliveryOption: body.deliveryOption,
+            district: body.district,
+            province: body.province,
+            ward: body.ward,
+        };
+        const Fee = await this.orderService.getDeliveryFree(id);
+        this.glo.deleteUserInfor(id);
+        return Fee;
     }
 };
 __decorate([
@@ -93,10 +109,27 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "getOrderDetail", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
+    (0, common_1.Delete)('/id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "deleteOrder", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.Get)('/ship-fee'),
+    __param(0, (0, user_decorator_1.User)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, createOrder_dto_1.createOrderDto]),
+    __metadata("design:returntype", Promise)
+], OrderController.prototype, "getShipFee", null);
 OrderController = __decorate([
     (0, common_1.Controller)('order'),
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),
-    __metadata("design:paramtypes", [order_service_1.OrderService])
+    __metadata("design:paramtypes", [order_service_1.OrderService, global_service_1.globalVariables])
 ], OrderController);
 exports.OrderController = OrderController;
 //# sourceMappingURL=order.controller.js.map
