@@ -82,7 +82,7 @@ __decorate([
 ], UserController.prototype, "editMe", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
-    (0, common_1.Patch)('/id/:id'),
+    (0, common_1.Patch)('id/:id'),
     (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('avatar')),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)(new addressValidation_pipe_1.AddressPipe())),

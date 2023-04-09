@@ -50,8 +50,11 @@ export class ShopService {
 
     async deleteByUserId(userId: number) {
         try {
-            await this.prisma.shop.delete({
+            await this.prisma.shop.update({
                 where: { UID: userId },
+                data: {
+                    isActive: false
+                }
             });
 
             await this.prisma.user.update({

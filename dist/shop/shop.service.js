@@ -51,8 +51,11 @@ let ShopService = class ShopService {
     }
     async deleteByUserId(userId) {
         try {
-            await this.prisma.shop.delete({
+            await this.prisma.shop.update({
                 where: { UID: userId },
+                data: {
+                    isActive: false
+                }
             });
             await this.prisma.user.update({
                 where: { id: userId },

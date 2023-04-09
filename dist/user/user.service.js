@@ -46,8 +46,9 @@ let UserService = class UserService {
     }
     async delete(id) {
         try {
-            await this.prisma.user.delete({
+            await this.prisma.user.update({
                 where: { id: id },
+                data: { isActive: false }
             });
         }
         catch (error) {

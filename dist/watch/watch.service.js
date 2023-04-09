@@ -20,8 +20,11 @@ let WatchService = class WatchService {
     }
     async delete(prodcutId) {
         try {
-            return await this.prisma.watch.delete({
+            return await this.prisma.watch.update({
                 where: { id: prodcutId },
+                data: {
+                    isActive: false
+                }
             });
         }
         catch (error) {
