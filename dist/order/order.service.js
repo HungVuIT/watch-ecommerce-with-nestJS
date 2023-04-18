@@ -44,53 +44,72 @@ let OrderService = class OrderService {
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
-            global_service_1.globalVariables.cartList[userId] = listItem;
-            let total = 0;
-            let quantiry = 0;
-            listItem.forEach((item) => {
-                if (item.quantity > item.watchQuantity)
-                    throw new common_1.HttpException({
-                        message: 'out of stock',
-                        itemID: item.WID,
-                        itemName: item.name,
-                    }, common_1.HttpStatus.NOT_FOUND);
+            const groupedItems = listItem.reduce((acc, item) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                }
+                else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.watchQuantity)
+                        throw new common_1.HttpException({
+                            message: 'out of stock',
+                            itemID: item.WID,
+                            itemName: item.name,
+                        }, common_1.HttpStatus.NOT_FOUND);
+                });
             });
-            listItem.forEach((v) => {
-                total += v.quantity * v.price;
-                quantiry += v.quantity;
-            });
-            const listItemInPaypal = listItem.map((item) => ({
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-            }));
             const location = global_service_1.globalVariables.deliveryLocation[userId];
-            let shipFee = await this.delivery.diliveryFee({
-                toProvince: location.province,
-                toDistrict: location.district,
-                toWard: location.district,
-                value: total,
-                quantity: quantiry,
-            });
-            switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                case 1:
-                    shipFee = Math.round(shipFee * 1.1);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    shipFee = Math.round(shipFee * 0.8);
-                    break;
+            const ordersByShop = [];
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
+                });
+                switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                    case 1:
+                        shipFee = Math.round(shipFee * 1.1);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        shipFee = Math.round(shipFee * 0.8);
+                        break;
+                }
+                const totalPrice = total + shipFee;
+                const order = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                };
+                ordersByShop.push(order);
             }
-            global_service_1.globalVariables.orderDetail[userId] = {
-                shipFee: shipFee,
-                itemValue: total,
-                total: shipFee + total,
-            };
+            global_service_1.globalVariables.orderList[userId] = groupedItems;
+            const orderDetail = ordersByShop.reduce((acc, curr) => {
+                return {
+                    itemValue: acc.itemValue + curr.itemPrice,
+                    shipFee: acc.shipFee + curr.shipFee,
+                    total: acc.total + curr.totalPrice,
+                };
+            }, { itemValue: 0, shipFee: 0, total: 0 });
+            global_service_1.globalVariables.orderDetail[userId] = orderDetail;
             const result = {
-                href: await this.payment.checkoutLink(userId, listItemInPaypal),
-                total: total,
-                shipFee: shipFee,
+                href: await this.payment.checkoutLink(userId),
             };
             return result;
         }
@@ -101,58 +120,60 @@ let OrderService = class OrderService {
     async completeOrder(userId) {
         try {
             await this.payment.succcessCheckout(userId);
-            await this.payment.payoutSeller(userId);
             return await this.prisma.$transaction(async (tx) => {
-                const { total } = global_service_1.globalVariables.orderDetail[userId];
-                const order = await tx.order.create({
-                    data: {
-                        UID: userId,
-                        total: total,
-                        paymentMethod: 'online',
-                    },
-                });
-                let data = [];
-                const listItem = global_service_1.globalVariables.cartList[userId];
-                listItem.forEach((v) => data.push({
-                    OID: order.id,
-                    WID: v.WID,
-                    quantity: v.quantity,
-                    total: v.price * v.quantity,
-                    fee: v.price * v.quantity * Number(this.config.get('FEE')),
-                }));
-                await tx.order_detail.createMany({
-                    data: data,
-                });
-                const update = listItem.map((item) => {
-                    tx.watch.update({
-                        where: { id: item.WID },
+                const listorder = global_service_1.globalVariables.orderList[userId];
+                listorder.forEach(async (item) => {
+                    const order = await tx.order.create({
                         data: {
-                            quantity: { increment: -item.quantity },
-                            saled: { increment: item.quantity },
+                            UID: userId,
+                            SID: item.SID,
+                            total: item.totalPrice,
+                            paymentMethod: 'online',
+                            status: 'created',
                         },
                     });
-                });
-                await Promise.all(update);
-                let deliveryType = client_1.deliveryOption.standard;
-                switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                    case 1:
-                        deliveryType = client_1.deliveryOption.express;
-                        break;
-                    case 2:
-                        deliveryType = client_1.deliveryOption.standard;
-                        break;
-                    case 3:
-                        deliveryType = client_1.deliveryOption.saving;
-                        break;
-                }
-                await tx.delivery_detail.create({
-                    data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: global_service_1.globalVariables.orderDetail[userId].shipFee, deliveryOption: deliveryType }),
-                });
-                await tx.cart.deleteMany({
-                    where: { UID: userId },
+                    let data = [];
+                    item.items.forEach((v) => data.push({
+                        OID: order.id,
+                        WID: v.WID,
+                        quantity: v.quantity,
+                        total: v.price * v.quantity,
+                        fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                    }));
+                    await tx.order_detail.createMany({
+                        data: data,
+                    });
+                    const update = item.items.map((item) => {
+                        tx.watch.update({
+                            where: { id: item.WID },
+                            data: {
+                                quantity: { increment: -item.quantity },
+                                saled: { increment: item.quantity },
+                            },
+                        });
+                    });
+                    await Promise.all(update);
+                    let deliveryType = client_1.deliveryOption.standard;
+                    switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                        case 1:
+                            deliveryType = client_1.deliveryOption.express;
+                            break;
+                        case 2:
+                            deliveryType = client_1.deliveryOption.standard;
+                            break;
+                        case 3:
+                            deliveryType = client_1.deliveryOption.saving;
+                            break;
+                    }
+                    await tx.delivery_detail.create({
+                        data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
+                    });
+                    await tx.cart.deleteMany({
+                        where: { UID: userId },
+                    });
                 });
                 this.glo.deleteUserInfor(userId);
-                return order;
+                return listorder;
             });
         }
         catch (error) {
@@ -178,100 +199,124 @@ let OrderService = class OrderService {
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
-            global_service_1.globalVariables.cartList[userId] = listItem;
-            let total = 0;
-            let quantiry = 0;
-            listItem.forEach((item) => {
-                if (item.quantity > item.watchQuantity)
-                    throw new common_1.HttpException({
-                        message: 'out of stock',
-                        itemID: item.WID,
-                        itemName: item.name,
-                    }, common_1.HttpStatus.NOT_FOUND);
+            const groupedItems = listItem.reduce((acc, item) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                }
+                else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.watchQuantity)
+                        throw new common_1.HttpException({
+                            message: 'out of stock',
+                            itemID: item.WID,
+                            itemName: item.name,
+                        }, common_1.HttpStatus.NOT_FOUND);
+                });
             });
-            listItem.forEach((v) => {
-                total += v.quantity * v.price;
-                quantiry += v.quantity;
-            });
-            const listItemInPaypal = listItem.map((item) => ({
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-            }));
             const location = global_service_1.globalVariables.deliveryLocation[userId];
-            let shipFee = await this.delivery.diliveryFee({
-                toProvince: location.province,
-                toDistrict: location.district,
-                toWard: location.district,
-                value: total,
-                quantity: quantiry,
-            });
-            switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                case 1:
-                    shipFee = Math.round(shipFee * 1.1);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    shipFee = Math.round(shipFee * 0.8);
-                    break;
-            }
-            global_service_1.globalVariables.orderDetail[userId] = {
-                shipFee: shipFee,
-                itemValue: total,
-                total: shipFee + total,
-            };
-            return await this.prisma.$transaction(async (tx) => {
-                const { total } = global_service_1.globalVariables.orderDetail[userId];
-                const order = await tx.order.create({
-                    data: {
-                        UID: userId,
-                        total: total,
-                        paymentMethod: 'offline',
-                    },
+            const ordersByShop = [];
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
                 });
-                let data = [];
-                const listItem = global_service_1.globalVariables.cartList[userId];
-                listItem.forEach((v) => data.push({
-                    OID: order.id,
-                    WID: v.WID,
-                    quantity: v.quantity,
-                    total: v.price * v.quantity,
-                    fee: v.price * v.quantity * Number(this.config.get('FEE')),
-                }));
-                await tx.order_detail.createMany({
-                    data: data,
-                });
-                const update = listItem.map((item) => {
-                    tx.watch.update({
-                        where: { id: item.WID },
-                        data: {
-                            quantity: { increment: -item.quantity },
-                            saled: { increment: item.quantity },
-                        },
-                    });
-                });
-                await Promise.all(update);
-                let deliveryType = client_1.deliveryOption.standard;
                 switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
                     case 1:
-                        deliveryType = client_1.deliveryOption.express;
+                        shipFee = Math.round(shipFee * 1.1);
                         break;
                     case 2:
-                        deliveryType = client_1.deliveryOption.standard;
                         break;
                     case 3:
-                        deliveryType = client_1.deliveryOption.saving;
+                        shipFee = Math.round(shipFee * 0.8);
                         break;
                 }
-                await tx.delivery_detail.create({
-                    data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: global_service_1.globalVariables.orderDetail[userId].shipFee, deliveryOption: deliveryType }),
+                const totalPrice = total + shipFee;
+                const order = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                };
+                ordersByShop.push(order);
+            }
+            global_service_1.globalVariables.orderList[userId] = groupedItems;
+            const orderDetail = ordersByShop.reduce((acc, curr) => {
+                return {
+                    itemValue: acc.itemValue + curr.itemPrice,
+                    shipFee: acc.shipFee + curr.shipFee,
+                    total: acc.total + curr.totalPrice,
+                };
+            }, { itemValue: 0, shipFee: 0, total: 0 });
+            global_service_1.globalVariables.orderDetail[userId] = orderDetail;
+            await this.prisma.$transaction(async (tx) => {
+                const listorder = global_service_1.globalVariables.orderList[userId];
+                listorder.forEach(async (item) => {
+                    const order = await tx.order.create({
+                        data: {
+                            UID: userId,
+                            SID: item.SID,
+                            total: item.totalPrice,
+                            paymentMethod: 'online',
+                            status: 'created',
+                        },
+                    });
+                    let data = [];
+                    item.items.forEach((v) => data.push({
+                        OID: order.id,
+                        WID: v.WID,
+                        quantity: v.quantity,
+                        total: v.price * v.quantity,
+                        fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                    }));
+                    await tx.order_detail.createMany({
+                        data: data,
+                    });
+                    const update = item.items.map((item) => {
+                        tx.watch.update({
+                            where: { id: item.WID },
+                            data: {
+                                quantity: { increment: -item.quantity },
+                                saled: { increment: item.quantity },
+                            },
+                        });
+                    });
+                    await Promise.all(update);
+                    let deliveryType = client_1.deliveryOption.standard;
+                    switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                        case 1:
+                            deliveryType = client_1.deliveryOption.express;
+                            break;
+                        case 2:
+                            deliveryType = client_1.deliveryOption.standard;
+                            break;
+                        case 3:
+                            deliveryType = client_1.deliveryOption.saving;
+                            break;
+                    }
+                    await tx.delivery_detail.create({
+                        data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
+                    });
+                    await tx.cart.deleteMany({
+                        where: { UID: userId },
+                    });
                 });
-                await tx.cart.deleteMany({
-                    where: { UID: userId },
-                });
+                return listorder;
                 this.glo.deleteUserInfor(userId);
-                return order;
             });
         }
         catch (error) {
@@ -318,7 +363,6 @@ let OrderService = class OrderService {
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
-            global_service_1.globalVariables.cartList[userId] = listItem;
             let total = 0;
             let quantiry = 0;
             listItem.forEach((v) => {
@@ -347,6 +391,19 @@ let OrderService = class OrderService {
         }
         catch (error) {
             throw Error();
+        }
+    }
+    async updateOrder(id, body) {
+        try {
+            await this.prisma.order.update({
+                where: { id: id },
+                data: {
+                    status: body.status,
+                },
+            });
+        }
+        catch (error) {
+            throw Error('cant delete');
         }
     }
     async deleteOrder(id) {

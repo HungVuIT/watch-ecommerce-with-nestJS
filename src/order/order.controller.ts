@@ -55,12 +55,14 @@ export class OrderController {
     }
 
     @Get(':id/success')
-    success(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
         globalVariables.other[id] = {
             payerId: req.query.PayerID,
             paymentId: req.query.paymentId,
         };
-        return this.orderService.completeOrder(id);
+        const order = await this.orderService.completeOrder(id);
+
+        return order
     }
 
     @UseGuards(jwtGuard)
@@ -73,6 +75,12 @@ export class OrderController {
     @Get('/order-detail/:orderId')
     getOrderDetail(@Param('orderId', ParseIntPipe) id: number) {
         return this.orderService.getOrderDetail(id);
+    }
+
+    @UseGuards(jwtGuard)
+    @Post('/id/:id')
+    updateOrder(@Param('id', ParseIntPipe) id: number, body: any) {
+        return this.orderService.updateOrder(id, body);
     }
 
     @UseGuards(jwtGuard, AdminGuard)

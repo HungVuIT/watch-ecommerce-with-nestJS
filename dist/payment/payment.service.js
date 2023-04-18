@@ -17,9 +17,11 @@ const global_service_1 = require("../shared/global.service");
 const querystring = require("qs");
 const crypto = require("crypto");
 const date_fns_1 = require("date-fns");
+const prisma_service_1 = require("../prisma/prisma.service");
 let PaymentService = class PaymentService {
-    constructor(config) {
+    constructor(config, prisma) {
         this.config = config;
+        this.prisma = prisma;
         const clientId = this.config.get('PAYPAL_CLIENT_ID');
         const clientSecret = this.config.get('PAYPAL_CLIENT_SECRET');
         paypal.configure({
@@ -33,7 +35,7 @@ let PaymentService = class PaymentService {
         const result = Math.round(trans * 100) / 100;
         return result;
     }
-    async checkoutLink(userId, listItem) {
+    async checkoutLink(userId) {
         try {
             const host = global_service_1.globalVariables.paymentHost[userId];
             const { total, itemValue, shipFee } = global_service_1.globalVariables.orderDetail[userId];
@@ -123,9 +125,10 @@ let PaymentService = class PaymentService {
             }
         });
     }
-    async payoutSeller(userId) {
+    async payoutSeller(orderId) {
         try {
-            const items = global_service_1.globalVariables.cartList[userId];
+            const order = await this.prisma.order.findFirst({ where: { id: orderId } });
+            const receiver = await this.prisma.shopWallet.findFirst({ where: { SID: order.SID } });
             let sender_batch_id = Math.random().toString(36).substring(9);
             let create_payout_json = {
                 sender_batch_header: {
@@ -135,17 +138,18 @@ let PaymentService = class PaymentService {
                     sender_batch_id: sender_batch_id,
                     email_subject: 'This is a test transaction from SDK',
                 },
-                items: items.map((item) => ({
-                    note: 'Your reveived for + ' + item.quantiry + ' product ' + item.name,
-                    amount: {
-                        currency: 'USD',
-                        value: (item.price *
-                            item.quantity *
-                            (1 - Number(this.config.get('FEE'))) *
-                            Number(this.config.get('VND_USD'))).toFixed(2),
+                items: [
+                    {
+                        note: 'Your reveived for order',
+                        amount: {
+                            currency: 'USD',
+                            value: (order.total *
+                                (1 - Number(this.config.get('FEE'))) *
+                                Number(this.config.get('VND_USD'))).toFixed(2),
+                        },
+                        receiver: receiver.paypalMethod,
                     },
-                    receiver: item.paypalMethod,
-                })),
+                ],
             };
             paypal.payout.create(create_payout_json, function (error, payout) {
                 if (error) {
@@ -235,7 +239,7 @@ let PaymentService = class PaymentService {
 };
 PaymentService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService, prisma_service_1.PrismaService])
 ], PaymentService);
 exports.PaymentService = PaymentService;
 //# sourceMappingURL=payment.service.js.map

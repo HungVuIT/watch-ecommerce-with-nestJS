@@ -45,18 +45,22 @@ let OrderController = class OrderController {
         const order = await this.orderService.createLinkPaymant(id);
         return order;
     }
-    success(id, req) {
+    async success(id, req) {
         global_service_1.globalVariables.other[id] = {
             payerId: req.query.PayerID,
             paymentId: req.query.paymentId,
         };
-        return this.orderService.completeOrder(id);
+        const order = await this.orderService.completeOrder(id);
+        return order;
     }
     getOrderList(id) {
         return this.orderService.getOrders(id);
     }
     getOrderDetail(id) {
         return this.orderService.getOrderDetail(id);
+    }
+    updateOrder(id, body) {
+        return this.orderService.updateOrder(id, body);
     }
     deleteOrder(id) {
         return this.orderService.deleteOrder(id);
@@ -91,7 +95,7 @@ __decorate([
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], OrderController.prototype, "success", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
@@ -109,6 +113,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "getOrderDetail", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.Post)('/id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "updateOrder", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
     (0, common_1.Delete)('/id/:id'),

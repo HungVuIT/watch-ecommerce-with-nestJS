@@ -8,7 +8,7 @@ export declare class globalVariables {
             deliveryOption: number;
         };
     };
-    static cartList: {
+    static orderList: {
         [index: string]: any;
     };
     static paymentHost: {

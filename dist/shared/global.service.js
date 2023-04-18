@@ -12,14 +12,14 @@ const common_1 = require("@nestjs/common");
 let globalVariables = globalVariables_1 = class globalVariables {
     deleteUserInfor(userId) {
         delete globalVariables_1.deliveryLocation[userId];
-        delete globalVariables_1.cartList[userId];
+        delete globalVariables_1.orderList[userId];
         delete globalVariables_1.paymentHost[userId];
         delete globalVariables_1.orderDetail[userId];
         delete globalVariables_1.other[userId];
     }
 };
 globalVariables.deliveryLocation = {};
-globalVariables.cartList = {};
+globalVariables.orderList = {};
 globalVariables.paymentHost = {};
 globalVariables.orderDetail = {};
 globalVariables.other = {};

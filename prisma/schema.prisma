@@ -88,6 +88,7 @@ model Shop {
 
   Watchs      Watch[]
   Shop_rating Shop_rating[]
+  Order Order[]
 
   isActive Boolean @default(true)
 }
@@ -254,6 +255,9 @@ model Order {
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
+  shop Shop @relation(fields: [SID], references: [id])
+  SID  Int
+
   Note String?
 
   isActive        Boolean          @default(true)
@@ -386,8 +390,6 @@ model Sale_off {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type saleType
-
   amount Int
 
   quantity Int
@@ -400,7 +402,3 @@ model Sale_off {
   WID Int  @unique
 }
 
-enum saleType {
-  fix
-  percent
-}

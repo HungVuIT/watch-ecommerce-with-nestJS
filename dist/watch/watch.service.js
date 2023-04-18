@@ -41,8 +41,12 @@ let WatchService = class WatchService {
             query['where'] = { AND: [] };
             if (option.search)
                 query['where'].AND.push({ name: { contains: option.search, mode: 'insensitive' } });
-            if (option.shopId)
-                query['where'].AND.push({ SID: Number(option.shopId) });
+            if (option.SID)
+                query['where'].AND.push({ SID: Number(option.SID) });
+            if (option.BID)
+                query['where'].AND.push({ BID: Number(option.BID) });
+            if (option.CID)
+                query['where'].AND.push({ CID: Number(option.CID) });
             if (option.price) {
                 const value = option.price.split(':');
                 query['where'].AND.push({
@@ -55,7 +59,7 @@ let WatchService = class WatchService {
                 sort[value[0]] = value[1];
                 query['orderBy'] = sort;
             }
-            query['include'] = { sale_off: true };
+            query['include'] = { sale_off: true, shop: true };
             const list = await this.prisma.watch.findMany(query);
             await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
                 list.map((watch, index) => {

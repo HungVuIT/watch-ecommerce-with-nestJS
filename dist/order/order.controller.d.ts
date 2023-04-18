@@ -6,14 +6,13 @@ export declare class OrderController {
     private orderService;
     private glo;
     constructor(orderService: OrderService, glo: globalVariables);
-    createOrder(id: number, body: createOrderDto, req: Request): Promise<import(".prisma/client").Order | {
+    createOrder(id: number, body: createOrderDto, req: Request): Promise<void | {
         href: unknown;
-        total: number;
-        shipFee: number;
     }>;
-    success(id: number, req: Request): Promise<import(".prisma/client").Order>;
+    success(id: number, req: Request): Promise<import("./order.service").OrderByShop[]>;
     getOrderList(id: number): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(id: number): Promise<import(".prisma/client").Order_detail[]>;
+    updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;
     getShipFee(id: number, body: createOrderDto): Promise<number>;
 }

@@ -30,11 +30,17 @@ export class WatchService {
 
             if (option.take) query['take'] = Number(option.take);
 
+
+
             query['where'] = { AND: [] };
             
             if (option.search) query['where'].AND.push({ name: {contains: option.search, mode: 'insensitive'} });
 
-            if (option.shopId) query['where'].AND.push({ SID: Number(option.shopId) });
+            if (option.SID) query['where'].AND.push({ SID: Number(option.SID) });
+
+            if (option.BID) query['where'].AND.push({BID: Number(option.BID)});
+
+            if (option.CID) query['where'].AND.push({CID: Number(option.CID)});
 
             if (option.price) {
                 const value = option.price.split(':');
@@ -53,7 +59,7 @@ export class WatchService {
                 query['orderBy'] = sort;
             }
 
-            query['include'] = { sale_off: true };
+            query['include'] = { sale_off: true, shop: true };
 
             const list = await this.prisma.watch.findMany(query);
 
@@ -62,6 +68,7 @@ export class WatchService {
                     watch['rating'] = rates[index];
                 });
             });
+
 
             return list;
         } catch (error) {

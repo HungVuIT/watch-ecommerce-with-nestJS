@@ -6,13 +6,4 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
     constructor(private pay: PaymentService){}
     
-    @Get('')
-    gngkt(){
-        return this.pay.VNPayCheckoutUrl()
-    }
-
-    @Get('return')
-    gagrrg(@Req() req:Request){
-        return this.pay.VNPayReturn(req)
-    }
 }

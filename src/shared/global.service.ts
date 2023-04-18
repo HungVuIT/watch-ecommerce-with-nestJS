@@ -12,7 +12,7 @@ export class globalVariables {
         };
     } = {};
 
-    public static cartList: { [index: string]: any } = {};
+    public static orderList: { [index: string]: any } = {};
 
     public static paymentHost: { [index: string]: string } = {};
 
@@ -28,7 +28,7 @@ export class globalVariables {
 
     deleteUserInfor(userId: number) {
         delete globalVariables.deliveryLocation[userId];
-        delete globalVariables.cartList[userId];
+        delete globalVariables.orderList[userId];
         delete globalVariables.paymentHost[userId];
         delete globalVariables.orderDetail[userId];
         delete globalVariables.other[userId];

@@ -6,12 +6,13 @@ import { globalVariables } from 'src/shared/global.service';
 import * as querystring from 'qs';
 import * as crypto from 'crypto';
 import { format } from 'date-fns';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PaymentService {
     // private payoutClient: any;
 
-    constructor(private config: ConfigService) {
+    constructor(private config: ConfigService, private prisma: PrismaService) {
         const clientId = this.config.get('PAYPAL_CLIENT_ID');
         const clientSecret = this.config.get('PAYPAL_CLIENT_SECRET');
 
@@ -37,14 +38,7 @@ export class PaymentService {
         return result;
     }
 
-    async checkoutLink(
-        userId: number,
-        listItem: {
-            name: string;
-            quantity: number;
-            price: number;
-        }[]
-    ) {
+    async checkoutLink(userId: number) {
         try {
             const host = globalVariables.paymentHost[userId];
             const { total, itemValue, shipFee } = globalVariables.orderDetail[userId];
@@ -148,9 +142,10 @@ export class PaymentService {
         });
     }
 
-    async payoutSeller(userId: number) {
+    async payoutSeller(orderId: number) {
         try {
-            const items = globalVariables.cartList[userId];
+            const order = await this.prisma.order.findFirst({ where: { id: orderId } });
+            const receiver = await this.prisma.shopWallet.findFirst({ where: { SID: order.SID } });
             // let requestBody = {
             //   sender_batch_header: {
             //     recipient_type: 'EMAIL',
@@ -204,19 +199,20 @@ export class PaymentService {
                     sender_batch_id: sender_batch_id,
                     email_subject: 'This is a test transaction from SDK',
                 },
-                items: items.map((item) => ({
-                    note: 'Your reveived for + ' + item.quantiry + ' product ' + item.name,
-                    amount: {
-                        currency: 'USD',
-                        value: (
-                            item.price *
-                            item.quantity *
-                            (1 - Number(this.config.get('FEE'))) *
-                            Number(this.config.get('VND_USD'))
-                        ).toFixed(2),
+                items: [
+                    {
+                        note: 'Your reveived for order',
+                        amount: {
+                            currency: 'USD',
+                            value: (
+                                order.total *
+                                (1 - Number(this.config.get('FEE'))) *
+                                Number(this.config.get('VND_USD'))
+                            ).toFixed(2),
+                        },
+                        receiver: receiver.paypalMethod,
                     },
-                    receiver: item.paypalMethod,
-                })),
+                ],
                 // items: [
                 //   {
                 //     note: 'Your Payout!',
