@@ -256,9 +256,10 @@ export class PaymentService {
                     throw error;
                 } else {
                     console.log('Create Payout Response');
-                    // console.log(payout);
                 }
             });
+
+            return true
         } catch (error) {
             throw error;
         }

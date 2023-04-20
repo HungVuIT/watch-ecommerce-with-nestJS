@@ -389,7 +389,7 @@ export class OrderService {
                             SID: item.SID,
                             total: item.totalPrice,
                             paymentMethod: 'online',
-                            status: 'created',
+                            status: 'confirm',
                         },
                     });
 
@@ -457,9 +457,9 @@ export class OrderService {
                     });
                 });
 
-                return listorder;
-
                 this.glo.deleteUserInfor(userId);
+
+                return listorder;
             });
         } catch (error) {
             throw error;
@@ -489,8 +489,6 @@ export class OrderService {
 
     async getDeliveryFree(userId: number) {
         try {
-            // trong postgresql table name nên để trong " " nếu không sẽ tự chuyển thành in thường -> lỗi ko tìm thấy
-            // chi tiết đọc tại https://stackoverflow.com/questions/26631205/postgresql-error-42p01-relation-table-does-not-exist
             const listItem: {
                 id: number;
                 quantity: number;
@@ -501,56 +499,103 @@ export class OrderService {
                 watchQuantity: number;
                 paypalMethod: string;
             }[] = await this.prisma.$queryRaw`
-          SELECT "Cart"."id", 
-          "Cart"."quantity", 
-          "Cart"."WID", 
-          "Cart"."UID", 
-          "Watch"."name", 
-          "Watch"."price", 
-          "Watch"."SID",
-          "Watch"."quantity" as "watchQuantity", 
-          "ShopWallet"."paypalMethod"
-          FROM "Cart" 
-          LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
-          LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
-          LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
-        `;
+      SELECT "Cart"."id", 
+      "Cart"."quantity", 
+      "Cart"."WID", 
+      "Cart"."UID", 
+      "Watch"."name", 
+      "Watch"."price", 
+      "Watch"."SID",
+      "Watch"."quantity" as "watchQuantity", 
+      "ShopWallet"."paypalMethod"
+      FROM "Cart" 
+      LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
+      LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
+      LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+    `;
 
             if (listItem.length === 0) throw new HttpException('Cart is emty', HttpStatus.BAD_REQUEST);
 
-            let total: number = 0;
+            const groupedItems: CartGroupedByShop[] = listItem.reduce((acc: CartGroupedByShop[], item: Cart) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                } else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
 
-            let quantiry: number = 0;
-
-            // Tính tổng tiền hàng và số lượng sản phẩm của đơn hàng
-            listItem.forEach((v) => {
-                total += v.quantity * v.price;
-                quantiry += v.quantity;
+            // Kiểm tra xem trng kho còn đủ hàng không
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.watchQuantity)
+                        throw new HttpException(
+                            {
+                                message: 'out of stock',
+                                itemID: item.WID,
+                                itemName: item.name,
+                            },
+                            HttpStatus.NOT_FOUND
+                        );
+                });
             });
 
-            // Tính chi phí ship hàng
             const location = globalVariables.deliveryLocation[userId];
 
-            let shipFee = await this.delivery.diliveryFee({
-                toProvince: location.province,
-                toDistrict: location.district,
-                toWard: location.district,
-                value: total,
-                quantity: quantiry,
-            });
+            const ordersByShop: OrderByShop[] = [];
 
-            switch (globalVariables.deliveryLocation[userId].deliveryOption) {
-                case 1:
-                    shipFee = Math.round(shipFee * 1.1);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    shipFee = Math.round(shipFee * 0.8);
-                    break;
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
+                });
+
+                switch (globalVariables.deliveryLocation[userId].deliveryOption) {
+                    case 1:
+                        shipFee = Math.round(shipFee * 1.1);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        shipFee = Math.round(shipFee * 0.8);
+                        break;
+                }
+                const totalPrice = total + shipFee;
+
+                const order: OrderByShop = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                };
+                ordersByShop.push(order);
             }
 
-            return shipFee;
+            globalVariables.orderList[userId] = groupedItems;
+
+            const orderDetail = ordersByShop.reduce(
+                (acc, curr) => {
+                    return {
+                        itemValue: acc.itemValue + curr.itemPrice,
+                        shipFee: acc.shipFee + curr.shipFee,
+                        total: acc.total + curr.totalPrice,
+                    };
+                },
+                { itemValue: 0, shipFee: 0, total: 0 }
+            );
+
+            return orderDetail.shipFee;
         } catch (error) {
             throw Error();
         }
@@ -576,6 +621,14 @@ export class OrderService {
             });
         } catch (error) {
             throw Error('cant delete');
+        }
+    }
+
+    async payForOrder(id: number) {
+        try {
+           if(this.payment.payoutSeller(id)) return { message: "success"}
+        } catch (error) {
+            throw error;
         }
     }
 }

@@ -160,6 +160,7 @@ let PaymentService = class PaymentService {
                     console.log('Create Payout Response');
                 }
             });
+            return true;
         }
         catch (error) {
             throw error;

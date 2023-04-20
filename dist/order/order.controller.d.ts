@@ -14,5 +14,8 @@ export declare class OrderController {
     getOrderDetail(id: number): Promise<import(".prisma/client").Order_detail[]>;
     updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;
+    payForVendor(id: number): Promise<{
+        message: string;
+    }>;
     getShipFee(id: number, body: createOrderDto): Promise<number>;
 }

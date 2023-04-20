@@ -7,7 +7,7 @@ export declare class PaymentService {
     vndToUsd(vnd: number): number;
     checkoutLink(userId: number): Promise<unknown>;
     succcessCheckout(userId: number): Promise<void>;
-    payoutSeller(orderId: number): Promise<void>;
+    payoutSeller(orderId: number): Promise<boolean>;
     VNPayCheckoutUrl(): Promise<string>;
     sortObject(obj: any): {};
     VNPayReturn(req: any): {

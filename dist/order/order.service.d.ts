@@ -40,5 +40,8 @@ export declare class OrderService {
     getDeliveryFree(userId: number): Promise<number>;
     updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;
+    payForOrder(id: number): Promise<{
+        message: string;
+    }>;
 }
 export {};

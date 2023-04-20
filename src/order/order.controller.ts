@@ -89,6 +89,12 @@ export class OrderController {
         return this.orderService.deleteOrder(id);
     }
 
+    @UseGuards(jwtGuard, AdminGuard)
+    @Get('/id/:id')
+    payForVendor(@Param('id', ParseIntPipe) id: number) {
+        return this.orderService.payForOrder(id);
+    }
+
     @UseGuards(jwtGuard)
     @Get('/ship-fee')
     async getShipFee(@User('id') id: number, @Body() body: createOrderDto) {

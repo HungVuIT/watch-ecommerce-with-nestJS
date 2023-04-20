@@ -65,6 +65,9 @@ let OrderController = class OrderController {
     deleteOrder(id) {
         return this.orderService.deleteOrder(id);
     }
+    payForVendor(id) {
+        return this.orderService.payForOrder(id);
+    }
     async getShipFee(id, body) {
         global_service_1.globalVariables.deliveryLocation[id] = {
             address: body.address,
@@ -129,6 +132,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "deleteOrder", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
+    (0, common_1.Get)('/id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "payForVendor", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Get)('/ship-fee'),

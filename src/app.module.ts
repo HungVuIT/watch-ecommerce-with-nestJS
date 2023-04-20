@@ -22,6 +22,7 @@ import { MailModule } from './mail/mail.module';
 import { RatingModule } from './rating/rating.module';
 import { RecommendModule } from './recommend/recommend.module';
 import { FavoriteModule } from './favorite/favorite.module';
+import { SaleOffModule } from './sale-off/sale-off.module';
 
 @Module({
     imports: [
@@ -46,6 +47,7 @@ import { FavoriteModule } from './favorite/favorite.module';
         RatingModule,
         RecommendModule,
         FavoriteModule,
+        SaleOffModule,
     ],
     controllers: [AppController, OrderController],
     providers: [AppService, OrderService],

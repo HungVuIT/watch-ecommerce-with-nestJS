@@ -272,7 +272,7 @@ let OrderService = class OrderService {
                             SID: item.SID,
                             total: item.totalPrice,
                             paymentMethod: 'online',
-                            status: 'created',
+                            status: 'confirm',
                         },
                     });
                     let data = [];
@@ -315,8 +315,8 @@ let OrderService = class OrderService {
                         where: { UID: userId },
                     });
                 });
-                return listorder;
                 this.glo.deleteUserInfor(userId);
+                return listorder;
             });
         }
         catch (error) {
@@ -347,47 +347,86 @@ let OrderService = class OrderService {
     async getDeliveryFree(userId) {
         try {
             const listItem = await this.prisma.$queryRaw `
-          SELECT "Cart"."id", 
-          "Cart"."quantity", 
-          "Cart"."WID", 
-          "Cart"."UID", 
-          "Watch"."name", 
-          "Watch"."price", 
-          "Watch"."SID",
-          "Watch"."quantity" as "watchQuantity", 
-          "ShopWallet"."paypalMethod"
-          FROM "Cart" 
-          LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
-          LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
-          LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
-        `;
+      SELECT "Cart"."id", 
+      "Cart"."quantity", 
+      "Cart"."WID", 
+      "Cart"."UID", 
+      "Watch"."name", 
+      "Watch"."price", 
+      "Watch"."SID",
+      "Watch"."quantity" as "watchQuantity", 
+      "ShopWallet"."paypalMethod"
+      FROM "Cart" 
+      LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
+      LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
+      LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+    `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
-            let total = 0;
-            let quantiry = 0;
-            listItem.forEach((v) => {
-                total += v.quantity * v.price;
-                quantiry += v.quantity;
+            const groupedItems = listItem.reduce((acc, item) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                }
+                else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.watchQuantity)
+                        throw new common_1.HttpException({
+                            message: 'out of stock',
+                            itemID: item.WID,
+                            itemName: item.name,
+                        }, common_1.HttpStatus.NOT_FOUND);
+                });
             });
             const location = global_service_1.globalVariables.deliveryLocation[userId];
-            let shipFee = await this.delivery.diliveryFee({
-                toProvince: location.province,
-                toDistrict: location.district,
-                toWard: location.district,
-                value: total,
-                quantity: quantiry,
-            });
-            switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                case 1:
-                    shipFee = Math.round(shipFee * 1.1);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    shipFee = Math.round(shipFee * 0.8);
-                    break;
+            const ordersByShop = [];
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
+                });
+                switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                    case 1:
+                        shipFee = Math.round(shipFee * 1.1);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        shipFee = Math.round(shipFee * 0.8);
+                        break;
+                }
+                const totalPrice = total + shipFee;
+                const order = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                };
+                ordersByShop.push(order);
             }
-            return shipFee;
+            global_service_1.globalVariables.orderList[userId] = groupedItems;
+            const orderDetail = ordersByShop.reduce((acc, curr) => {
+                return {
+                    itemValue: acc.itemValue + curr.itemPrice,
+                    shipFee: acc.shipFee + curr.shipFee,
+                    total: acc.total + curr.totalPrice,
+                };
+            }, { itemValue: 0, shipFee: 0, total: 0 });
+            return orderDetail.shipFee;
         }
         catch (error) {
             throw Error();
@@ -414,6 +453,15 @@ let OrderService = class OrderService {
         }
         catch (error) {
             throw Error('cant delete');
+        }
+    }
+    async payForOrder(id) {
+        try {
+            if (this.payment.payoutSeller(id))
+                return { message: "success" };
+        }
+        catch (error) {
+            throw error;
         }
     }
 };
