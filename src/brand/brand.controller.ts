@@ -18,7 +18,7 @@ import { createBrandDto } from './dto/createBrand.dto';
 import { editBrandDto } from './dto/editBrand.dto';
 
 @UseInterceptors(TransResInterceptor)
-@Controller('brand')
+@Controller('brands')
 export class BrandController {
     constructor(private service: BrandService) {}
 
@@ -30,7 +30,7 @@ export class BrandController {
     }
 
     @UseGuards(jwtGuard, AdminGuard)
-    @Patch(':id')
+    @Patch('id/:id')
     editBrand(
         @Param('id', ParseIntPipe) id: number,
         @Body() body: editBrandDto,
@@ -39,12 +39,12 @@ export class BrandController {
         return this.service.editBrand(id, body, file);
     }
 
-    @Get()
+    @Get('list')
     getList() {
         return this.service.getList();
     }
 
-    @Get(':id')
+    @Get('id/:id')
     getById(@Param('id', ParseIntPipe) id: number) {
         return this.service.getById(id);
     }

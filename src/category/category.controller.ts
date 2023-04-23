@@ -18,7 +18,7 @@ import { createCategoryDto } from './dto/createCategory.dto';
 import { editCategoryDto } from './dto/editCategory.dto';
 
 @UseInterceptors(TransResInterceptor)
-@Controller('category')
+@Controller('categorys')
 export class CategoryController {
     constructor(private service: CategoryService) {}
 
@@ -31,7 +31,7 @@ export class CategoryController {
 
     @UseInterceptors(fileUpload('image'))
     @UseGuards(jwtGuard, AdminGuard)
-    @Patch(':id')
+    @Patch('id/:id')
     editCategory(
         @Param('id', ParseIntPipe) id: number,
         @Body() body: editCategoryDto,
@@ -40,12 +40,12 @@ export class CategoryController {
         return this.service.editCategory(id, body, file);
     }
 
-    @Get()
+    @Get('list')
     getList() {
         return this.service.getList();
     }
 
-    @Get(':id')
+    @Get('id/:id')
     getById(@Param('id', ParseIntPipe) id: number) {
         return this.service.getById(id);
     }

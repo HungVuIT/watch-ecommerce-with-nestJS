@@ -50,7 +50,7 @@ __decorate([
 __decorate([
     (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('image')),
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Patch)('id/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.UploadedFile)()),
@@ -59,13 +59,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "editCategory", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('list'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "getList", null);
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)('id/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -73,7 +73,7 @@ __decorate([
 ], CategoryController.prototype, "getById", null);
 CategoryController = __decorate([
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),
-    (0, common_1.Controller)('category'),
+    (0, common_1.Controller)('categorys'),
     __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], CategoryController);
 exports.CategoryController = CategoryController;
