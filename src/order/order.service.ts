@@ -466,10 +466,31 @@ export class OrderService {
         }
     }
 
-    async getOrders(userId: number) {
+    async getOrdersUser(id: number) {
         try {
             return await this.prisma.order.findMany({
-                where: { UID: userId },
+                where: { UID: id },
+                orderBy: { createdAt: 'desc' },
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getOrdersShop(id: number) {
+        try {
+            return await this.prisma.order.findMany({
+                where: { SID: id },
+                orderBy: { createdAt: 'desc' },
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getOrdersAdmin() {
+        try {
+            return await this.prisma.order.findMany({
                 orderBy: { createdAt: 'desc' },
             });
         } catch (error) {

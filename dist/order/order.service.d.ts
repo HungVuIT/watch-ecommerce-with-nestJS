@@ -35,7 +35,9 @@ export declare class OrderService {
     }>;
     completeOrder(userId: number): Promise<OrderByShop[]>;
     cashOnDelivery(userId: number): Promise<void>;
-    getOrders(userId: number): Promise<import(".prisma/client").Order[]>;
+    getOrdersUser(id: number): Promise<import(".prisma/client").Order[]>;
+    getOrdersShop(id: number): Promise<import(".prisma/client").Order[]>;
+    getOrdersAdmin(): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(orderId: number): Promise<import(".prisma/client").Order_detail[]>;
     getDeliveryFree(userId: number): Promise<number>;
     updateOrder(id: number, body: any): Promise<void>;

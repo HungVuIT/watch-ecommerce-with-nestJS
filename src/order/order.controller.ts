@@ -20,6 +20,7 @@ import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 import { DeliveryService } from 'src/delivery/delivery.service';
+import { Shop } from 'src/shared/customDecorator/shop.decorator';
 
 @Controller('order')
 @UseInterceptors(TransResInterceptor)
@@ -66,9 +67,21 @@ export class OrderController {
     }
 
     @UseGuards(jwtGuard)
-    @Get('')
-    getOrderList(@User('id') id: number) {
-        return this.orderService.getOrders(id);
+    @Get('/user')
+    getOrderListUser(@User('id') id:number) {
+        return this.orderService.getOrdersUser(id);
+    }
+
+    @UseGuards(jwtGuard)
+    @Get('/admin')
+    getOrderListAdmin() {
+        return this.orderService.getOrdersAdmin();
+    }
+
+    @UseGuards(jwtGuard)
+    @Get('/shop')
+    getOrderListShop(@Shop('id') id:number) {
+        return this.orderService.getOrdersShop(id);
     }
 
     @UseGuards(jwtGuard)
@@ -96,7 +109,8 @@ export class OrderController {
     }
 
     @UseGuards(jwtGuard)
-    @Get('/ship-fee')
+    @UseInterceptors(FileInterceptor(''))
+    @Post('/ship-fee')
     async getShipFee(@User('id') id: number, @Body() body: createOrderDto) {
         globalVariables.deliveryLocation[id] = {
             address: body.address,

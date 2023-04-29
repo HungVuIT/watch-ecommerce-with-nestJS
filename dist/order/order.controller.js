@@ -21,6 +21,7 @@ const guard_1 = require("../shared/guard");
 const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
 const createOrder_dto_1 = require("./dto/createOrder.dto");
 const order_service_1 = require("./order.service");
+const shop_decorator_1 = require("../shared/customDecorator/shop.decorator");
 let OrderController = class OrderController {
     constructor(orderService, glo) {
         this.orderService = orderService;
@@ -53,8 +54,14 @@ let OrderController = class OrderController {
         const order = await this.orderService.completeOrder(id);
         return order;
     }
-    getOrderList(id) {
-        return this.orderService.getOrders(id);
+    getOrderListUser(id) {
+        return this.orderService.getOrdersUser(id);
+    }
+    getOrderListAdmin() {
+        return this.orderService.getOrdersAdmin();
+    }
+    getOrderListShop(id) {
+        return this.orderService.getOrdersShop(id);
     }
     getOrderDetail(id) {
         return this.orderService.getOrderDetail(id);
@@ -102,12 +109,27 @@ __decorate([
 ], OrderController.prototype, "success", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.Get)(''),
+    (0, common_1.Get)('/user'),
     __param(0, (0, user_decorator_1.User)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
-], OrderController.prototype, "getOrderList", null);
+], OrderController.prototype, "getOrderListUser", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.Get)('/admin'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "getOrderListAdmin", null);
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.Get)('/shop'),
+    __param(0, (0, shop_decorator_1.Shop)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OrderController.prototype, "getOrderListShop", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Get)('/order-detail/:orderId'),
@@ -142,7 +164,8 @@ __decorate([
 ], OrderController.prototype, "payForVendor", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.Get)('/ship-fee'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
+    (0, common_1.Post)('/ship-fee'),
     __param(0, (0, user_decorator_1.User)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),

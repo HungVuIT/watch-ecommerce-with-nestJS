@@ -10,7 +10,9 @@ export declare class OrderController {
         href: unknown;
     }>;
     success(id: number, req: Request): Promise<import("./order.service").OrderByShop[]>;
-    getOrderList(id: number): Promise<import(".prisma/client").Order[]>;
+    getOrderListUser(id: number): Promise<import(".prisma/client").Order[]>;
+    getOrderListAdmin(): Promise<import(".prisma/client").Order[]>;
+    getOrderListShop(id: number): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(id: number): Promise<import(".prisma/client").Order_detail[]>;
     updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;

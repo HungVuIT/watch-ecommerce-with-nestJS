@@ -323,10 +323,31 @@ let OrderService = class OrderService {
             throw error;
         }
     }
-    async getOrders(userId) {
+    async getOrdersUser(id) {
         try {
             return await this.prisma.order.findMany({
-                where: { UID: userId },
+                where: { UID: id },
+                orderBy: { createdAt: 'desc' },
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getOrdersShop(id) {
+        try {
+            return await this.prisma.order.findMany({
+                where: { SID: id },
+                orderBy: { createdAt: 'desc' },
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getOrdersAdmin() {
+        try {
+            return await this.prisma.order.findMany({
                 orderBy: { createdAt: 'desc' },
             });
         }
