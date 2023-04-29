@@ -120,56 +120,59 @@ let OrderService = class OrderService {
     async completeOrder(userId) {
         try {
             await this.payment.succcessCheckout(userId);
-            return await this.prisma.$transaction(async (tx) => {
+            const location = global_service_1.globalVariables.deliveryLocation[userId];
+            await this.prisma.$transaction(async (tx) => {
                 const listorder = global_service_1.globalVariables.orderList[userId];
                 listorder.forEach(async (item) => {
-                    const order = await tx.order.create({
-                        data: {
-                            UID: userId,
-                            SID: item.SID,
-                            total: item.totalPrice,
-                            paymentMethod: 'online',
-                            status: 'created',
-                        },
-                    });
-                    let data = [];
-                    item.items.forEach((v) => data.push({
-                        OID: order.id,
-                        WID: v.WID,
-                        quantity: v.quantity,
-                        total: v.price * v.quantity,
-                        fee: v.price * v.quantity * Number(this.config.get('FEE')),
-                    }));
-                    await tx.order_detail.createMany({
-                        data: data,
-                    });
-                    const update = item.items.map((item) => {
-                        tx.watch.update({
-                            where: { id: item.WID },
+                    await this.prisma.$transaction(async (tx) => {
+                        const order = await tx.order.create({
                             data: {
-                                quantity: { increment: -item.quantity },
-                                saled: { increment: item.quantity },
+                                UID: userId,
+                                SID: item.SID,
+                                total: item.totalPrice,
+                                paymentMethod: 'online',
+                                status: 'confirm',
                             },
                         });
-                    });
-                    await Promise.all(update);
-                    let deliveryType = client_1.deliveryOption.standard;
-                    switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                        case 1:
-                            deliveryType = client_1.deliveryOption.express;
-                            break;
-                        case 2:
-                            deliveryType = client_1.deliveryOption.standard;
-                            break;
-                        case 3:
-                            deliveryType = client_1.deliveryOption.saving;
-                            break;
-                    }
-                    await tx.delivery_detail.create({
-                        data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
-                    });
-                    await tx.cart.deleteMany({
-                        where: { UID: userId },
+                        let data = [];
+                        item.items.forEach((v) => data.push({
+                            OID: order.id,
+                            WID: v.WID,
+                            quantity: v.quantity,
+                            total: v.price * v.quantity,
+                            fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                        }));
+                        await tx.order_detail.createMany({
+                            data: data,
+                        });
+                        const update = item.items.map((item) => {
+                            tx.watch.update({
+                                where: { id: item.WID },
+                                data: {
+                                    quantity: { increment: -item.quantity },
+                                    saled: { increment: item.quantity },
+                                },
+                            });
+                        });
+                        await Promise.all(update);
+                        let deliveryType = client_1.deliveryOption.standard;
+                        switch (location.deliveryOption) {
+                            case 1:
+                                deliveryType = client_1.deliveryOption.express;
+                                break;
+                            case 2:
+                                deliveryType = client_1.deliveryOption.standard;
+                                break;
+                            case 3:
+                                deliveryType = client_1.deliveryOption.saving;
+                                break;
+                        }
+                        await tx.delivery_detail.create({
+                            data: Object.assign(Object.assign({}, location), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
+                        });
+                        await tx.cart.deleteMany({
+                            where: { UID: userId },
+                        });
                     });
                 });
                 this.glo.deleteUserInfor(userId);
@@ -254,7 +257,7 @@ let OrderService = class OrderService {
                 };
                 ordersByShop.push(order);
             }
-            global_service_1.globalVariables.orderList[userId] = groupedItems;
+            global_service_1.globalVariables.orderList[userId] = ordersByShop;
             const orderDetail = ordersByShop.reduce((acc, curr) => {
                 return {
                     itemValue: acc.itemValue + curr.itemPrice,
@@ -266,53 +269,55 @@ let OrderService = class OrderService {
             await this.prisma.$transaction(async (tx) => {
                 const listorder = global_service_1.globalVariables.orderList[userId];
                 listorder.forEach(async (item) => {
-                    const order = await tx.order.create({
-                        data: {
-                            UID: userId,
-                            SID: item.SID,
-                            total: item.totalPrice,
-                            paymentMethod: 'online',
-                            status: 'confirm',
-                        },
-                    });
-                    let data = [];
-                    item.items.forEach((v) => data.push({
-                        OID: order.id,
-                        WID: v.WID,
-                        quantity: v.quantity,
-                        total: v.price * v.quantity,
-                        fee: v.price * v.quantity * Number(this.config.get('FEE')),
-                    }));
-                    await tx.order_detail.createMany({
-                        data: data,
-                    });
-                    const update = item.items.map((item) => {
-                        tx.watch.update({
-                            where: { id: item.WID },
+                    await this.prisma.$transaction(async (tx) => {
+                        const order = await tx.order.create({
                             data: {
-                                quantity: { increment: -item.quantity },
-                                saled: { increment: item.quantity },
+                                UID: userId,
+                                SID: item.SID,
+                                total: item.totalPrice,
+                                paymentMethod: 'offline',
+                                status: 'created',
                             },
                         });
-                    });
-                    await Promise.all(update);
-                    let deliveryType = client_1.deliveryOption.standard;
-                    switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
-                        case 1:
-                            deliveryType = client_1.deliveryOption.express;
-                            break;
-                        case 2:
-                            deliveryType = client_1.deliveryOption.standard;
-                            break;
-                        case 3:
-                            deliveryType = client_1.deliveryOption.saving;
-                            break;
-                    }
-                    await tx.delivery_detail.create({
-                        data: Object.assign(Object.assign({}, global_service_1.globalVariables.deliveryLocation[userId]), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
-                    });
-                    await tx.cart.deleteMany({
-                        where: { UID: userId },
+                        let data = [];
+                        item.items.forEach((v) => data.push({
+                            OID: order.id,
+                            WID: v.WID,
+                            quantity: v.quantity,
+                            total: v.price * v.quantity,
+                            fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                        }));
+                        await tx.order_detail.createMany({
+                            data: data,
+                        });
+                        const update = item.items.map((item) => {
+                            tx.watch.update({
+                                where: { id: item.WID },
+                                data: {
+                                    quantity: { increment: -item.quantity },
+                                    saled: { increment: item.quantity },
+                                },
+                            });
+                        });
+                        await Promise.all(update);
+                        let deliveryType = client_1.deliveryOption.standard;
+                        switch (location.deliveryOption) {
+                            case 1:
+                                deliveryType = client_1.deliveryOption.express;
+                                break;
+                            case 2:
+                                deliveryType = client_1.deliveryOption.standard;
+                                break;
+                            case 3:
+                                deliveryType = client_1.deliveryOption.saving;
+                                break;
+                        }
+                        await tx.delivery_detail.create({
+                            data: Object.assign(Object.assign({}, location), { OID: order.id, shipFee: item.shipFee, deliveryOption: deliveryType }),
+                        });
+                        await tx.cart.deleteMany({
+                            where: { UID: userId },
+                        });
                     });
                 });
                 this.glo.deleteUserInfor(userId);
@@ -479,7 +484,7 @@ let OrderService = class OrderService {
     async payForOrder(id) {
         try {
             if (this.payment.payoutSeller(id))
-                return { message: "success" };
+                return { message: 'success' };
         }
         catch (error) {
             throw error;

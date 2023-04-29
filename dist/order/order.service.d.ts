@@ -33,7 +33,7 @@ export declare class OrderService {
     createLinkPaymant(userId: number): Promise<{
         href: unknown;
     }>;
-    completeOrder(userId: number): Promise<OrderByShop[]>;
+    completeOrder(userId: number): Promise<void>;
     cashOnDelivery(userId: number): Promise<void>;
     getOrdersUser(id: number): Promise<import(".prisma/client").Order[]>;
     getOrdersShop(id: number): Promise<import(".prisma/client").Order[]>;

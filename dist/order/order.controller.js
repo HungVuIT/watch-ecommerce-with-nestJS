@@ -123,7 +123,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "getOrderListAdmin", null);
 __decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.VendorGuard),
     (0, common_1.Get)('/shop'),
     __param(0, (0, shop_decorator_1.Shop)('id')),
     __metadata("design:type", Function),

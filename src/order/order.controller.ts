@@ -15,7 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { User } from 'src/shared/customDecorator/user.decorator';
 import { globalVariables } from 'src/shared/global.service';
-import { AdminGuard, jwtGuard } from 'src/shared/guard';
+import { AdminGuard, VendorGuard, jwtGuard } from 'src/shared/guard';
 import { TransResInterceptor } from 'src/shared/interceptor/res.interceptor';
 import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
@@ -78,7 +78,7 @@ export class OrderController {
         return this.orderService.getOrdersAdmin();
     }
 
-    @UseGuards(jwtGuard)
+    @UseGuards(jwtGuard, VendorGuard)
     @Get('/shop')
     getOrderListShop(@Shop('id') id:number) {
         return this.orderService.getOrdersShop(id);
