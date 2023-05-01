@@ -91,8 +91,8 @@ export class OrderController {
     }
 
     @UseGuards(jwtGuard)
-    @Post('/id/:id')
-    updateOrder(@Param('id', ParseIntPipe) id: number, body: any) {
+    @Patch('/id/:id')
+    updateOrder(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
         return this.orderService.updateOrder(id, body);
     }
 

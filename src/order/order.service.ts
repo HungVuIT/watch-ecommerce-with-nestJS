@@ -637,7 +637,7 @@ export class OrderService {
                 },
             });
         } catch (error) {
-            throw Error('cant delete');
+            throw error;
         }
     }
 
