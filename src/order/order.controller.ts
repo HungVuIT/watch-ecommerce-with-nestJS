@@ -103,7 +103,7 @@ export class OrderController {
     }
 
     @UseGuards(jwtGuard, AdminGuard)
-    @Get('/id/:id')
+    @Get('/pay-vendor/:id')
     payForVendor(@Param('id', ParseIntPipe) id: number) {
         return this.orderService.payForOrder(id);
     }

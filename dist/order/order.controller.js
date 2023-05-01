@@ -157,7 +157,7 @@ __decorate([
 ], OrderController.prototype, "deleteOrder", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
-    (0, common_1.Get)('/id/:id'),
+    (0, common_1.Get)('/pay-vendor/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
