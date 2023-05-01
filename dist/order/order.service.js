@@ -145,16 +145,14 @@ let OrderService = class OrderService {
                         await tx.order_detail.createMany({
                             data: data,
                         });
-                        const update = item.items.map((item) => {
-                            tx.watch.update({
-                                where: { id: item.WID },
-                                data: {
-                                    quantity: { increment: -item.quantity },
-                                    saled: { increment: item.quantity },
-                                },
-                            });
-                        });
-                        await Promise.all(update);
+                        const updates = item.items.map((item) => tx.watch.update({
+                            where: { id: item.WID },
+                            data: {
+                                quantity: { decrement: item.quantity },
+                                saled: { increment: item.quantity },
+                            },
+                        }));
+                        await Promise.all(updates);
                         let deliveryType = client_1.deliveryOption.standard;
                         switch (location.deliveryOption) {
                             case 1:
@@ -290,16 +288,14 @@ let OrderService = class OrderService {
                         await tx.order_detail.createMany({
                             data: data,
                         });
-                        const update = item.items.map((item) => {
-                            tx.watch.update({
-                                where: { id: item.WID },
-                                data: {
-                                    quantity: { increment: -item.quantity },
-                                    saled: { increment: item.quantity },
-                                },
-                            });
-                        });
-                        await Promise.all(update);
+                        const updates = item.items.map((item) => tx.watch.update({
+                            where: { id: item.WID },
+                            data: {
+                                quantity: { decrement: item.quantity },
+                                saled: { increment: item.quantity },
+                            },
+                        }));
+                        await Promise.all(updates);
                         let deliveryType = client_1.deliveryOption.standard;
                         switch (location.deliveryOption) {
                             case 1:
@@ -366,7 +362,7 @@ let OrderService = class OrderService {
                 where: { OID: orderId },
                 include: {
                     watch: true,
-                }
+                },
             });
         }
         catch (error) {

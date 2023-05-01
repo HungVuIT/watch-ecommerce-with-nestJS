@@ -218,17 +218,17 @@ export class OrderService {
                             data: data,
                         });
 
-                        const update = item.items.map((item) => {
+                        const updates = item.items.map((item) =>
                             tx.watch.update({
                                 where: { id: item.WID },
                                 data: {
-                                    quantity: { increment: -item.quantity },
+                                    quantity: { decrement: item.quantity },
                                     saled: { increment: item.quantity },
                                 },
-                            });
-                        });
+                            })
+                        );
 
-                        await Promise.all(update);
+                        await Promise.all(updates);
 
                         let deliveryType: deliveryOption = deliveryOption.standard;
 
@@ -419,17 +419,17 @@ export class OrderService {
                             data: data,
                         });
 
-                        const update = item.items.map((item) => {
+                        const updates = item.items.map((item) =>
                             tx.watch.update({
                                 where: { id: item.WID },
                                 data: {
-                                    quantity: { increment: -item.quantity },
+                                    quantity: { decrement: item.quantity },
                                     saled: { increment: item.quantity },
                                 },
-                            });
-                        });
+                            })
+                        );
 
-                        await Promise.all(update);
+                        await Promise.all(updates);
 
                         let deliveryType: deliveryOption = deliveryOption.standard;
 
@@ -507,7 +507,7 @@ export class OrderService {
                 where: { OID: orderId },
                 include: {
                     watch: true,
-                }
+                },
             });
         } catch (error) {
             throw error;
