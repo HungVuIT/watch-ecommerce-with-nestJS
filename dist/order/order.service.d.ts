@@ -40,6 +40,7 @@ export declare class OrderService {
     getOrdersAdmin(): Promise<import(".prisma/client").Order[]>;
     getOrderDetail(orderId: number): Promise<(import(".prisma/client").Order_detail & {
         watch: import(".prisma/client").Watch;
+        order: import(".prisma/client").Order;
     })[]>;
     getDeliveryFree(userId: number): Promise<number>;
     updateOrder(id: number, body: any): Promise<void>;

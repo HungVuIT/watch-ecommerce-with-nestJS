@@ -362,6 +362,7 @@ let OrderService = class OrderService {
                 where: { OID: orderId },
                 include: {
                     watch: true,
+                    order: true,
                 },
             });
         }

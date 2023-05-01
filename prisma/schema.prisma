@@ -260,6 +260,8 @@ model Order {
 
   Note String?
 
+  payVendor Boolean @default(false)
+
   isActive        Boolean          @default(true)
   Order_detail    Order_detail[]
   Delivery_detail Delivery_detail?
