@@ -131,7 +131,7 @@ let OrderService = class OrderService {
                                 SID: item.SID,
                                 total: item.totalPrice,
                                 paymentMethod: 'online',
-                                status: 'confirm',
+                                status: 'created',
                             },
                         });
                         let data = [];
@@ -364,6 +364,9 @@ let OrderService = class OrderService {
         try {
             return await this.prisma.order_detail.findMany({
                 where: { OID: orderId },
+                include: {
+                    watch: true,
+                }
             });
         }
         catch (error) {

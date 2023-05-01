@@ -402,3 +402,13 @@ model Sale_off {
   WID Int  @unique
 }
 
+model News {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title String
+
+  content String
+}
+

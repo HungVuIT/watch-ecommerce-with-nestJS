@@ -38,7 +38,9 @@ export declare class OrderService {
     getOrdersUser(id: number): Promise<import(".prisma/client").Order[]>;
     getOrdersShop(id: number): Promise<import(".prisma/client").Order[]>;
     getOrdersAdmin(): Promise<import(".prisma/client").Order[]>;
-    getOrderDetail(orderId: number): Promise<import(".prisma/client").Order_detail[]>;
+    getOrderDetail(orderId: number): Promise<(import(".prisma/client").Order_detail & {
+        watch: import(".prisma/client").Watch;
+    })[]>;
     getDeliveryFree(userId: number): Promise<number>;
     updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;

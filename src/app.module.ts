@@ -23,6 +23,7 @@ import { RatingModule } from './rating/rating.module';
 import { RecommendModule } from './recommend/recommend.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { SaleOffModule } from './sale-off/sale-off.module';
+import { NewsModule } from './news/new.module';
 
 @Module({
     imports: [
@@ -48,6 +49,7 @@ import { SaleOffModule } from './sale-off/sale-off.module';
         RecommendModule,
         FavoriteModule,
         SaleOffModule,
+        NewsModule,
     ],
     controllers: [AppController, OrderController],
     providers: [AppService, OrderService],

@@ -13,7 +13,9 @@ export declare class OrderController {
     getOrderListUser(id: number): Promise<import(".prisma/client").Order[]>;
     getOrderListAdmin(): Promise<import(".prisma/client").Order[]>;
     getOrderListShop(id: number): Promise<import(".prisma/client").Order[]>;
-    getOrderDetail(id: number): Promise<import(".prisma/client").Order_detail[]>;
+    getOrderDetail(id: number): Promise<(import(".prisma/client").Order_detail & {
+        watch: import(".prisma/client").Watch;
+    })[]>;
     updateOrder(id: number, body: any): Promise<void>;
     deleteOrder(id: number): Promise<void>;
     payForVendor(id: number): Promise<{

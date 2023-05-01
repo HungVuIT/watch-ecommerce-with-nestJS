@@ -32,6 +32,7 @@ const rating_module_1 = require("./rating/rating.module");
 const recommend_module_1 = require("./recommend/recommend.module");
 const favorite_module_1 = require("./favorite/favorite.module");
 const sale_off_module_1 = require("./sale-off/sale-off.module");
+const new_module_1 = require("./news/new.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -59,6 +60,7 @@ AppModule = __decorate([
             recommend_module_1.RecommendModule,
             favorite_module_1.FavoriteModule,
             sale_off_module_1.SaleOffModule,
+            new_module_1.NewsModule,
         ],
         controllers: [app_controller_1.AppController, order_controller_1.OrderController],
         providers: [app_service_1.AppService, order_service_1.OrderService],
