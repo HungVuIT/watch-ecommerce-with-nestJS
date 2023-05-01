@@ -14,8 +14,8 @@ export class WatchService {
             return await this.prisma.watch.update({
                 where: { id: prodcutId },
                 data: {
-                    isActive: false
-                }
+                    isActive: false,
+                },
             });
         } catch (error) {
             throw error;
@@ -30,17 +30,15 @@ export class WatchService {
 
             if (option.take) query['take'] = Number(option.take);
 
-
-
             query['where'] = { AND: [] };
-            
-            if (option.search) query['where'].AND.push({ name: {contains: option.search, mode: 'insensitive'} });
+
+            if (option.search) query['where'].AND.push({ name: { contains: option.search, mode: 'insensitive' } });
 
             if (option.SID) query['where'].AND.push({ SID: Number(option.SID) });
 
-            if (option.BID) query['where'].AND.push({BID: Number(option.BID)});
+            if (option.BID) query['where'].AND.push({ BID: Number(option.BID) });
 
-            if (option.CID) query['where'].AND.push({CID: Number(option.CID)});
+            if (option.CID) query['where'].AND.push({ CID: Number(option.CID) });
 
             if (option.price) {
                 const value = option.price.split(':');
@@ -63,14 +61,25 @@ export class WatchService {
 
             const list = await this.prisma.watch.findMany(query);
 
-            await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
-                list.map((watch, index) => {
+            let result = list;
+
+            if (option.province)
+                result = result.filter((item: any) => {
+                    return item.shop.province === option.province ? true : false;
+                });
+
+            if (option.district)
+                result = result.filter((item: any) => {
+                    return item.shop.district === option.district ? true : false;
+                });
+
+            await Promise.all(result.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
+                result.map((watch, index) => {
                     watch['rating'] = rates[index];
                 });
             });
 
-
-            return list;
+            return result;
         } catch (error) {
             throw error;
         }

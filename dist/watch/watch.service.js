@@ -23,8 +23,8 @@ let WatchService = class WatchService {
             return await this.prisma.watch.update({
                 where: { id: prodcutId },
                 data: {
-                    isActive: false
-                }
+                    isActive: false,
+                },
             });
         }
         catch (error) {
@@ -61,12 +61,21 @@ let WatchService = class WatchService {
             }
             query['include'] = { sale_off: true, shop: true };
             const list = await this.prisma.watch.findMany(query);
-            await Promise.all(list.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
-                list.map((watch, index) => {
+            let result = list;
+            if (option.province)
+                result = result.filter((item) => {
+                    return item.shop.province === option.province ? true : false;
+                });
+            if (option.district)
+                result = result.filter((item) => {
+                    return item.shop.district === option.district ? true : false;
+                });
+            await Promise.all(result.map((watch) => this.ratingService.getProductRate(watch.id))).then((rates) => {
+                result.map((watch, index) => {
                     watch['rating'] = rates[index];
                 });
             });
-            return list;
+            return result;
         }
         catch (error) {
             throw error;
