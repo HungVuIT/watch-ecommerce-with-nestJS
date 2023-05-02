@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewsController = void 0;
 const common_1 = require("@nestjs/common");
+const storage_1 = require("../shared/cloudinary/storage");
 const guard_1 = require("../shared/guard");
 const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
 const new_service_1 = require("./new.service");
@@ -37,6 +38,7 @@ let NewsController = class NewsController {
     }
 };
 __decorate([
+    (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('image')),
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -45,6 +47,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], NewsController.prototype, "createNew", null);
 __decorate([
+    (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('image')),
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
     (0, common_1.Patch)('id/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

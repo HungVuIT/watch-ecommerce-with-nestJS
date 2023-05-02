@@ -9,6 +9,18 @@ export class RatingService {
 
     async rateProduct(userID: number, body: rateBody) {
         try {
+            const orders = await this.prisma.order.findMany({
+                where: {UID: userID},
+                include: {Order_detail: true}
+            })
+
+            const WIDs = orders
+            .flatMap((order) => order.Order_detail)
+            .map((order_detail) => order_detail.WID);
+
+            if (!WIDs.includes(body.targetID)) throw Error("can rate this product cause it you didnt buy it yet")
+          
+
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,

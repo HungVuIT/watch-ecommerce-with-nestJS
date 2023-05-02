@@ -22,12 +22,14 @@ import { editNewDto } from './dto/editNew.dto';
 export class NewsController {
     constructor(private service: NewsService) {}
 
+    @UseInterceptors(fileUpload('image'))
     @UseGuards(jwtGuard, AdminGuard)
     @Post()
     createNew(@Body() body: createNewDto) {
         return this.service.createNew(body);
     }
 
+    @UseInterceptors(fileUpload('image'))
     @UseGuards(jwtGuard, AdminGuard)
     @Patch('id/:id')
     editNew(
