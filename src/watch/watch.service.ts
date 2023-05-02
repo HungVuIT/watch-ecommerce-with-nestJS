@@ -38,8 +38,10 @@ export class WatchService {
 
             if (option.BID) query['where'].AND.push({ BID: Number(option.BID) });
 
-            if (option.CID) query['where'].AND.push({ CID: Number(option.CID) });
+            if (option.CID) query['where'].AND.push({CID: { contains: Number(option.CID) }});
 
+
+                       
             if (option.price) {
                 const value = option.price.split(':');
                 query['where'].AND.push({

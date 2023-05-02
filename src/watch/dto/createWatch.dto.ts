@@ -8,10 +8,13 @@ export class createWatchDto {
     name: string;
 
     @IsNumber()
+    @Type(() => Number)
+    @IsInt()
     @IsOptional()
     BID: number;
 
     @IsArray()
+    @Type(() => Number)
     @IsOptional()
     CID: number[];
 

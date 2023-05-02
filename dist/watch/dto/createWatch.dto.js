@@ -22,11 +22,14 @@ __decorate([
 ], createWatchDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], createWatchDto.prototype, "BID", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => Number),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], createWatchDto.prototype, "CID", void 0);
