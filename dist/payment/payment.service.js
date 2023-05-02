@@ -160,6 +160,10 @@ let PaymentService = class PaymentService {
                     console.log('Create Payout Response');
                 }
             });
+            await this.prisma.order.update({
+                where: { id: order.id },
+                data: { payVendor: true }
+            });
             return true;
         }
         catch (error) {
