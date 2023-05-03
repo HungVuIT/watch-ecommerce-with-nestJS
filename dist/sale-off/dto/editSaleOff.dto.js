@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.editSaleOffDto = void 0;
+const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class editSaleOffDto {
 }
@@ -19,6 +20,8 @@ __decorate([
 ], editSaleOffDto.prototype, "id", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsInt)(),
     __metadata("design:type", Number)
 ], editSaleOffDto.prototype, "amount", void 0);
 __decorate([
