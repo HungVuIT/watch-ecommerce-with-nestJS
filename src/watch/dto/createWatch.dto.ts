@@ -53,7 +53,6 @@ export class createWatchDto {
     glassSurface: string;
 
     @IsOptional()
-    @IsString()
     glassSize: string;
 
     @IsOptional()
@@ -69,6 +68,25 @@ export class createWatchDto {
     @Type(() => Date)
     @IsOptional()
     warranty: Date;
+
+    @IsOptional()
+    isOld: boolean;
+
+    @IsOptional()
+    @IsString()
+    status: string;
+
+    @IsOptional()
+    @IsString()
+    include: string;
+
+    @IsOptional()
+    @IsString()
+    used: string;
+
+    @IsOptional()
+    @IsString()
+    resalePrice: number;
 }
 
 // model Watch {

@@ -16,4 +16,9 @@ export declare class updateWatchDto {
     weight: number;
     madeBy: string;
     image: any;
+    isOld: boolean;
+    status: string;
+    include: string;
+    used: string;
+    resalePrice: number;
 }

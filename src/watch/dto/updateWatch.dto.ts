@@ -71,6 +71,25 @@ export class updateWatchDto {
     @IsOptional()
     image: any;
 
+    @IsOptional()
+    isOld: boolean;
+
+    @IsOptional()
+    @IsString()
+    status: string;
+
+    @IsOptional()
+    @IsString()
+    include: string;
+
+    @IsOptional()
+    @IsString()
+    used: string;
+
+    @IsOptional()
+    @IsString()
+    resalePrice: number;
+
     // @IsOptional()
     // warranty     : date
 }

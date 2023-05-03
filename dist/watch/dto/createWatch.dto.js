@@ -77,7 +77,6 @@ __decorate([
 ], createWatchDto.prototype, "glassSurface", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], createWatchDto.prototype, "glassSize", void 0);
 __decorate([
@@ -98,5 +97,29 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Date)
 ], createWatchDto.prototype, "warranty", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], createWatchDto.prototype, "isOld", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], createWatchDto.prototype, "status", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], createWatchDto.prototype, "include", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], createWatchDto.prototype, "used", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Number)
+], createWatchDto.prototype, "resalePrice", void 0);
 exports.createWatchDto = createWatchDto;
 //# sourceMappingURL=createWatch.dto.js.map

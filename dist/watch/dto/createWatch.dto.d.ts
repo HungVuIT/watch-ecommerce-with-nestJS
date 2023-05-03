@@ -16,4 +16,9 @@ export declare class createWatchDto {
     madeBy: string;
     image: any;
     warranty: Date;
+    isOld: boolean;
+    status: string;
+    include: string;
+    used: string;
+    resalePrice: number;
 }
