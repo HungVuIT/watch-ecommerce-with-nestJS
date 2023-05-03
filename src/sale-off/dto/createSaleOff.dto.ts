@@ -10,9 +10,11 @@ export class createSaleOffDto {
     @IsNotEmpty()
     WID: number;
 
+    @Type(() => Date)
     @IsOptional()
     start: Date;
 
+    @Type(() => Date)
     @IsOptional()
     end: Date;
 }
