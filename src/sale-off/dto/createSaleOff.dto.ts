@@ -8,6 +8,8 @@ export class createSaleOffDto {
     amount: number;
 
     @IsNotEmpty()
+    @Type(() => Number)
+    @IsInt()
     WID: number;
 
     @Type(() => Date)
