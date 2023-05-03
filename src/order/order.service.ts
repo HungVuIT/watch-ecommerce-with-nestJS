@@ -507,7 +507,12 @@ export class OrderService {
                 where: { OID: orderId },
                 include: {
                     watch: true,
-                    order: true,
+                    order: {
+                        include: {
+                            shop: true,
+                            user: true,
+                        },
+                    },
                 },
             });
         } catch (error) {
