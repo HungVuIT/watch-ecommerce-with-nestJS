@@ -59,4 +59,14 @@ export class BrandService {
             throw error;
         }
     }
+
+    async delete(id: number) {
+        try {
+            return await this.prisma.brand.delete({
+                where: { id: id },
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }

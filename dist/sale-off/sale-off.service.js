@@ -37,6 +37,16 @@ let SaleOffService = class SaleOffService {
             throw error;
         }
     }
+    async delete(id) {
+        try {
+            return await this.prisma.sale_off.delete({
+                where: { id: id },
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 };
 SaleOffService = __decorate([
     (0, common_1.Injectable)(),

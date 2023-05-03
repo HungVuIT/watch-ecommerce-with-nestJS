@@ -50,6 +50,16 @@ let CategoryService = class CategoryService {
             throw error;
         }
     }
+    async delete(categoryId) {
+        try {
+            return await this.prisma.category.delete({
+                where: { id: categoryId },
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     async createCategory(body, file) {
         try {
             if (file) {

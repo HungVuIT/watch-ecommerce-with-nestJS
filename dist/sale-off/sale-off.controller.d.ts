@@ -6,4 +6,5 @@ export declare class SaleOffController {
     constructor(service: SaleOffService);
     createSaleOff(body: createSaleOffDto): Promise<import(".prisma/client").Sale_off>;
     editSaleOff(body: editSaleOffDto): Promise<import(".prisma/client").Sale_off>;
+    delete(id: number): Promise<import(".prisma/client").Sale_off>;
 }

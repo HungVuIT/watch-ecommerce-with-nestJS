@@ -9,4 +9,5 @@ export declare class BrandService {
     getList(): Promise<import(".prisma/client").Brand[]>;
     editBrand(brandId: number, body: editBrandDto, file: any): Promise<HttpException | import(".prisma/client").Brand>;
     createBrand(body: createBrandDto, file: any): Promise<import(".prisma/client").Brand>;
+    delete(id: number): Promise<import(".prisma/client").Brand>;
 }

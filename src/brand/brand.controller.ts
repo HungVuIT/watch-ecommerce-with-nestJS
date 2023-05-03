@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     ParseIntPipe,
@@ -47,5 +48,10 @@ export class BrandController {
     @Get('id/:id')
     getById(@Param('id', ParseIntPipe) id: number) {
         return this.service.getById(id);
+    }
+
+    @Delete('id/:id')
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.service.delete(id);
     }
 }

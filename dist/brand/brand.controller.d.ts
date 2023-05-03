@@ -9,4 +9,5 @@ export declare class BrandController {
     editBrand(id: number, body: editBrandDto, file: Express.Multer.File): Promise<import("@nestjs/common").HttpException | import(".prisma/client").Brand>;
     getList(): Promise<import(".prisma/client").Brand[]>;
     getById(id: number): Promise<import(".prisma/client").Brand>;
+    delete(id: number): Promise<import(".prisma/client").Brand>;
 }

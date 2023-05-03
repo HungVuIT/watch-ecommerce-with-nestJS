@@ -27,4 +27,14 @@ export class SaleOffService {
             throw error;
         }
     }
+
+    async delete(id: number) {
+        try {
+            return await this.prisma.sale_off.delete({
+                where: { id: id },
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }

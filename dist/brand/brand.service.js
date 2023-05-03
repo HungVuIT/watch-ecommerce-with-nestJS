@@ -65,6 +65,16 @@ let BrandService = class BrandService {
             throw error;
         }
     }
+    async delete(id) {
+        try {
+            return await this.prisma.brand.delete({
+                where: { id: id },
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 };
 BrandService = __decorate([
     (0, common_1.Injectable)(),

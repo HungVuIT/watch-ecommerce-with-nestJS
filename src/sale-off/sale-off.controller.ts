@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     ParseIntPipe,
@@ -23,17 +24,22 @@ export class SaleOffController {
     constructor(private service: SaleOffService) {}
 
     @UseInterceptors(fileUpload('image'))
-    @UseGuards(jwtGuard, AdminGuard)
+    @UseGuards(jwtGuard)
     @Post()
     createSaleOff(@Body() body: createSaleOffDto) {
         return this.service.createSaleOff(body);
     }
 
-    @UseGuards(jwtGuard, AdminGuard)
+    @UseGuards(jwtGuard)
     @Patch('')
     editSaleOff(
         @Body() body: editSaleOffDto,
     ) {
         return this.service.editSaleOff(body);
+    }
+
+    @Delete('id/:id')
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.service.delete(id);
     }
 }

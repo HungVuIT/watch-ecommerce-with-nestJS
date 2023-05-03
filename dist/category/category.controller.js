@@ -36,6 +36,9 @@ let CategoryController = class CategoryController {
     getById(id) {
         return this.service.getById(id);
     }
+    delete(id) {
+        return this.service.delete(id);
+    }
 };
 __decorate([
     (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('image')),
@@ -71,6 +74,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "getById", null);
+__decorate([
+    (0, common_1.Delete)('id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], CategoryController.prototype, "delete", null);
 CategoryController = __decorate([
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),
     (0, common_1.Controller)('categorys'),

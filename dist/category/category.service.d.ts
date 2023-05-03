@@ -7,5 +7,6 @@ export declare class CategoryService {
     getById(CategoryId: number): Promise<import(".prisma/client").Category>;
     getList(): Promise<import(".prisma/client").Category[]>;
     editCategory(categoryId: number, body: editCategoryDto, file: any): Promise<import(".prisma/client").Category>;
+    delete(categoryId: number): Promise<import(".prisma/client").Category>;
     createCategory(body: createCategoryDto, file: any): Promise<import(".prisma/client").Category>;
 }

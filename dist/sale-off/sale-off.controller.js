@@ -30,10 +30,13 @@ let SaleOffController = class SaleOffController {
     editSaleOff(body) {
         return this.service.editSaleOff(body);
     }
+    delete(id) {
+        return this.service.delete(id);
+    }
 };
 __decorate([
     (0, common_1.UseInterceptors)((0, storage_1.fileUpload)('image')),
-    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -41,13 +44,20 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SaleOffController.prototype, "createSaleOff", null);
 __decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Patch)(''),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [editSaleOff_dto_1.editSaleOffDto]),
     __metadata("design:returntype", void 0)
 ], SaleOffController.prototype, "editSaleOff", null);
+__decorate([
+    (0, common_1.Delete)('id/:id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], SaleOffController.prototype, "delete", null);
 SaleOffController = __decorate([
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),
     (0, common_1.Controller)('saleOff'),
