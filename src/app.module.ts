@@ -15,7 +15,7 @@ import { PaymentModule } from './payment/payment.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SharedModule } from './shared/shared.module';
 import { ShopModule } from './shop/shop.module';
-import { UserModule } from './user/user.module';
+import { UserModule } from './shop/user/user.module';
 import { WatchModule } from './watch/watch.module';
 import { ChatModule } from './chat/chat.module';
 import { MailModule } from './mail/mail.module';

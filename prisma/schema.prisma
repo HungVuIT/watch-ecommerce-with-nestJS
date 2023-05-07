@@ -248,6 +248,8 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  code String?
+
   status        orderProcess  @default(created)
   total         Float
   paymentMethod paymentMethod
@@ -260,6 +262,7 @@ model Order {
 
   Note String?
 
+  userPay Boolean @default(false)
   payVendor Boolean @default(false)
 
   isActive        Boolean          @default(true)

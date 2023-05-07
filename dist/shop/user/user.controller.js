@@ -14,11 +14,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
-const storage_1 = require("../shared/cloudinary/storage");
-const user_decorator_1 = require("../shared/customDecorator/user.decorator");
-const guard_1 = require("../shared/guard");
-const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
-const addressValidation_pipe_1 = require("../shared/pipe/addressValidation.pipe");
+const storage_1 = require("../../shared/cloudinary/storage");
+const user_decorator_1 = require("../../shared/customDecorator/user.decorator");
+const guard_1 = require("../../shared/guard");
+const res_interceptor_1 = require("../../shared/interceptor/res.interceptor");
+const addressValidation_pipe_1 = require("../../shared/pipe/addressValidation.pipe");
 const user_dto_1 = require("./dto/user.dto");
 const user_service_1 = require("./user.service");
 let UserController = class UserController {

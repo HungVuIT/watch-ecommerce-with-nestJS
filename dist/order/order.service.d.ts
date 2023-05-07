@@ -22,6 +22,7 @@ export interface OrderByShop extends CartGroupedByShop {
     itemPrice: number;
     shipFee: number;
     totalPrice: number;
+    code: string;
 }
 export declare class OrderService {
     private prisma;
@@ -51,5 +52,6 @@ export declare class OrderService {
     payForOrder(id: number): Promise<{
         message: string;
     }>;
+    private generateOrderCode;
 }
 export {};

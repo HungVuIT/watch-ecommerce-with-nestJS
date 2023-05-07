@@ -66,6 +66,7 @@ let OrderService = class OrderService {
             });
             const location = global_service_1.globalVariables.deliveryLocation[userId];
             const ordersByShop = [];
+            const code = this.generateOrderCode();
             for (const group of groupedItems) {
                 const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
                 const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
@@ -96,10 +97,11 @@ let OrderService = class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
                 };
                 ordersByShop.push(order);
             }
-            global_service_1.globalVariables.orderList[userId] = groupedItems;
+            global_service_1.globalVariables.orderList[userId] = ordersByShop;
             const orderDetail = ordersByShop.reduce((acc, curr) => {
                 return {
                     itemValue: acc.itemValue + curr.itemPrice,
@@ -127,11 +129,13 @@ let OrderService = class OrderService {
                     await this.prisma.$transaction(async (tx) => {
                         const order = await tx.order.create({
                             data: {
+                                code: item.code,
                                 UID: userId,
                                 SID: item.SID,
                                 total: item.totalPrice,
                                 paymentMethod: 'online',
                                 status: 'created',
+                                userPay: true,
                             },
                         });
                         let data = [];
@@ -222,6 +226,7 @@ let OrderService = class OrderService {
             });
             const location = global_service_1.globalVariables.deliveryLocation[userId];
             const ordersByShop = [];
+            const code = this.generateOrderCode();
             for (const group of groupedItems) {
                 const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
                 const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
@@ -252,6 +257,7 @@ let OrderService = class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
                 };
                 ordersByShop.push(order);
             }
@@ -270,6 +276,7 @@ let OrderService = class OrderService {
                     await this.prisma.$transaction(async (tx) => {
                         const order = await tx.order.create({
                             data: {
+                                code: item.code,
                                 UID: userId,
                                 SID: item.SID,
                                 total: item.totalPrice,
@@ -446,6 +453,7 @@ let OrderService = class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: "none"
                 };
                 ordersByShop.push(order);
             }
@@ -494,6 +502,11 @@ let OrderService = class OrderService {
         catch (error) {
             throw error;
         }
+    }
+    generateOrderCode() {
+        const { customAlphabet } = require('nanoid');
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return customAlphabet(alphabet, 8);
     }
 };
 OrderService = __decorate([

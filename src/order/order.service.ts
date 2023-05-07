@@ -27,6 +27,7 @@ export interface OrderByShop extends CartGroupedByShop {
     itemPrice: number;
     shipFee: number;
     totalPrice: number;
+    code: string;
 }
 
 @Injectable()
@@ -108,6 +109,8 @@ export class OrderService {
 
             const ordersByShop: OrderByShop[] = [];
 
+            const code = this.generateOrderCode()
+
             for (const group of groupedItems) {
                 const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
 
@@ -141,11 +144,12 @@ export class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
                 };
                 ordersByShop.push(order);
             }
 
-            globalVariables.orderList[userId] = groupedItems;
+            globalVariables.orderList[userId] = ordersByShop;
 
             const orderDetail = ordersByShop.reduce(
                 (acc, curr) => {
@@ -186,11 +190,13 @@ export class OrderService {
                     await this.prisma.$transaction(async (tx) => {
                         const order = await tx.order.create({
                             data: {
+                                code: item.code,
                                 UID: userId,
                                 SID: item.SID,
                                 total: item.totalPrice,
                                 paymentMethod: 'online',
                                 status: 'created',
+                                userPay: true,
                             },
                         });
 
@@ -328,6 +334,8 @@ export class OrderService {
 
             const ordersByShop: OrderByShop[] = [];
 
+            const code = this.generateOrderCode()
+
             for (const group of groupedItems) {
                 const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
 
@@ -361,6 +369,7 @@ export class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
                 };
                 ordersByShop.push(order);
             }
@@ -387,6 +396,7 @@ export class OrderService {
                     await this.prisma.$transaction(async (tx) => {
                         const order = await tx.order.create({
                             data: {
+                                code: item.code,
                                 UID: userId,
                                 SID: item.SID,
                                 total: item.totalPrice,
@@ -611,6 +621,7 @@ export class OrderService {
                     items: group.items,
                     shipFee: shipFee,
                     totalPrice: totalPrice,
+                    code: "none"
                 };
                 ordersByShop.push(order);
             }
@@ -663,5 +674,12 @@ export class OrderService {
         } catch (error) {
             throw error;
         }
+    }
+
+    private generateOrderCode(){
+        const { customAlphabet } = require('nanoid');
+
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return customAlphabet(alphabet, 8); 
     }
 }
