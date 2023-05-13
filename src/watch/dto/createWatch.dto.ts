@@ -1,6 +1,6 @@
 import { Gender } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsArray, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class createWatchDto {
     @IsNotEmpty()
@@ -60,16 +60,31 @@ export class createWatchDto {
     weight: number;
 
     @IsOptional()
+    @Type(() => Number)
+    height: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    length: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    width: number;
+
+    @IsOptional()
     madeBy: string;
 
     @IsOptional()
     image: any;
 
-    @Type(() => Date)
     @IsOptional()
-    warranty: Date;
-
+    @IsString()
+    warranty: string;
+    
     @IsOptional()
+    @IsNotEmpty()
+    @Type(() => Boolean)
+    @IsBoolean()
     isOld: boolean;
 
     @IsOptional()

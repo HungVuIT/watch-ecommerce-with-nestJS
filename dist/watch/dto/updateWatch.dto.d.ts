@@ -14,7 +14,11 @@ export declare class updateWatchDto {
     glassSurface: string;
     glassSize: string;
     weight: number;
+    height: number;
+    length: number;
+    width: number;
     madeBy: string;
+    warranty: string;
     image: any;
     isOld: boolean;
     status: string;

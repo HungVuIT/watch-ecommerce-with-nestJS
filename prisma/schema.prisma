@@ -140,7 +140,7 @@ model Watch {
   width        Int?
   madeBy       String?
   image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
-  warranty     DateTime?
+  warranty     String?
 
   isOld        Boolean  @default(false)
   status        String?

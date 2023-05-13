@@ -17,6 +17,7 @@ const delivery_service_1 = require("../delivery/delivery.service");
 const payment_service_1 = require("../payment/payment.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const global_service_1 = require("../shared/global.service");
+const nanoid_1 = require("nanoid");
 let OrderService = class OrderService {
     constructor(prisma, payment, delivery, config, glo) {
         this.prisma = prisma;
@@ -504,9 +505,8 @@ let OrderService = class OrderService {
         }
     }
     generateOrderCode() {
-        const { customAlphabet } = require('nanoid');
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return customAlphabet(alphabet, 8);
+        return (0, nanoid_1.customAlphabet)(alphabet, 8);
     }
 };
 OrderService = __decorate([

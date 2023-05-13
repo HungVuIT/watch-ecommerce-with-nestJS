@@ -13,9 +13,12 @@ export declare class createWatchDto {
     glassSurface: string;
     glassSize: string;
     weight: number;
+    height: number;
+    length: number;
+    width: number;
     madeBy: string;
     image: any;
-    warranty: Date;
+    warranty: string;
     isOld: boolean;
     status: string;
     include: string;

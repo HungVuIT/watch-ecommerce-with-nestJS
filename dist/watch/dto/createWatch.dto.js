@@ -86,6 +86,21 @@ __decorate([
 ], createWatchDto.prototype, "weight", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    __metadata("design:type", Number)
+], createWatchDto.prototype, "height", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    __metadata("design:type", Number)
+], createWatchDto.prototype, "length", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    __metadata("design:type", Number)
+], createWatchDto.prototype, "width", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], createWatchDto.prototype, "madeBy", void 0);
 __decorate([
@@ -93,12 +108,15 @@ __decorate([
     __metadata("design:type", Object)
 ], createWatchDto.prototype, "image", void 0);
 __decorate([
-    (0, class_transformer_1.Type)(() => Date),
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Date)
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
 ], createWatchDto.prototype, "warranty", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => Boolean),
+    (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], createWatchDto.prototype, "isOld", void 0);
 __decorate([
