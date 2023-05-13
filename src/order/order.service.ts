@@ -5,7 +5,7 @@ import { DeliveryService } from 'src/delivery/delivery.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { globalVariables } from 'src/shared/global.service';
-import { customAlphabet } from 'nanoid';
+
 
 interface Cart {
     id: number;
@@ -678,7 +678,12 @@ export class OrderService {
     }
 
     private generateOrderCode(){
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return customAlphabet(alphabet, 8); 
+        const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var randomString = '';
+        for (var i = 0; i < 8; i++) {
+            var randomPoz = Math.floor(Math.random() * charSet.length);
+            randomString += charSet.substring(randomPoz,randomPoz+1);
+        }
+        return randomString;
     }
 }

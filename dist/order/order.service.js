@@ -17,7 +17,6 @@ const delivery_service_1 = require("../delivery/delivery.service");
 const payment_service_1 = require("../payment/payment.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const global_service_1 = require("../shared/global.service");
-const nanoid_1 = require("nanoid");
 let OrderService = class OrderService {
     constructor(prisma, payment, delivery, config, glo) {
         this.prisma = prisma;
@@ -505,8 +504,13 @@ let OrderService = class OrderService {
         }
     }
     generateOrderCode() {
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return (0, nanoid_1.customAlphabet)(alphabet, 8);
+        const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var randomString = '';
+        for (var i = 0; i < 8; i++) {
+            var randomPoz = Math.floor(Math.random() * charSet.length);
+            randomString += charSet.substring(randomPoz, randomPoz + 1);
+        }
+        return randomString;
     }
 };
 OrderService = __decorate([
