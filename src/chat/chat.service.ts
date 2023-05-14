@@ -10,7 +10,7 @@ export class ChatService {
     constructor(private prisma: PrismaService, private chatGateway: ChatGateway) {}
 
     async getConversation(senderId: number, receiverId: number) {
-        return this.prisma.conversation.findMany({
+        const sender = await this.prisma.conversation.findMany({
             where: {
                 senderId: senderId,
                 receiverId: receiverId,
@@ -19,6 +19,36 @@ export class ChatService {
                 createdAt: 'asc',
             },
         });
+
+        const receiver = await this.prisma.conversation.findMany({
+            where: {
+                senderId: receiverId,
+                receiverId: senderId,
+            },
+            orderBy: {
+                createdAt: 'asc',
+            },
+        });
+
+        // Trộn hai mảng sender và receiver thành một mảng conversations
+        const conversations = sender.concat(receiver);
+
+        // Sắp xếp các tin nhắn theo thời gian tạo
+        conversations.sort((a: any, b: any) => {
+            const timeA = new Date(a.createdAt).getTime();
+            const timeB = new Date(b.createdAt).getTime();
+            return timeA - timeB;
+        });
+
+        // Thêm thuộc tính 'me' vào các tin nhắn của người gửi
+        conversations.forEach((conversation) => {
+            if (conversation.senderId === senderId) {
+                conversation['me'] = true;
+            }
+            conversation['me'] = false;
+        });
+
+        return conversations
     }
 
     async saveConversation(payload: CreateConversationDTO) {

@@ -9,7 +9,7 @@ class ChatService {
         this.chatGateway = chatGateway;
     }
     async getConversation(senderId, receiverId) {
-        return this.prisma.conversation.findMany({
+        const sender = await this.prisma.conversation.findMany({
             where: {
                 senderId: senderId,
                 receiverId: receiverId,
@@ -18,6 +18,28 @@ class ChatService {
                 createdAt: 'asc',
             },
         });
+        const receiver = await this.prisma.conversation.findMany({
+            where: {
+                senderId: receiverId,
+                receiverId: senderId,
+            },
+            orderBy: {
+                createdAt: 'asc',
+            },
+        });
+        const conversations = sender.concat(receiver);
+        conversations.sort((a, b) => {
+            const timeA = new Date(a.createdAt).getTime();
+            const timeB = new Date(b.createdAt).getTime();
+            return timeA - timeB;
+        });
+        conversations.forEach((conversation) => {
+            if (conversation.senderId === senderId) {
+                conversation['me'] = true;
+            }
+            conversation['me'] = false;
+        });
+        return conversations;
     }
     async saveConversation(payload) {
         const result = await this.prisma.conversation.create({
