@@ -1,12 +1,8 @@
-import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class authDto {
     @IsString()
-    @MinLength(4)
-    @MaxLength(20)
-    @Matches(/^[a-zA-Z0-9_.-]+$/, {
-        message: 'tài khoản chỉ bao gồm các kí tự chữ thường, chữ hoa, số, gạch ngang, gạch chân và dấu chấm',
-    })
+    @IsEmail()
     username: string;
 
     @IsString()

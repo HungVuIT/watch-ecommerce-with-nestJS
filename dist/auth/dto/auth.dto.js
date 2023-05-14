@@ -15,11 +15,7 @@ class authDto {
 }
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(4),
-    (0, class_validator_1.MaxLength)(20),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9_.-]+$/, {
-        message: 'tài khoản chỉ bao gồm các kí tự chữ thường, chữ hoa, số, gạch ngang, gạch chân và dấu chấm',
-    }),
+    (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], authDto.prototype, "username", void 0);
 __decorate([
