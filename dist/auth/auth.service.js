@@ -83,7 +83,9 @@ let AuthService = class AuthService {
             if (exit)
                 throw new common_1.HttpException('Username hoặc email đã tồn tại', common_1.HttpStatus.BAD_REQUEST);
             body.password = await (0, argon2_1.hash)(body.password);
-            const user = await this.prisma.user.create({ data: body });
+            const user = await this.prisma.user.create({
+                data: Object.assign(Object.assign({}, body), { email: body.username })
+            });
             delete user['password'];
             return user;
         }

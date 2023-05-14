@@ -45,6 +45,7 @@ let ChatGateway = class ChatGateway {
             userId: userId,
             socketId: client.id,
         };
+        console.log('disconnection');
         (0, ulti_1.removeUser)(userId);
     }
 };

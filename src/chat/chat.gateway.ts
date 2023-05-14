@@ -43,7 +43,7 @@ export class ChatGateway {
             userId: userId,
             socketId: client.id,
         };
-
+        console.log('disconnection');
         removeUser(userId);
     }
 }

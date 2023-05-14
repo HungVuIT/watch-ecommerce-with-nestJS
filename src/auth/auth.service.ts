@@ -88,7 +88,12 @@ export class AuthService {
 
             body.password = await hash(body.password);
 
-            const user = await this.prisma.user.create({ data: body });
+            const user = await this.prisma.user.create({ 
+                data:{
+                    ...body,
+                    email: body.username
+                }
+             });
 
             delete user['password'];
 
