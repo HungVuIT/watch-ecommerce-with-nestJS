@@ -10,5 +10,5 @@ export declare class ChatGateway {
         receiverId: number;
         senderId: number;
     }): Promise<void>;
-    handleDisconnection(client: Socket, userId: number): void;
+    handleDisconnect(client: Socket): void;
 }

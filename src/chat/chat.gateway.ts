@@ -38,12 +38,10 @@ export class ChatGateway {
         });
     }
 
-    handleDisconnection(client: Socket, userId: number) {
-        const device = {
-            userId: userId,
-            socketId: client.id,
-        };
+
+    handleDisconnect(client: Socket) {
+        client.disconnect(true);
         console.log('disconnection');
-        removeUser(userId);
+        removeUser(client.id);
     }
 }

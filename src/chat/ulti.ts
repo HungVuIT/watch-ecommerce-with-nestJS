@@ -18,8 +18,8 @@ function addUser({ userId, socketId }) {
 }
 
 const removeUser = (id) => {
-    const index = users.findIndex((user) => user.userId === id);
-
+    const index = users.findIndex((user) => user.socketId === id);
+    
     if (index !== -1) {
         return users.splice(index, 1)[0];
     }

@@ -40,13 +40,10 @@ let ChatGateway = class ChatGateway {
             },
         });
     }
-    handleDisconnection(client, userId) {
-        const device = {
-            userId: userId,
-            socketId: client.id,
-        };
+    handleDisconnect(client) {
+        client.disconnect(true);
         console.log('disconnection');
-        (0, ulti_1.removeUser)(userId);
+        (0, ulti_1.removeUser)(client.id);
     }
 };
 __decorate([
