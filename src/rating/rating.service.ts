@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { rateBody } from './rating.controller';
+import { Exception } from 'handlebars';
 
 @Injectable()
 export class RatingService {
@@ -18,9 +19,7 @@ export class RatingService {
             .flatMap((order) => order.Order_detail)
             .map((order_detail) => order_detail.WID);
 
-            if (!WIDs.includes(body.targetID)) throw Error("can rate this product cause it you didnt buy it yet")
-          
-
+            if (!WIDs.includes(body.targetID)) throw new Error()
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,

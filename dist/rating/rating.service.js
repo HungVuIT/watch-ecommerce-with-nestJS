@@ -27,7 +27,7 @@ let RatingService = class RatingService {
                 .flatMap((order) => order.Order_detail)
                 .map((order_detail) => order_detail.WID);
             if (!WIDs.includes(body.targetID))
-                throw Error("can rate this product cause it you didnt buy it yet");
+                throw new Error();
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,
