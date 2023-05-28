@@ -8,6 +8,8 @@ export declare class CartController {
     changeOption(userId: number, body: updateItemDto): Promise<void>;
     removeItem(id: number): Promise<void>;
     getCart(userId: number): Promise<(import(".prisma/client").Cart & {
-        watch: import(".prisma/client").Watch;
+        watch: import(".prisma/client").Watch & {
+            sale_off: import(".prisma/client").Sale_off;
+        };
     })[]>;
 }

@@ -41,6 +41,7 @@ let OrderService = class OrderService {
           LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
           LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
           LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+          WHERE "Cart"."UID" = ${userId};
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
@@ -201,6 +202,7 @@ let OrderService = class OrderService {
           LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
           LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
           LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+          WHERE "Cart"."UID" = ${userId};
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
@@ -398,6 +400,7 @@ let OrderService = class OrderService {
       LEFT JOIN "Watch" ON "Cart"."WID" = "Watch"."id"
       LEFT JOIN "Shop" ON "Watch"."SID" = "Shop"."id"
       LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
+      WHERE "Cart"."UID" = ${userId};
     `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
