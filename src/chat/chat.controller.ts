@@ -39,6 +39,11 @@ export class ChatController {
         return this.chatService.getConversation(userId, null);
     }
 
+    @Get('with-user')
+    chatWith(@User('id') userId: number) {
+        return this.chatService.chatWith(userId);
+    }
+
     @Post(':receiverId/markAsRead')
     markAsRead(@Body(ValidationPipe) chat: MarkAsReadConversationDTO) {
         return this.chatService.markAllBeforeAsRead(chat);

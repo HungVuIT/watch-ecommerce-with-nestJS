@@ -36,6 +36,9 @@ let ChatController = class ChatController {
     getMyMessages(userId) {
         return this.chatService.getConversation(userId, null);
     }
+    chatWith(userId) {
+        return this.chatService.chatWith(userId);
+    }
     markAsRead(chat) {
         return this.chatService.markAllBeforeAsRead(chat);
     }
@@ -67,6 +70,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], ChatController.prototype, "getMyMessages", null);
+__decorate([
+    (0, common_1.Get)('with-user'),
+    __param(0, (0, user_decorator_1.User)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], ChatController.prototype, "chatWith", null);
 __decorate([
     (0, common_1.Post)(':receiverId/markAsRead'),
     __param(0, (0, common_1.Body)(common_1.ValidationPipe)),

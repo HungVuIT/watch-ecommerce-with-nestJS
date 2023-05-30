@@ -48,6 +48,18 @@ class ChatService {
         this.chatGateway.server.emit('server-send-data' + result.receiverId, result);
         return result;
     }
+    async chatWith(userId) {
+        const list = await this.prisma.conversation.findMany({
+            where: {
+                senderId: userId,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+        let receivers = list.map(item => item.receiverId);
+        return [...new Set(receivers)];
+    }
     async markAllBeforeAsRead(conversation) {
         return;
     }

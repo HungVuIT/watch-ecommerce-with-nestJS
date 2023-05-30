@@ -60,6 +60,20 @@ export class ChatService {
         return result;
     }
 
+    async chatWith(userId: number){
+        const list = await this.prisma.conversation.findMany({
+            where: {
+                senderId: userId,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },   
+        });
+
+        let receivers = list.map(item => item.receiverId)
+        return [...new Set(receivers)]
+    }
+
     async markAllBeforeAsRead(conversation: MarkAsReadConversationDTO) {
         return;
     }

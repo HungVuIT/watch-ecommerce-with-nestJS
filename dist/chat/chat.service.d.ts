@@ -9,6 +9,7 @@ export declare class ChatService {
     constructor(prisma: PrismaService, chatGateway: ChatGateway);
     getConversation(senderId: number, receiverId: number): Promise<Conversation[]>;
     saveConversation(payload: CreateConversationDTO): Promise<Conversation>;
+    chatWith(userId: number): Promise<number[]>;
     markAllBeforeAsRead(conversation: MarkAsReadConversationDTO): Promise<void>;
     deleteConversation(conversationId: number, userId: number): Promise<void>;
 }
