@@ -18,4 +18,44 @@ export declare class ShopController {
     getShopById(id: number): import(".prisma/client").Prisma.Prisma__ShopClient<import(".prisma/client").Shop, never> | import("@nestjs/common").HttpException;
     myShop(shop: any): any;
     addPayment(id: number, body: any): Promise<import("@nestjs/common").HttpException | import(".prisma/client").ShopWallet>;
+    dashbroad(id: number, body: any): Promise<import("@nestjs/common").HttpException | {
+        orderCount: number;
+        soldCount: import(".prisma/client").Prisma.GetOrder_detailAggregateType<{
+            where: {
+                order: {
+                    shop: {
+                        id: number;
+                    };
+                };
+            };
+            _sum: {
+                quantity: true;
+            };
+        }>;
+        revenue: import(".prisma/client").Prisma.GetOrderAggregateType<{
+            where: {
+                shop: {
+                    id: number;
+                };
+            };
+            _sum: {
+                total: true;
+            };
+        }>;
+        watchCount: number;
+    }>;
+    dashbroadAdmin(): Promise<import("@nestjs/common").HttpException | {
+        orderCount: number;
+        soldCount: import(".prisma/client").Prisma.GetOrder_detailAggregateType<{
+            _sum: {
+                quantity: true;
+            };
+        }>;
+        revenue: import(".prisma/client").Prisma.GetOrderAggregateType<{
+            _sum: {
+                total: true;
+            };
+        }>;
+        watchCount: number;
+    }>;
 }

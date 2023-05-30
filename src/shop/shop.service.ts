@@ -53,8 +53,8 @@ export class ShopService {
             await this.prisma.shop.update({
                 where: { UID: userId },
                 data: {
-                    isActive: false
-                }
+                    isActive: false,
+                },
             });
 
             await this.prisma.user.update({
@@ -79,7 +79,7 @@ export class ShopService {
         }
     ) {
         try {
-            if(files){
+            if (files) {
                 if (files.logo) {
                     body.logo = files.logo[0].path;
                 }
@@ -87,7 +87,7 @@ export class ShopService {
                 if (files.banner) {
                     body.banner = files.banner[0].path;
                 }
-            }  
+            }
 
             const shop = await this.prisma.shop.update({
                 where: { UID: id },
@@ -111,7 +111,7 @@ export class ShopService {
         }
     ) {
         try {
-            if(files){
+            if (files) {
                 if (files.logo) {
                     body.logo = files.logo[0].path;
                 }
@@ -119,7 +119,7 @@ export class ShopService {
                 if (files.banner) {
                     body.banner = files.banner[0].path;
                 }
-            }  
+            }
 
             const shop = await this.prisma.shop.update({
                 where: { id: id },
@@ -171,6 +171,66 @@ export class ShopService {
 
             console.log(error);
 
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
+    }
+
+    async dashbroad(shopId: number) {
+        try {
+            // Truy vấn số đơn hàng được đặt cho Shop
+            const orderCount = await this.prisma.order.count({
+                where: { shop: { id: shopId } },
+            });
+
+            // Truy vấn số sản phẩm bán ra cho Shop
+            const soldCount = await this.prisma.order_detail.aggregate({
+                where: { order: { shop: { id: shopId } } },
+                _sum: { quantity: true },
+            });
+
+            // Truy vấn số tiền thu được cho Shop
+            const revenue = await this.prisma.order.aggregate({
+                where: { shop: { id: shopId } },
+                _sum: { total: true },
+            });
+
+            const watchCount = await this.prisma.watch.count({
+                where: { shop: { id: shopId } }
+            });
+
+
+            return {orderCount,soldCount,revenue, watchCount}
+
+        } catch (error) {
+            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+        }
+    }
+
+    async dashbroadAdmin() {
+        try {
+            // Truy vấn số đơn hàng được đặt cho Shop
+            const orderCount = await this.prisma.order.count({
+                
+            });
+
+            // Truy vấn số sản phẩm bán ra cho Shop
+            const soldCount = await this.prisma.order_detail.aggregate({
+                _sum: { quantity: true },
+            });
+
+            // Truy vấn số tiền thu được cho Shop
+            const revenue = await this.prisma.order.aggregate({
+                _sum: { total: true },
+            });
+
+            const watchCount = await this.prisma.watch.count({
+
+            });
+
+
+            return {orderCount,soldCount,revenue, watchCount}
+
+        } catch (error) {
             return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
         }
     }

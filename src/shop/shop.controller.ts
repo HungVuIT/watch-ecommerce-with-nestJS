@@ -102,4 +102,18 @@ export class ShopController {
     addPayment(@Shop('id') id: number, @Body() body) {
         return this.shopService.addPayment(id, body.email);
     }
+
+    @UseGuards(jwtGuard, VendorGuard)
+    @UseInterceptors(FileInterceptor(''))
+    @Post('dashbroad')
+    dashbroad(@Shop('id') id: number, @Body() body) {
+        return this.shopService.dashbroad(id);
+    }
+
+    @UseGuards(jwtGuard)
+    @UseInterceptors(FileInterceptor(''))
+    @Post('dashbroad-admin')
+    dashbroadAdmin() {
+        return this.shopService.dashbroadAdmin();
+    }
 }

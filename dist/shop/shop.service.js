@@ -54,8 +54,8 @@ let ShopService = class ShopService {
             await this.prisma.shop.update({
                 where: { UID: userId },
                 data: {
-                    isActive: false
-                }
+                    isActive: false,
+                },
             });
             await this.prisma.user.update({
                 where: { id: userId },
@@ -141,6 +141,44 @@ let ShopService = class ShopService {
         catch (error) {
             console.log('===============ERROR==============');
             console.log(error);
+            return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
+        }
+    }
+    async dashbroad(shopId) {
+        try {
+            const orderCount = await this.prisma.order.count({
+                where: { shop: { id: shopId } },
+            });
+            const soldCount = await this.prisma.order_detail.aggregate({
+                where: { order: { shop: { id: shopId } } },
+                _sum: { quantity: true },
+            });
+            const revenue = await this.prisma.order.aggregate({
+                where: { shop: { id: shopId } },
+                _sum: { total: true },
+            });
+            const watchCount = await this.prisma.watch.count({
+                where: { shop: { id: shopId } }
+            });
+            return { orderCount, soldCount, revenue, watchCount };
+        }
+        catch (error) {
+            return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
+        }
+    }
+    async dashbroadAdmin() {
+        try {
+            const orderCount = await this.prisma.order.count({});
+            const soldCount = await this.prisma.order_detail.aggregate({
+                _sum: { quantity: true },
+            });
+            const revenue = await this.prisma.order.aggregate({
+                _sum: { total: true },
+            });
+            const watchCount = await this.prisma.watch.count({});
+            return { orderCount, soldCount, revenue, watchCount };
+        }
+        catch (error) {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
         }
     }
