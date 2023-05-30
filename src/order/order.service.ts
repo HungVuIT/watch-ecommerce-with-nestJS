@@ -516,7 +516,8 @@ export class OrderService {
                 include: {
                     Delivery_detail: true,
                     Order_detail: true,
-                    shop: true
+                    shop: true,
+                    user: true
                 }
             });
         } catch (error) {
@@ -531,7 +532,8 @@ export class OrderService {
                 include: {
                     Delivery_detail: true,
                     Order_detail: true,
-                    shop: true
+                    shop: true,
+                    user: true
                 }
             });
         } catch (error) {

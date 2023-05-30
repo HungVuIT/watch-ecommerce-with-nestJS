@@ -42,11 +42,13 @@ export declare class OrderService {
         Delivery_detail: import(".prisma/client").Delivery_detail;
     })[]>;
     getOrdersShop(id: number): Promise<(import(".prisma/client").Order & {
+        user: import(".prisma/client").User;
         shop: import(".prisma/client").Shop;
         Order_detail: import(".prisma/client").Order_detail[];
         Delivery_detail: import(".prisma/client").Delivery_detail;
     })[]>;
     getOrdersAdmin(): Promise<(import(".prisma/client").Order & {
+        user: import(".prisma/client").User;
         shop: import(".prisma/client").Shop;
         Order_detail: import(".prisma/client").Order_detail[];
         Delivery_detail: import(".prisma/client").Delivery_detail;

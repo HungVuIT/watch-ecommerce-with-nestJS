@@ -365,7 +365,8 @@ let OrderService = class OrderService {
                 include: {
                     Delivery_detail: true,
                     Order_detail: true,
-                    shop: true
+                    shop: true,
+                    user: true
                 }
             });
         }
@@ -380,7 +381,8 @@ let OrderService = class OrderService {
                 include: {
                     Delivery_detail: true,
                     Order_detail: true,
-                    shop: true
+                    shop: true,
+                    user: true
                 }
             });
         }
