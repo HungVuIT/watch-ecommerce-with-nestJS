@@ -210,7 +210,7 @@ export class ShopService {
         try {
             // Truy vấn số đơn hàng được đặt cho Shop
             const orderCount = await this.prisma.order.count({
-                
+
             });
 
             // Truy vấn số sản phẩm bán ra cho Shop

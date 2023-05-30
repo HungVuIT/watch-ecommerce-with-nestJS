@@ -105,14 +105,14 @@ export class ShopController {
 
     @UseGuards(jwtGuard, VendorGuard)
     @UseInterceptors(FileInterceptor(''))
-    @Post('dashbroad')
+    @Get('dashbroad')
     dashbroad(@Shop('id') id: number, @Body() body) {
         return this.shopService.dashbroad(id);
     }
 
     @UseGuards(jwtGuard)
     @UseInterceptors(FileInterceptor(''))
-    @Post('dashbroad-admin')
+    @Get('dashbroad-admin')
     dashbroadAdmin() {
         return this.shopService.dashbroadAdmin();
     }

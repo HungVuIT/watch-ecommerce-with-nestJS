@@ -139,7 +139,7 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.VendorGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Post)('dashbroad'),
+    (0, common_1.Get)('dashbroad'),
     __param(0, (0, shop_decorator_1.Shop)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -149,7 +149,7 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Post)('dashbroad-admin'),
+    (0, common_1.Get)('dashbroad-admin'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
