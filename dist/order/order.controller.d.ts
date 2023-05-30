@@ -10,9 +10,21 @@ export declare class OrderController {
         href: unknown;
     }>;
     success(id: number, req: Request): Promise<void>;
-    getOrderListUser(id: number): Promise<import(".prisma/client").Order[]>;
-    getOrderListAdmin(): Promise<import(".prisma/client").Order[]>;
-    getOrderListShop(id: number): Promise<import(".prisma/client").Order[]>;
+    getOrderListUser(id: number): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
+    getOrderListAdmin(): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
+    getOrderListShop(id: number): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
     getOrderDetail(id: number): Promise<(import(".prisma/client").Order_detail & {
         watch: import(".prisma/client").Watch;
         order: import(".prisma/client").Order & {

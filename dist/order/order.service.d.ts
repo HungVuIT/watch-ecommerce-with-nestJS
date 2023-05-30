@@ -36,9 +36,21 @@ export declare class OrderService {
     }>;
     completeOrder(userId: number): Promise<void>;
     cashOnDelivery(userId: number): Promise<void>;
-    getOrdersUser(id: number): Promise<import(".prisma/client").Order[]>;
-    getOrdersShop(id: number): Promise<import(".prisma/client").Order[]>;
-    getOrdersAdmin(): Promise<import(".prisma/client").Order[]>;
+    getOrdersUser(id: number): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
+    getOrdersShop(id: number): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
+    getOrdersAdmin(): Promise<(import(".prisma/client").Order & {
+        shop: import(".prisma/client").Shop;
+        Order_detail: import(".prisma/client").Order_detail[];
+        Delivery_detail: import(".prisma/client").Delivery_detail;
+    })[]>;
     getOrderDetail(orderId: number): Promise<(import(".prisma/client").Order_detail & {
         watch: import(".prisma/client").Watch;
         order: import(".prisma/client").Order & {

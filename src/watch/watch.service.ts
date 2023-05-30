@@ -70,9 +70,14 @@ export class WatchService {
 
             let result = list;
 
-            if (option.saleOff)  result = result.filter((item: any) => {
-                return item.sale_off !== null ? true : false;
-            });
+            if (option.saleOff)  {
+                result = result.filter((item: any) => {
+                    return item.sale_off !== null ? true : false;
+                });
+
+                if (option.saleOff === "desc") result.sort((a:any, b:any) => b.sale_off.amount - a.sale_off.amount);
+                if (option.saleOff === "asc") result.sort((a:any, b:any) => a.sale_off.amount - b.sale_off.amount);
+            }
             
             if (option.province)
                 result = result.filter((item: any) => {

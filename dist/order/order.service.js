@@ -45,6 +45,10 @@ let OrderService = class OrderService {
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
+            for (const item of listItem) {
+                const watch = await this.prisma.watch.findFirst({ where: { id: item.WID }, include: { sale_off: true } });
+                item.price = watch.sale_off.amount ? item.price - watch.sale_off.amount : item.price;
+            }
             const groupedItems = listItem.reduce((acc, item) => {
                 const existingGroup = acc.find((group) => group.SID === item.SID);
                 if (existingGroup) {
@@ -206,6 +210,10 @@ let OrderService = class OrderService {
         `;
             if (listItem.length === 0)
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
+            for (const item of listItem) {
+                const watch = await this.prisma.watch.findFirst({ where: { id: item.WID }, include: { sale_off: true } });
+                item.price = watch.sale_off.amount ? item.price - watch.sale_off.amount : item.price;
+            }
             const groupedItems = listItem.reduce((acc, item) => {
                 const existingGroup = acc.find((group) => group.SID === item.SID);
                 if (existingGroup) {
@@ -338,6 +346,11 @@ let OrderService = class OrderService {
             return await this.prisma.order.findMany({
                 where: { UID: id },
                 orderBy: { createdAt: 'desc' },
+                include: {
+                    Delivery_detail: true,
+                    Order_detail: true,
+                    shop: true
+                }
             });
         }
         catch (error) {
@@ -349,6 +362,11 @@ let OrderService = class OrderService {
             return await this.prisma.order.findMany({
                 where: { SID: id },
                 orderBy: { createdAt: 'desc' },
+                include: {
+                    Delivery_detail: true,
+                    Order_detail: true,
+                    shop: true
+                }
             });
         }
         catch (error) {
@@ -359,6 +377,11 @@ let OrderService = class OrderService {
         try {
             return await this.prisma.order.findMany({
                 orderBy: { createdAt: 'desc' },
+                include: {
+                    Delivery_detail: true,
+                    Order_detail: true,
+                    shop: true
+                }
             });
         }
         catch (error) {

@@ -62,10 +62,15 @@ let WatchService = class WatchService {
             query['include'] = { sale_off: true, shop: true };
             const list = await this.prisma.watch.findMany(query);
             let result = list;
-            if (option.saleOff)
+            if (option.saleOff) {
                 result = result.filter((item) => {
                     return item.sale_off !== null ? true : false;
                 });
+                if (option.saleOff === "desc")
+                    result.sort((a, b) => b.sale_off.amount - a.sale_off.amount);
+                if (option.saleOff === "asc")
+                    result.sort((a, b) => a.sale_off.amount - b.sale_off.amount);
+            }
             if (option.province)
                 result = result.filter((item) => {
                     return item.shop.province === option.province ? true : false;
