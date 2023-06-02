@@ -157,10 +157,17 @@ let ShopService = class ShopService {
                 where: { shop: { id: shopId } },
                 _sum: { total: true },
             });
-            const watchCount = await this.prisma.watch.count({
-                where: { shop: { id: shopId } }
+            const watchCount = await this.prisma.watch.aggregate({
+                where: { shop: { id: shopId } },
+                _count: true,
+                _sum: { quantity: true }
             });
-            return { orderCount, soldCount, revenue, watchCount };
+            const bestSellingProduct = await this.prisma.watch.findFirst({
+                orderBy: {
+                    saled: "desc",
+                },
+            });
+            return { orderCount, soldCount, revenue, watchCount, bestSellingProduct };
         }
         catch (error) {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);

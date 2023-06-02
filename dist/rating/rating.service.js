@@ -27,7 +27,7 @@ let RatingService = class RatingService {
                 .flatMap((order) => order.Order_detail)
                 .map((order_detail) => order_detail.WID);
             if (!WIDs.includes(body.targetID))
-                throw new Error();
+                throw new common_1.HttpException("Chưa mua sản phẩm", common_1.HttpStatus.BAD_REQUEST);
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,

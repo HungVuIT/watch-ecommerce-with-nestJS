@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { rateBody } from './rating.controller';
@@ -19,7 +19,7 @@ export class RatingService {
             .flatMap((order) => order.Order_detail)
             .map((order_detail) => order_detail.WID);
 
-            if (!WIDs.includes(body.targetID)) throw new Error()
+            if (!WIDs.includes(body.targetID)) throw new HttpException("Chưa mua sản phẩm", HttpStatus.BAD_REQUEST)
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,

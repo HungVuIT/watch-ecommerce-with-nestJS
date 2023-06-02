@@ -42,7 +42,18 @@ export declare class ShopService {
                 total: true;
             };
         }>;
-        watchCount: number;
+        watchCount: import(".prisma/client").Prisma.GetWatchAggregateType<{
+            where: {
+                shop: {
+                    id: number;
+                };
+            };
+            _count: true;
+            _sum: {
+                quantity: true;
+            };
+        }>;
+        bestSellingProduct: import(".prisma/client").Watch;
     }>;
     dashbroadAdmin(): Promise<HttpException | {
         orderCount: number;
