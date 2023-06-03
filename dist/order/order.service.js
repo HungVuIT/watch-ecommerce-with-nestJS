@@ -26,6 +26,7 @@ let OrderService = class OrderService {
         this.glo = glo;
     }
     async createLinkPaymant(userId) {
+        var _a, _b;
         try {
             const listItem = await this.prisma.$queryRaw `
           SELECT "Cart"."id", 
@@ -47,7 +48,7 @@ let OrderService = class OrderService {
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
             for (const item of listItem) {
                 const watch = await this.prisma.watch.findFirst({ where: { id: item.WID }, include: { sale_off: true } });
-                item.price = watch.sale_off.amount ? item.price - watch.sale_off.amount : item.price;
+                item.price = ((_a = watch === null || watch === void 0 ? void 0 : watch.sale_off) === null || _a === void 0 ? void 0 : _a.amount) ? item.price - ((_b = watch === null || watch === void 0 ? void 0 : watch.sale_off) === null || _b === void 0 ? void 0 : _b.amount) : item.price;
             }
             const groupedItems = listItem.reduce((acc, item) => {
                 const existingGroup = acc.find((group) => group.SID === item.SID);
@@ -191,6 +192,7 @@ let OrderService = class OrderService {
         }
     }
     async cashOnDelivery(userId) {
+        var _a, _b;
         try {
             const listItem = await this.prisma.$queryRaw `
           SELECT "Cart"."id", 
@@ -212,7 +214,7 @@ let OrderService = class OrderService {
                 throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
             for (const item of listItem) {
                 const watch = await this.prisma.watch.findFirst({ where: { id: item.WID }, include: { sale_off: true } });
-                item.price = watch.sale_off.amount ? item.price - watch.sale_off.amount : item.price;
+                item.price = ((_a = watch === null || watch === void 0 ? void 0 : watch.sale_off) === null || _a === void 0 ? void 0 : _a.amount) ? item.price - ((_b = watch === null || watch === void 0 ? void 0 : watch.sale_off) === null || _b === void 0 ? void 0 : _b.amount) : item.price;
             }
             const groupedItems = listItem.reduce((acc, item) => {
                 const existingGroup = acc.find((group) => group.SID === item.SID);

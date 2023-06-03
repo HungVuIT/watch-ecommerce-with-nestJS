@@ -75,7 +75,7 @@ export class OrderService {
 
             for (const item of listItem) {
                 const watch = await this.prisma.watch.findFirst({where: {id: item.WID}, include: {sale_off: true}})
-                item.price = watch.sale_off.amount ? item.price -  watch.sale_off.amount: item.price
+                item.price = watch?.sale_off?.amount ? item.price -  watch?.sale_off?.amount: item.price
             }
 
             const groupedItems: CartGroupedByShop[] = listItem.reduce((acc: CartGroupedByShop[], item: Cart) => {
@@ -315,7 +315,7 @@ export class OrderService {
 
             for (const item of listItem) {
                 const watch = await this.prisma.watch.findFirst({where: {id: item.WID}, include: {sale_off: true}})
-                item.price = watch.sale_off.amount ? item.price -  watch.sale_off.amount: item.price
+                item.price = watch?.sale_off?.amount ? item.price -  watch?.sale_off?.amount: item.price
             }
 
             const groupedItems: CartGroupedByShop[] = listItem.reduce((acc: CartGroupedByShop[], item: Cart) => {
