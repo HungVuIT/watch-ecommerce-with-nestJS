@@ -27,7 +27,7 @@ let RatingService = class RatingService {
                 .flatMap((order) => order.Order_detail)
                 .map((order_detail) => order_detail.WID);
             if (!WIDs.includes(body.targetID))
-                throw new Error();
+                return { message: 'server conflict', success: false };
             await this.prisma.watch_rating.create({
                 data: {
                     UID: userID,
@@ -38,7 +38,7 @@ let RatingService = class RatingService {
             });
         }
         catch (error) {
-            throw new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
+            throw error;
         }
     }
     async updateRateProduct(userID, body) {

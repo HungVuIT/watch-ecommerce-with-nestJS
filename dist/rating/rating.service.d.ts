@@ -4,7 +4,10 @@ import { rateBody } from './rating.controller';
 export declare class RatingService {
     private prisma;
     constructor(config: ConfigService, prisma: PrismaService);
-    rateProduct(userID: number, body: rateBody): Promise<void>;
+    rateProduct(userID: number, body: rateBody): Promise<{
+        message: string;
+        success: boolean;
+    }>;
     updateRateProduct(userID: number, body: rateBody): Promise<void>;
     rateShop(userID: number, body: rateBody): Promise<void>;
     updateRateShop(userID: number, body: rateBody): Promise<void>;
