@@ -8,6 +8,7 @@ import {
     Patch,
     Post,
     Req,
+    Res,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
@@ -56,19 +57,19 @@ export class OrderController {
     }
 
     @Get(':id/success')
-    async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request, @Res() res: any) {
         globalVariables.other[id] = {
             payerId: req.query.PayerID,
             paymentId: req.query.paymentId,
         };
         const order = await this.orderService.completeOrder(id);
 
-        return order
+        return res.redirect(`https://main--dh-watch-bku.netlify.app/`);
     }
 
     @UseGuards(jwtGuard)
     @Get('/user')
-    getOrderListUser(@User('id') id:number) {
+    getOrderListUser(@User('id') id: number) {
         return this.orderService.getOrdersUser(id);
     }
 
@@ -80,7 +81,7 @@ export class OrderController {
 
     @UseGuards(jwtGuard, VendorGuard)
     @Get('/shop')
-    getOrderListShop(@Shop('id') id:number) {
+    getOrderListShop(@Shop('id') id: number) {
         return this.orderService.getOrdersShop(id);
     }
 

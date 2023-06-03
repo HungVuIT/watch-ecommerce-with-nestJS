@@ -9,7 +9,7 @@ export declare class OrderController {
     createOrder(id: number, body: createOrderDto, req: Request): Promise<void | {
         href: unknown;
     }>;
-    success(id: number, req: Request): Promise<void>;
+    success(id: number, req: Request, res: any): Promise<any>;
     getOrderListUser(id: number): Promise<(import(".prisma/client").Order & {
         shop: import(".prisma/client").Shop;
         Order_detail: import(".prisma/client").Order_detail[];

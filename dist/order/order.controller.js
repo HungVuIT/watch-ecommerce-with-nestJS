@@ -46,13 +46,13 @@ let OrderController = class OrderController {
         const order = await this.orderService.createLinkPaymant(id);
         return order;
     }
-    async success(id, req) {
+    async success(id, req, res) {
         global_service_1.globalVariables.other[id] = {
             payerId: req.query.PayerID,
             paymentId: req.query.paymentId,
         };
         const order = await this.orderService.completeOrder(id);
-        return order;
+        return res.redirect(`https://main--dh-watch-bku.netlify.app/`);
     }
     getOrderListUser(id) {
         return this.orderService.getOrdersUser(id);
@@ -103,8 +103,9 @@ __decorate([
     (0, common_1.Get)(':id/success'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Object, Object]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "success", null);
 __decorate([
