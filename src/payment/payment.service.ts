@@ -206,7 +206,7 @@ export class PaymentService {
                             currency: 'USD',
                             value: (
                                 order.total *
-                                (1 - Number(this.config.get('FEE'))) *
+                                Number(this.config.get('FEE')) *
                                 Number(this.config.get('VND_USD'))
                             ).toFixed(2),
                         },
