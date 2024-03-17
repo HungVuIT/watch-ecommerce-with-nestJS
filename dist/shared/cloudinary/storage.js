@@ -16,7 +16,7 @@ const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     params: async (req, file) => {
         const uniqFileName = file.originalname.replace(/\.jpeg|\.jpg|\.png/gi, '');
         return {
-            folder: 'watch-ecommerce',
+            folder: 'product-ecommerce',
             format: 'jpeg',
             public_id: uniqFileName,
         };

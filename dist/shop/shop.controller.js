@@ -48,12 +48,6 @@ let ShopController = class ShopController {
     myShop(shop) {
         return shop;
     }
-    addPayment(id, body) {
-        return this.shopService.addPayment(id, body.email);
-    }
-    dashbroad(id, body) {
-        return this.shopService.dashbroad(id);
-    }
     dashbroadAdmin() {
         return this.shopService.dashbroadAdmin();
     }
@@ -126,26 +120,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ShopController.prototype, "myShop", null);
-__decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.VendorGuard),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Post)('add-payment-method'),
-    __param(0, (0, shop_decorator_1.Shop)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", void 0)
-], ShopController.prototype, "addPayment", null);
-__decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.VendorGuard),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Get)('dashbroad'),
-    __param(0, (0, shop_decorator_1.Shop)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", void 0)
-], ShopController.prototype, "dashbroad", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),

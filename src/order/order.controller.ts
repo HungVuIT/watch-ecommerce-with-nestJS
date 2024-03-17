@@ -28,44 +28,44 @@ import { Shop } from 'src/shared/customDecorator/shop.decorator';
 export class OrderController {
     constructor(private orderService: OrderService, private glo: globalVariables) {}
 
-    @UseGuards(jwtGuard)
-    @UseInterceptors(FileInterceptor(''))
-    @Post('/checkout')
-    async createOrder(@User('id') id: number, @Body() body: createOrderDto, @Req() req: Request) {
-        globalVariables.deliveryLocation[id] = {
-            address: body.address,
-            deliveryOption: body.deliveryOption,
-            district: body.district,
-            province: body.province,
-            ward: body.ward,
-        };
+    // @UseGuards(jwtGuard)
+    // @UseInterceptors(FileInterceptor(''))
+    // @Post('/checkout')
+    // async createOrder(@User('id') id: number, @Body() body: createOrderDto, @Req() req: Request) {
+    //     globalVariables.deliveryLocation[id] = {
+    //         address: body.address,
+    //         deliveryOption: body.deliveryOption,
+    //         district: body.district,
+    //         province: body.province,
+    //         ward: body.ward,
+    //     };
 
-        globalVariables.paymentHost[id] =
-            process.env.NODE_ENV === 'production'
-                ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
-                : 'http://localhost:8000/api/order/' + id.toString();
+    //     globalVariables.paymentHost[id] =
+    //         process.env.NODE_ENV === 'production'
+    //             ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
+    //             : 'http://localhost:8000/api/order/' + id.toString();
 
-        if (body.paymentMethod === 'offline') {
-            const order = await this.orderService.cashOnDelivery(id);
+    //     if (body.paymentMethod === 'offline') {
+    //         const order = await this.orderService.cashOnDelivery(id);
 
-            return order;
-        }
+    //         return order;
+    //     }
 
-        const order = await this.orderService.createLinkPaymant(id);
+    //     const order = await this.orderService.createLinkPaymant(id);
 
-        return order;
-    }
+    //     return order;
+    // }
 
-    @Get(':id/success')
-    async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request, @Res() res: any) {
-        globalVariables.other[id] = {
-            payerId: req.query.PayerID,
-            paymentId: req.query.paymentId,
-        };
-        const order = await this.orderService.completeOrder(id);
+    // @Get(':id/success')
+    // async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request, @Res() res: any) {
+    //     globalVariables.other[id] = {
+    //         payerId: req.query.PayerID,
+    //         paymentId: req.query.paymentId,
+    //     };
+    //     const order = await this.orderService.completeOrder(id);
 
-        return res.redirect(`https://main--dh-watch-bku.netlify.app/`);
-    }
+    //     return res.redirect(`https://main--dh-product-bku.netlify.app/`);
+    // }
 
     @UseGuards(jwtGuard)
     @Get('/user')
@@ -103,27 +103,27 @@ export class OrderController {
         return this.orderService.deleteOrder(id);
     }
 
-    @UseGuards(jwtGuard, AdminGuard)
-    @Get('/pay-vendor/:id')
-    payForVendor(@Param('id', ParseIntPipe) id: number) {
-        return this.orderService.payForOrder(id);
-    }
+    // @UseGuards(jwtGuard, AdminGuard)
+    // @Get('/pay-vendor/:id')
+    // payForVendor(@Param('id', ParseIntPipe) id: number) {
+    //     return this.orderService.payForOrder(id);
+    // }
 
-    @UseGuards(jwtGuard)
-    @UseInterceptors(FileInterceptor(''))
-    @Post('/ship-fee')
-    async getShipFee(@User('id') id: number, @Body() body: createOrderDto) {
-        globalVariables.deliveryLocation[id] = {
-            address: body.address,
-            deliveryOption: body.deliveryOption,
-            district: body.district,
-            province: body.province,
-            ward: body.ward,
-        };
-        const Fee = await this.orderService.getDeliveryFree(id);
+    // @UseGuards(jwtGuard)
+    // @UseInterceptors(FileInterceptor(''))
+    // @Post('/ship-fee')
+    // async getShipFee(@User('id') id: number, @Body() body: createOrderDto) {
+    //     globalVariables.deliveryLocation[id] = {
+    //         address: body.address,
+    //         deliveryOption: body.deliveryOption,
+    //         district: body.district,
+    //         province: body.province,
+    //         ward: body.ward,
+    //     };
+    //     const Fee = await this.orderService.getDeliveryFree(id);
 
-        this.glo.deleteUserInfor(id);
+    //     this.glo.deleteUserInfor(id);
 
-        return Fee;
-    }
+    //     return Fee;
+    // }
 }

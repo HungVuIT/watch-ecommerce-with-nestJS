@@ -21,7 +21,7 @@ let FavoriteService = class FavoriteService {
             const favorite = await this.prisma.favorite.findMany({
                 where: { UID: userId },
                 include: {
-                    watch: true,
+                    product: true,
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -50,14 +50,14 @@ let FavoriteService = class FavoriteService {
             const favorite = await this.prisma.favorite.findFirst({
                 where: {
                     UID: userId,
-                    WID: body.itemId,
+                    PID: body.itemId,
                 },
             });
             if (!favorite) {
                 return await this.prisma.favorite.create({
                     data: {
                         UID: userId,
-                        WID: body.itemId
+                        PID: body.itemId
                     },
                 });
             }

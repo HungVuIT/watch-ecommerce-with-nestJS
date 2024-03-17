@@ -25,14 +25,14 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const shared_module_1 = require("./shared/shared.module");
 const shop_module_1 = require("./shop/shop.module");
 const user_module_1 = require("./shop/user/user.module");
-const watch_module_1 = require("./watch/watch.module");
 const chat_module_1 = require("./chat/chat.module");
 const mail_module_1 = require("./mail/mail.module");
 const rating_module_1 = require("./rating/rating.module");
-const recommend_module_1 = require("./recommend/recommend.module");
 const favorite_module_1 = require("./favorite/favorite.module");
 const sale_off_module_1 = require("./sale-off/sale-off.module");
 const new_module_1 = require("./news/new.module");
+const product_module_1 = require("./product/product.module");
+const recommend_module_1 = require("./recommend/recommend.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -46,7 +46,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             shop_module_1.ShopModule,
             shared_module_1.SharedModule,
-            watch_module_1.WatchModule,
+            product_module_1.ProductModule,
             cart_module_1.CartModule,
             order_module_1.OrderModule,
             category_module_1.CategoryModule,

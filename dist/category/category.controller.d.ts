@@ -5,9 +5,44 @@ import { editCategoryDto } from './dto/editCategory.dto';
 export declare class CategoryController {
     private service;
     constructor(service: CategoryService);
-    createCategory(body: createCategoryDto, file: Express.Multer.File): Promise<import(".prisma/client").Category>;
-    editCategory(id: number, body: editCategoryDto, file: Express.Multer.File): Promise<import(".prisma/client").Category>;
-    getList(): Promise<import(".prisma/client").Category[]>;
-    getById(id: number): Promise<import(".prisma/client").Category>;
-    delete(id: number): Promise<import(".prisma/client").Category>;
+    createCategory(body: createCategoryDto, file: Express.Multer.File): Promise<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        image: string;
+    }, unknown, never> & {}>;
+    editCategory(id: number, body: editCategoryDto, file: Express.Multer.File): Promise<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        image: string;
+    }, unknown, never> & {}>;
+    getList(): Promise<(import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        image: string;
+    }, unknown, never> & {})[]>;
+    getById(id: number): Promise<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        image: string;
+    }, unknown, never> & {}>;
+    delete(id: number): Promise<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        image: string;
+    }, unknown, never> & {}>;
 }

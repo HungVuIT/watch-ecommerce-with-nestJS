@@ -16,14 +16,15 @@ import { PrismaModule } from './prisma/prisma.module';
 import { SharedModule } from './shared/shared.module';
 import { ShopModule } from './shop/shop.module';
 import { UserModule } from './shop/user/user.module';
-import { WatchModule } from './watch/watch.module';
 import { ChatModule } from './chat/chat.module';
 import { MailModule } from './mail/mail.module';
 import { RatingModule } from './rating/rating.module';
-import { RecommendModule } from './recommend/recommend.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { SaleOffModule } from './sale-off/sale-off.module';
 import { NewsModule } from './news/new.module';
+import { ProductModule } from './product/product.module';
+import { RecommendService } from './recommend/recommend.service';
+import { RecommendModule } from './recommend/recommend.module';
 
 @Module({
     imports: [
@@ -35,7 +36,7 @@ import { NewsModule } from './news/new.module';
         AuthModule,
         ShopModule,
         SharedModule,
-        WatchModule,
+        ProductModule,
         CartModule,
         OrderModule,
         CategoryModule,

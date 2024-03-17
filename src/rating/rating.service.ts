@@ -10,20 +10,20 @@ export class RatingService {
 
     async rateProduct(userID: number, body: rateBody) {
         try {
-            const orders = await this.prisma.order.findMany({
-                where: {UID: userID},
-                include: {Order_detail: true}
-            })
+            // const orders = await this.prisma.order.findMany({
+            //     where: {UID: userID},
+            //     include: {Order_detail: true}
+            // })
 
-            const WIDs = orders
-            .flatMap((order) => order.Order_detail)
-            .map((order_detail) => order_detail.WID);
+            // const WIDs = orders
+            // .flatMap((order) => order.Order_detail)
+            // .map((order_detail) => order_detail.PID);
 
-            if (!WIDs.includes(body.targetID)) return { message: 'server conflict', success: false }
-            await this.prisma.watch_rating.create({
+            // if (!WIDs.includes(body.targetID)) return { message: 'server conflict', success: false }
+            await this.prisma.product_rating.create({
                 data: {
                     UID: userID,
-                    WID: body.targetID,
+                    PID: body.targetID,
                     score: body.score,
                     content: body.content,
                 },
@@ -38,16 +38,16 @@ export class RatingService {
         //     await this.prisma.$queryRaw`
         //     update "Watch_rating"
         //     set "score" = ${score}
-        //     where "UID" = ${userID} and "WID" = ${productID}
+        //     where "UID" = ${userID} and "PID" = ${productID}
         //     `;
         // } catch (error) {
         //     throw error;
         // }
         try {
-            await this.prisma.watch_rating.updateMany({
+            await this.prisma.product_rating.updateMany({
                 where: {
                     UID: userID,
-                    WID: body.targetID
+                    PID: body.targetID
                 },
                 data: {
                     score: body.score,
@@ -117,20 +117,20 @@ export class RatingService {
         }
     }
 
-    async getProductRate(watchID: number) {
+    async getProductRate(productID: number) {
         try {
-            const score = await this.prisma.watch_rating.aggregate({
+            const score = await this.prisma.product_rating.aggregate({
                 _avg: {
                     score: true,
                 },
                 where: {
-                    WID: watchID,
+                    PID: productID,
                 },
             });
 
-            const list = await this.prisma.watch_rating.findMany({
+            const list = await this.prisma.product_rating.findMany({
                 where: {
-                    WID: watchID
+                    PID: productID
                 },
                 include: {
                     user: true

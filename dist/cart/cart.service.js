@@ -21,7 +21,7 @@ let CartService = class CartService {
             const cart = await this.prisma.cart.findMany({
                 where: { UID: userId },
                 include: {
-                    watch: { include: { sale_off: true } },
+                    product: { include: { sale_off: true } },
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -50,14 +50,14 @@ let CartService = class CartService {
             const cart = await this.prisma.cart.findFirst({
                 where: {
                     UID: userId,
-                    WID: body.itemId,
+                    PID: body.itemId,
                 },
             });
             if (!cart) {
                 return await this.prisma.cart.create({
                     data: {
                         UID: userId,
-                        WID: body.itemId,
+                        PID: body.itemId,
                         quantity: body.quantity || 1,
                     },
                 });

@@ -68,7 +68,7 @@ export class createShopDto {
 //     user User @relation(fields: [UID], references: [id])
 //     UID  Int  @unique
 
-//     watchs Watch[]
+//     watchs Product[]
 
 //     isActive Boolean @default(true)
 //   }

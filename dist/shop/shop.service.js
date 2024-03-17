@@ -129,50 +129,6 @@ let ShopService = class ShopService {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
         }
     }
-    async addPayment(shopId, email) {
-        try {
-            return await this.prisma.shopWallet.create({
-                data: {
-                    paypalMethod: email,
-                    SID: shopId,
-                },
-            });
-        }
-        catch (error) {
-            console.log('===============ERROR==============');
-            console.log(error);
-            return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
-        }
-    }
-    async dashbroad(shopId) {
-        try {
-            const orderCount = await this.prisma.order.count({
-                where: { shop: { id: shopId } },
-            });
-            const soldCount = await this.prisma.order_detail.aggregate({
-                where: { order: { shop: { id: shopId } } },
-                _sum: { quantity: true },
-            });
-            const revenue = await this.prisma.order.aggregate({
-                where: { shop: { id: shopId } },
-                _sum: { total: true },
-            });
-            const watchCount = await this.prisma.watch.aggregate({
-                where: { shop: { id: shopId } },
-                _count: true,
-                _sum: { quantity: true }
-            });
-            const bestSellingProduct = await this.prisma.watch.findFirst({
-                orderBy: {
-                    saled: "desc",
-                },
-            });
-            return { orderCount, soldCount, revenue, watchCount, bestSellingProduct };
-        }
-        catch (error) {
-            return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);
-        }
-    }
     async dashbroadAdmin() {
         try {
             const orderCount = await this.prisma.order.count({});
@@ -182,8 +138,8 @@ let ShopService = class ShopService {
             const revenue = await this.prisma.order.aggregate({
                 _sum: { total: true },
             });
-            const watchCount = await this.prisma.watch.count({});
-            return { orderCount, soldCount, revenue, watchCount };
+            const productCount = await this.prisma.product.count({});
+            return { orderCount, soldCount, revenue, productCount };
         }
         catch (error) {
             return new common_1.HttpException({ message: 'server conflict', success: false }, common_1.HttpStatus.CONFLICT);

@@ -158,62 +158,62 @@ export class ShopService {
         }
     }
 
-    async addPayment(shopId: number, email: string) {
-        try {
-            return await this.prisma.shopWallet.create({
-                data: {
-                    paypalMethod: email,
-                    SID: shopId,
-                },
-            });
-        } catch (error) {
-            console.log('===============ERROR==============');
+    // async addPayment(shopId: number, email: string) {
+    //     try {
+    //         return await this.prisma.shopWallet.create({
+    //             data: {
+    //                 paypalMethod: email,
+    //                 SID: shopId,
+    //             },
+    //         });
+    //     } catch (error) {
+    //         console.log('===============ERROR==============');
 
-            console.log(error);
+    //         console.log(error);
 
-            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
-        }
-    }
+    //         return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+    //     }
+    // }
 
-    async dashbroad(shopId: number) {
-        try {
-            // Truy vấn số đơn hàng được đặt cho Shop
-            const orderCount = await this.prisma.order.count({
-                where: { shop: { id: shopId } },
-            });
+    // async dashbroad(shopId: number) {
+    //     try {
+    //         // Truy vấn số đơn hàng được đặt cho Shop
+    //         const orderCount = await this.prisma.order.count({
+    //             where: { shop: { id: shopId } },
+    //         });
 
-            // Truy vấn số sản phẩm bán ra cho Shop
-            const soldCount = await this.prisma.order_detail.aggregate({
-                where: { order: { shop: { id: shopId } } },
-                _sum: { quantity: true },
-            });
+    //         // Truy vấn số sản phẩm bán ra cho Shop
+    //         const soldCount = await this.prisma.order_detail.aggregate({
+    //             where: { order: { shop: { id: shopId } } },
+    //             _sum: { quantity: true },
+    //         });
 
-            // Truy vấn số tiền thu được cho Shop
-            const revenue = await this.prisma.order.aggregate({
-                where: { shop: { id: shopId } },
-                _sum: { total: true },
-            });
+    //         // Truy vấn số tiền thu được cho Shop
+    //         const revenue = await this.prisma.order.aggregate({
+    //             where: { shop: { id: shopId } },
+    //             _sum: { total: true },
+    //         });
 
-            const watchCount = await this.prisma.watch.aggregate({
-                where: { shop: { id: shopId } },
-                _count: true,
-                _sum: {quantity: true}
-            });
+    //         const productCount = await this.prisma.product.aggregate({
+    //             where: { shop: { id: shopId } },
+    //             _count: true,
+    //             _sum: {quantity: true}
+    //         });
 
-            const bestSellingProduct = await this.prisma.watch.findFirst({
-                orderBy: {
-                  saled: "desc",
-                },
-              });
+    //         const bestSellingProduct = await this.prisma.product.findFirst({
+    //             orderBy: {
+    //               saled: "desc",
+    //             },
+    //           });
             
 
 
-            return {orderCount,soldCount,revenue, watchCount, bestSellingProduct}
+    //         return {orderCount,soldCount,revenue, productCount, bestSellingProduct}
 
-        } catch (error) {
-            return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
-        }
-    }
+    //     } catch (error) {
+    //         return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);
+    //     }
+    // }
 
     async dashbroadAdmin() {
         try {
@@ -232,12 +232,12 @@ export class ShopService {
                 _sum: { total: true },
             });
 
-            const watchCount = await this.prisma.watch.count({
+            const productCount = await this.prisma.product.count({
 
             });
 
 
-            return {orderCount,soldCount,revenue, watchCount}
+            return {orderCount,soldCount,revenue, productCount}
 
         } catch (error) {
             return new HttpException({ message: 'server conflict', success: false }, HttpStatus.CONFLICT);

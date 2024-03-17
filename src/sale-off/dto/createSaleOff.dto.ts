@@ -10,7 +10,7 @@ export class createSaleOffDto {
     @IsNotEmpty()
     @Type(() => Number)
     @IsInt()
-    WID: number;
+    PID: number;
 
     @Type(() => Date)
     @IsOptional()

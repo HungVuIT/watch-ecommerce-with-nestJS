@@ -14,45 +14,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
 const common_1 = require("@nestjs/common");
-const platform_express_1 = require("@nestjs/platform-express");
 const user_decorator_1 = require("../shared/customDecorator/user.decorator");
 const global_service_1 = require("../shared/global.service");
 const guard_1 = require("../shared/guard");
 const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
-const createOrder_dto_1 = require("./dto/createOrder.dto");
 const order_service_1 = require("./order.service");
 const shop_decorator_1 = require("../shared/customDecorator/shop.decorator");
 let OrderController = class OrderController {
     constructor(orderService, glo) {
         this.orderService = orderService;
         this.glo = glo;
-    }
-    async createOrder(id, body, req) {
-        global_service_1.globalVariables.deliveryLocation[id] = {
-            address: body.address,
-            deliveryOption: body.deliveryOption,
-            district: body.district,
-            province: body.province,
-            ward: body.ward,
-        };
-        global_service_1.globalVariables.paymentHost[id] =
-            process.env.NODE_ENV === 'production'
-                ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
-                : 'http://localhost:8000/api/order/' + id.toString();
-        if (body.paymentMethod === 'offline') {
-            const order = await this.orderService.cashOnDelivery(id);
-            return order;
-        }
-        const order = await this.orderService.createLinkPaymant(id);
-        return order;
-    }
-    async success(id, req, res) {
-        global_service_1.globalVariables.other[id] = {
-            payerId: req.query.PayerID,
-            paymentId: req.query.paymentId,
-        };
-        const order = await this.orderService.completeOrder(id);
-        return res.redirect(`https://main--dh-watch-bku.netlify.app/`);
     }
     getOrderListUser(id) {
         return this.orderService.getOrdersUser(id);
@@ -72,42 +43,7 @@ let OrderController = class OrderController {
     deleteOrder(id) {
         return this.orderService.deleteOrder(id);
     }
-    payForVendor(id) {
-        return this.orderService.payForOrder(id);
-    }
-    async getShipFee(id, body) {
-        global_service_1.globalVariables.deliveryLocation[id] = {
-            address: body.address,
-            deliveryOption: body.deliveryOption,
-            district: body.district,
-            province: body.province,
-            ward: body.ward,
-        };
-        const Fee = await this.orderService.getDeliveryFree(id);
-        this.glo.deleteUserInfor(id);
-        return Fee;
-    }
 };
-__decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Post)('/checkout'),
-    __param(0, (0, user_decorator_1.User)('id')),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, createOrder_dto_1.createOrderDto, Object]),
-    __metadata("design:returntype", Promise)
-], OrderController.prototype, "createOrder", null);
-__decorate([
-    (0, common_1.Get)(':id/success'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object, Object]),
-    __metadata("design:returntype", Promise)
-], OrderController.prototype, "success", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Get)('/user'),
@@ -156,24 +92,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "deleteOrder", null);
-__decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard, guard_1.AdminGuard),
-    (0, common_1.Get)('/pay-vendor/:id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], OrderController.prototype, "payForVendor", null);
-__decorate([
-    (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
-    (0, common_1.Post)('/ship-fee'),
-    __param(0, (0, user_decorator_1.User)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, createOrder_dto_1.createOrderDto]),
-    __metadata("design:returntype", Promise)
-], OrderController.prototype, "getShipFee", null);
 OrderController = __decorate([
     (0, common_1.Controller)('order'),
     (0, common_1.UseInterceptors)(res_interceptor_1.TransResInterceptor),

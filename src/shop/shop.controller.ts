@@ -96,19 +96,19 @@ export class ShopController {
         return shop;
     }
 
-    @UseGuards(jwtGuard, VendorGuard)
-    @UseInterceptors(FileInterceptor(''))
-    @Post('add-payment-method')
-    addPayment(@Shop('id') id: number, @Body() body) {
-        return this.shopService.addPayment(id, body.email);
-    }
+    // @UseGuards(jwtGuard, VendorGuard)
+    // @UseInterceptors(FileInterceptor(''))
+    // @Post('add-payment-method')
+    // addPayment(@Shop('id') id: number, @Body() body) {
+    //     return this.shopService.addPayment(id, body.email);
+    // }
 
-    @UseGuards(jwtGuard, VendorGuard)
-    @UseInterceptors(FileInterceptor(''))
-    @Get('dashbroad')
-    dashbroad(@Shop('id') id: number, @Body() body) {
-        return this.shopService.dashbroad(id);
-    }
+    // @UseGuards(jwtGuard, VendorGuard)
+    // @UseInterceptors(FileInterceptor(''))
+    // @Get('dashbroad')
+    // dashbroad(@Shop('id') id: number, @Body() body) {
+    //     return this.shopService.dashbroad(id);
+    // }
 
     @UseGuards(jwtGuard)
     @UseInterceptors(FileInterceptor(''))

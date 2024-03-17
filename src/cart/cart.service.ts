@@ -12,7 +12,7 @@ export class CartService {
             const cart = await this.prisma.cart.findMany({
                 where: { UID: userId },
                 include: {
-                    watch: { include: { sale_off: true } },
+                    product: { include: { sale_off: true } },
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -39,16 +39,16 @@ export class CartService {
 
     async addItem(userId: number, body: addItemDto) {
         try {
-            // const watch = await this.prisma.watch.findUnique({
+            // const product = await this.prisma.product.findUnique({
             //   where: { id: body.itemId },
             // });
 
-            // if (watch.quantity < 1)
+            // if (product.quantity < 1)
             //   throw new HttpException('Hết hàng', HttpStatus.NOT_FOUND);
             const cart = await this.prisma.cart.findFirst({
                 where: {
                     UID: userId,
-                    WID: body.itemId,
+                    PID: body.itemId,
                 },
             });
 
@@ -56,7 +56,7 @@ export class CartService {
                 return await this.prisma.cart.create({
                     data: {
                         UID: userId,
-                        WID: body.itemId,
+                        PID: body.itemId,
                         quantity: body.quantity || 1,
                     },
                 });
@@ -70,9 +70,9 @@ export class CartService {
                     id: cart.id,
                 },
             });
-            // await this.prisma.watch.update({
+            // await this.prisma.product.update({
             //   where: { id: body.itemId },
-            //   data: { quantity: watch.quantity - (body.quantity || 1) },
+            //   data: { quantity: product.quantity - (body.quantity || 1) },
             // });
         } catch (error) {
             throw error;

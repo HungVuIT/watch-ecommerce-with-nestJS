@@ -12,7 +12,7 @@ export class FavoriteService {
             const favorite = await this.prisma.favorite.findMany({
                 where: { UID: userId },
                 include: {
-                    watch: true,
+                    product: true,
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -39,16 +39,16 @@ export class FavoriteService {
 
     async addItem(userId: number, body: addItemDto) {
         try {
-            // const watch = await this.prisma.watch.findUnique({
+            // const product = await this.prisma.product.findUnique({
             //   where: { id: body.itemId },
             // });
 
-            // if (watch.quantity < 1)
+            // if (product.quantity < 1)
             //   throw new HttpException('Hết hàng', HttpStatus.NOT_FOUND);
             const favorite = await this.prisma.favorite.findFirst({
                 where: {
                     UID: userId,
-                    WID: body.itemId,
+                    PID: body.itemId,
                 },
             });
 
@@ -56,13 +56,13 @@ export class FavoriteService {
                 return await this.prisma.favorite.create({
                     data: {
                         UID: userId,
-                        WID: body.itemId
+                        PID: body.itemId
                     },
                 });
             }
-            // await this.prisma.watch.update({
+            // await this.prisma.product.update({
             //   where: { id: body.itemId },
-            //   data: { quantity: watch.quantity - (body.quantity || 1) },
+            //   data: { quantity: product.quantity - (body.quantity || 1) },
             // });
         } catch (error) {
             throw error;

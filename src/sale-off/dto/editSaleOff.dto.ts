@@ -11,7 +11,7 @@ export class editSaleOffDto {
     amount: number;
 
     @IsNotEmpty()
-    WID: number;
+    PID: number;
 
     @Type(() => Date)
     @IsOptional()

@@ -12,16 +12,72 @@ export declare class RatingController {
     updateRateShop(userID: number, body: rateBody): HttpStatus;
     getRateShop(id: number): Promise<{
         score: number;
-        list: (import(".prisma/client").Shop_rating & {
-            user: import(".prisma/client").User;
-        })[];
+        list: ({
+            user: import("@prisma/client/runtime").GetResult<{
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                username: string;
+                password: string;
+                email: string;
+                phoneNumber: string;
+                firstName: string;
+                lastName: string;
+                province: string;
+                district: string;
+                ward: string;
+                address: string;
+                gender: import(".prisma/client").Gender;
+                birthDay: Date;
+                avatar: string;
+                status: boolean;
+                role: import(".prisma/client").Role;
+                isActive: boolean;
+            }, unknown, never> & {};
+        } & import("@prisma/client/runtime").GetResult<{
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
+            UID: number;
+            SID: number;
+            score: number;
+            content: string;
+        }, unknown, never> & {})[];
     }>;
     rateWatch(userID: number, body: rateBody): HttpStatus;
     updateRateWatch(userID: number, body: rateBody): HttpStatus;
     getRateWatch(id: number): Promise<{
         score: number;
-        list: (import(".prisma/client").Watch_rating & {
-            user: import(".prisma/client").User;
-        })[];
+        list: ({
+            user: import("@prisma/client/runtime").GetResult<{
+                id: number;
+                createdAt: Date;
+                updatedAt: Date;
+                username: string;
+                password: string;
+                email: string;
+                phoneNumber: string;
+                firstName: string;
+                lastName: string;
+                province: string;
+                district: string;
+                ward: string;
+                address: string;
+                gender: import(".prisma/client").Gender;
+                birthDay: Date;
+                avatar: string;
+                status: boolean;
+                role: import(".prisma/client").Role;
+                isActive: boolean;
+            }, unknown, never> & {};
+        } & import("@prisma/client/runtime").GetResult<{
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
+            UID: number;
+            PID: number;
+            score: number;
+            content: string;
+        }, unknown, never> & {})[];
     }>;
 }

@@ -5,7 +5,27 @@ import { authDto } from './dto/auth.dto';
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
-    signup(body: authDto): Promise<import(".prisma/client").User>;
+    signup(body: authDto): Promise<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        username: string;
+        password: string;
+        email: string;
+        phoneNumber: string;
+        firstName: string;
+        lastName: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        gender: import(".prisma/client").Gender;
+        birthDay: Date;
+        avatar: string;
+        status: boolean;
+        role: import(".prisma/client").Role;
+        isActive: boolean;
+    }, unknown, never> & {}>;
     signin(body: authDto): Promise<{
         access_token: string;
         refresh_token: string;

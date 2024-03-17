@@ -1,7 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 interface Item {
     id: number;
-    Watch_rating: {
+    Product_rating: {
         UID: number;
         score: number;
     }[];
@@ -9,17 +9,35 @@ interface Item {
 export declare class RecommendService {
     private prisma;
     constructor(prisma: PrismaService);
-    recommend_item_list(base_item_id: number): Promise<import(".prisma/client").Watch[]>;
+    recommend_item_list(base_item_id: number): Promise<(import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        BID: number;
+        SID: number;
+        CID: number;
+        sku: string;
+        description: string;
+        content: string;
+        isHome: boolean;
+        saled: number;
+        quantity: number;
+        price: number;
+        estimatedPrice: number;
+        image: string[];
+        isActive: boolean;
+    }, unknown, never> & {})[]>;
     list_watch_and_rating(): Promise<{
         id: number;
-        Watch_rating: {
+        Product_rating: {
             UID: number;
             score: number;
         }[];
     }[]>;
     watch_and_rating(id: number): Promise<{
         id: number;
-        Watch_rating: {
+        Product_rating: {
             UID: number;
             score: number;
         }[];

@@ -19,7 +19,7 @@ let CommentService = class CommentService {
     async getCmtOfWatch(watchId, query) {
         try {
             return await this.prisma.comment.findMany({
-                where: { WID: watchId },
+                where: { PID: watchId },
                 orderBy: { createdAt: 'desc' },
                 skip: query.skip,
                 take: query.take,
@@ -37,7 +37,7 @@ let CommentService = class CommentService {
             await this.prisma.comment.create({
                 data: {
                     UID: userId,
-                    WID: body.watchId,
+                    PID: body.watchId,
                     content: body.content,
                 },
             });

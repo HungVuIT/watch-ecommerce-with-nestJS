@@ -1,7 +1,7 @@
 export declare class editSaleOffDto {
     id: number;
     amount: number;
-    WID: number;
+    PID: number;
     start: Date;
     end: Date;
 }

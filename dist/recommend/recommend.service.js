@@ -32,22 +32,22 @@ let RecommendService = class RecommendService {
             arr.sort(function (a, b) {
                 return b.khoangCach - a.khoangCach;
             });
-            const item1 = await this.prisma.watch.findUnique({
+            const item1 = await this.prisma.product.findUnique({
                 where: {
                     id: arr[0].id,
                 },
             });
-            const item2 = await this.prisma.watch.findUnique({
+            const item2 = await this.prisma.product.findUnique({
                 where: {
                     id: arr[1].id,
                 },
             });
-            const item3 = await this.prisma.watch.findUnique({
+            const item3 = await this.prisma.product.findUnique({
                 where: {
                     id: arr[2].id,
                 },
             });
-            const item4 = await this.prisma.watch.findUnique({
+            const item4 = await this.prisma.product.findUnique({
                 where: {
                     id: arr[3].id,
                 },
@@ -61,10 +61,10 @@ let RecommendService = class RecommendService {
     }
     async list_watch_and_rating() {
         try {
-            return await this.prisma.watch.findMany({
+            return await this.prisma.product.findMany({
                 select: {
                     id: true,
-                    Watch_rating: {
+                    Product_rating: {
                         select: {
                             UID: true,
                             score: true,
@@ -83,13 +83,13 @@ let RecommendService = class RecommendService {
     }
     async watch_and_rating(id) {
         try {
-            return await this.prisma.watch.findUnique({
+            return await this.prisma.product.findUnique({
                 where: {
                     id: id,
                 },
                 select: {
                     id: true,
-                    Watch_rating: {
+                    Product_rating: {
                         select: {
                             UID: true,
                             score: true,
@@ -103,15 +103,15 @@ let RecommendService = class RecommendService {
         }
     }
     chuanhoa(baseItem, recItem) {
-        let newBitem = { id: 0, Watch_rating: [] };
-        let newRitem = { id: 0, Watch_rating: [] };
+        let newBitem = { id: 0, Product_rating: [] };
+        let newRitem = { id: 0, Product_rating: [] };
         newBitem.id = baseItem.id;
         newRitem.id = recItem.id;
-        baseItem.Watch_rating.forEach((rating) => {
-            recItem.Watch_rating.forEach((rating2) => {
+        baseItem.Product_rating.forEach((rating) => {
+            recItem.Product_rating.forEach((rating2) => {
                 if (rating.UID === rating2.UID) {
-                    newBitem.Watch_rating.push(rating);
-                    newRitem.Watch_rating.push(rating2);
+                    newBitem.Product_rating.push(rating);
+                    newRitem.Product_rating.push(rating2);
                 }
             });
         });
@@ -124,12 +124,12 @@ let RecommendService = class RecommendService {
         let tu;
         let mau1;
         let mau2;
-        if (item.Watch_rating.length === 0)
+        if (item.Product_rating.length === 0)
             return 0;
-        for (let index = 0; index < item.Watch_rating.length; index++) {
-            tu += item.Watch_rating[index].score * recItem.Watch_rating[index].score;
-            mau1 += Math.pow(item.Watch_rating[index].score, 2);
-            mau2 += Math.pow(recItem.Watch_rating[index].score, 2);
+        for (let index = 0; index < item.Product_rating.length; index++) {
+            tu += item.Product_rating[index].score * recItem.Product_rating[index].score;
+            mau1 += Math.pow(item.Product_rating[index].score, 2);
+            mau2 += Math.pow(recItem.Product_rating[index].score, 2);
         }
         return Number((tu / Math.sqrt(mau1 * mau2)).toFixed(2));
     }

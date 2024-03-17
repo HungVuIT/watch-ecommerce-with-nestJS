@@ -1,6 +1,6 @@
 export declare class createSaleOffDto {
     amount: number;
-    WID: number;
+    PID: number;
     start: Date;
     end: Date;
 }

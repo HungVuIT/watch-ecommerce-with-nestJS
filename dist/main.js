@@ -7,6 +7,7 @@ const platform_socket_io_1 = require("@nestjs/platform-socket.io");
 const path_1 = require("path");
 const app_module_1 = require("./app.module");
 const errors_filter_1 = require("./errors.filter");
+const swagger_1 = require("./swagger");
 const cors = require('cors');
 class SocketAdapter extends platform_socket_io_1.IoAdapter {
     createIOServer(port, options) {
@@ -20,6 +21,7 @@ class SocketAdapter extends platform_socket_io_1.IoAdapter {
 exports.SocketAdapter = SocketAdapter;
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    (0, swagger_1.setupSwagger)(app);
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
     }));

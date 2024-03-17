@@ -7,6 +7,7 @@ import { ServerOptions } from 'http';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors.filter';
+import { setupSwagger } from './swagger';
 const cors = require('cors');
 
 export class SocketAdapter extends IoAdapter {
@@ -31,6 +32,7 @@ export class SocketAdapter extends IoAdapter {
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+    setupSwagger(app)
     //Thêm validator pipes global, đồng thời bỏ các trường ko cần thiết với whitelist true
     app.useGlobalPipes(
         new ValidationPipe({
@@ -57,7 +59,7 @@ async function bootstrap() {
         methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH'],
         credentials: true,
     });
-    
+
     // app.use(cors());
     // app.enableCors({
     //     origin: 'http://localhost:3000',

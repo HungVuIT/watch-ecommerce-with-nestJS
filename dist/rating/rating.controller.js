@@ -98,7 +98,7 @@ __decorate([
 ], RatingController.prototype, "getRateShop", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.Post)('watch'),
+    (0, common_1.Post)('product'),
     __param(0, (0, user_decorator_1.User)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -107,7 +107,7 @@ __decorate([
 ], RatingController.prototype, "rateWatch", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
-    (0, common_1.Patch)('watch'),
+    (0, common_1.Patch)('product'),
     __param(0, (0, user_decorator_1.User)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -115,7 +115,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RatingController.prototype, "updateRateWatch", null);
 __decorate([
-    (0, decorators_1.Get)('watch/:id'),
+    (0, decorators_1.Get)('product/:id'),
     __param(0, (0, decorators_1.Param)('id', pipes_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

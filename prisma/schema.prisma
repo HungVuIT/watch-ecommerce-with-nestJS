@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgres"
   url      = env("DATABASE_URL_LOCAL")
 }
 
@@ -35,17 +35,17 @@ model User {
   gender   Gender?
   birthDay DateTime?
 
-  avatar String   @default("https://res.cloudinary.com/vhh/image/upload/v1665845758/watch-ecommerce/istockphoto-476085198-612x612_bt6y0m.jpg")
+  avatar String   @default("https://res.cloudinary.com/vhh/image/upload/v1665845758/product-ecommerce/istockphoto-476085198-612x612_bt6y0m.jpg")
   status Boolean?
 
   role Role @default(USER)
 
-  Shop         Shop?
-  Favorite     Favorite[]
-  Cart         Cart[]
-  Order        Order[]
-  Shop_rating  Shop_rating[]
-  Watch_rating Watch_rating[]
+  Shop           Shop?
+  Favorite       Favorite[]
+  Cart           Cart[]
+  Order          Order[]
+  Shop_rating    Shop_rating[]
+  Product_rating Product_rating[]
 
   isActive Boolean   @default(true)
   Comment  Comment[]
@@ -78,36 +78,23 @@ model Shop {
   email       String?
   phoneNumber String
 
-  logo   String  @default("https://res.cloudinary.com/vhh/image/upload/v1665845746/watch-ecommerce/74827_of9gt0.png")
+  logo   String  @default("https://res.cloudinary.com/vhh/image/upload/v1665845746/product-ecommerce/74827_of9gt0.png")
   banner String?
 
   user User @relation(fields: [UID], references: [id])
   UID  Int  @unique
 
-  ShopWallet ShopWallet?
-
-  Watchs      Watch[]
+  Product     Product[]
   Shop_rating Shop_rating[]
-  Order Order[]
+  Order       Order[]
 
   isActive Boolean @default(true)
 }
 
-model ShopWallet {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  paypalMethod String
-
-  shop Shop @relation(fields: [SID], references: [id])
-  SID  Int  @unique
-}
-
 // ===========================================================================================================
 // ===========================================================================================================
 
-model Watch {
+model Product {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -119,47 +106,28 @@ model Watch {
   shop Shop @relation(fields: [SID], references: [id])
   SID  Int
 
-  CID Int[]
+  CID Int?
 
-  sku         String?
-  slug    String?
-  description String?
-  content     String?
+  sku            String?
+  description    String?
+  content        String?
+  isHome         Boolean @default(true)
+  saled          Int     @default(0)
+  quantity       Int?
+  price          Int?
+  estimatedPrice Int?
 
-  quantity   Int
-  saled      Int @default(0)
-  price      Int
+  image String[] @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/product-ecommerce/76007_vyvril.png"])
 
-  gender       Gender    @default(none)
-  materialCord String?
-  glassSurface String?
-  glassSize    String?
-  weight       Int?
-  height       Int?
-  length       Int?
-  width        Int?
-  madeBy       String?
-  image        String[]  @default(["https://res.cloudinary.com/vhh/image/upload/v1665845768/watch-ecommerce/76007_vyvril.png"])
-  warranty     String?
+  isActive Boolean @default(true)
 
-  isOld        Boolean  @default(false)
-  status        String?
-  include       String?
-  used          String?
-  resalePrice   Int?
-
-  prioritize  Boolean @default(false)
-  
-  isActive     Boolean   @default(true)
-
-  Favorite     Favorite[]
-  Cart         Cart[]
-  Order_detail Order_detail[]
-  Comment      Comment[]
-  Watch_rating Watch_rating[]
-  sale_off Sale_off?
+  Favorite       Favorite[]
+  Cart           Cart[]
+  Order_detail   Order_detail[]
+  Comment        Comment[]
+  Product_rating Product_rating[]
+  sale_off       Sale_off?
 }
-
 
 enum Gender {
   male
@@ -193,20 +161,6 @@ model Brand {
   image       String?
 }
 
-// ===========================================================================================================
-// ===========================================================================================================
-
-// model Rating {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   rate Int
-// }
-
-// ===========================================================================================================
-// ===========================================================================================================
-
 model Favorite {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -215,8 +169,8 @@ model Favorite {
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID   Int
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int
 
   isActive Boolean @default(true)
 }
@@ -232,8 +186,8 @@ model Cart {
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID   Int
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int
 
   quantity Int
 
@@ -262,12 +216,11 @@ model Order {
 
   Note String?
 
-  userPay Boolean @default(false)
+  userPay   Boolean @default(false)
   payVendor Boolean @default(false)
 
-  isActive        Boolean          @default(true)
-  Order_detail    Order_detail[]
-  Delivery_detail Delivery_detail?
+  isActive     Boolean        @default(true)
+  Order_detail Order_detail[]
 }
 
 enum orderProcess {
@@ -295,41 +248,13 @@ model Order_detail {
   order Order @relation(fields: [OID], references: [id])
   OID   Int
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID   Int
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int
 
   quantity Int
   total    Float
   fee      Float
-
-  
 }
-
-model Delivery_detail {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  province String
-  district String
-  ward     String
-  address  String
-  shipFee  Float
-
-  deliveryOption deliveryOption @default(standard)
-
-  order Order @relation(fields: [OID], references: [id])
-  OID   Int   @unique
-}
-
-enum deliveryOption {
-  express
-  standard
-  saving
-}
-
-// ===========================================================================================================
-// ===========================================================================================================
 
 model Comment {
   id        Int      @id @default(autoincrement())
@@ -339,8 +264,8 @@ model Comment {
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID   Int
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int
 
   content String
 }
@@ -348,7 +273,7 @@ model Comment {
 // ===========================================================================================================
 // ===========================================================================================================
 
-model Watch_rating {
+model Product_rating {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -356,10 +281,10 @@ model Watch_rating {
   user User @relation(fields: [UID], references: [id])
   UID  Int
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID   Int
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int
 
-  score Int @default(0)
+  score   Int     @default(0)
   content String?
 }
 
@@ -374,7 +299,7 @@ model Shop_rating {
   shop Shop @relation(fields: [SID], references: [id])
   SID  Int
 
-  score Int @default(0)
+  score   Int     @default(0)
   content String?
 }
 
@@ -401,10 +326,10 @@ model Sale_off {
 
   start DateTime
 
-  end  DateTime
+  end DateTime
 
-  watch Watch @relation(fields: [WID], references: [id])
-  WID Int  @unique
+  product Product @relation(fields: [PID], references: [id])
+  PID     Int     @unique
 }
 
 model News {
@@ -412,8 +337,6 @@ model News {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String
-
+  title   String
   content String
 }
-

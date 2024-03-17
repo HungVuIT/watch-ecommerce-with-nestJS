@@ -53,20 +53,20 @@ export class RatingController {
     }
 
     @UseGuards(jwtGuard)
-    @Post('watch')
+    @Post('product')
     rateWatch(@User('id') userID: number, @Body() body: rateBody) {
         this.ratingService.rateProduct(userID, body);
         return HttpStatus.OK;
     }
 
     @UseGuards(jwtGuard)
-    @Patch('watch')
+    @Patch('product')
     updateRateWatch(@User('id') userID: number, @Body() body: rateBody) {
         this.ratingService.updateRateProduct(userID, body);
         return HttpStatus.OK;
     }
 
-    @Get('watch/:id')
+    @Get('product/:id')
     getRateWatch(@Param('id', ParseIntPipe) id: number) {
         return this.ratingService.getProductRate(id);
     }

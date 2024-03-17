@@ -27,7 +27,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
-], editSaleOffDto.prototype, "WID", void 0);
+], editSaleOffDto.prototype, "PID", void 0);
 __decorate([
     (0, class_transformer_1.Type)(() => Date),
     (0, class_validator_1.IsOptional)(),

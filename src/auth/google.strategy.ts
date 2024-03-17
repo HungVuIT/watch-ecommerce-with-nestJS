@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
     constructor(config: ConfigService) {
-        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:8000';
+        const host = process.env.NODE_ENV === 'production' ? 'https://dhwatch.onrender.com' : 'http://localhost:https://f5x7hz81-8000.asse.devtunnels.ms';
 
         super({
             clientID: config.get('GOOGLE_CLIENT_ID'),

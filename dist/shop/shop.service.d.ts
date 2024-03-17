@@ -5,56 +5,103 @@ import { createShopDto } from './dto/createShop.dto';
 export declare class ShopService {
     private prisma;
     constructor(prisma: PrismaService);
-    findById(shopId: number): import(".prisma/client").Prisma.Prisma__ShopClient<import(".prisma/client").Shop, never> | HttpException;
-    findMany(option: any): Promise<HttpException | import(".prisma/client").Shop[]>;
+    findById(shopId: number): import(".prisma/client").Prisma.Prisma__ShopClient<import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        content: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        email: string;
+        phoneNumber: string;
+        logo: string;
+        banner: string;
+        UID: number;
+        isActive: boolean;
+    }, unknown, never> & {}, never, import("@prisma/client/runtime").DefaultArgs> | HttpException;
+    findMany(option: any): Promise<HttpException | (import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        content: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        email: string;
+        phoneNumber: string;
+        logo: string;
+        banner: string;
+        UID: number;
+        isActive: boolean;
+    }, unknown, never> & {})[]>;
     deleteByUserId(userId: number): Promise<HttpException>;
     updateByUserId(id: number, body: createShopDto, files: {
         logo?: Express.Multer.File[];
         banner?: Express.Multer.File[];
-    }): Promise<import(".prisma/client").Shop | HttpException>;
+    }): Promise<(import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        content: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        email: string;
+        phoneNumber: string;
+        logo: string;
+        banner: string;
+        UID: number;
+        isActive: boolean;
+    }, unknown, never> & {}) | HttpException>;
     updateByShopId(id: number, body: createShopDto, files: {
         logo?: Express.Multer.File[];
         banner?: Express.Multer.File[];
-    }): Promise<import(".prisma/client").Shop | HttpException>;
-    create(userId: number, body: createShopDto): Promise<import(".prisma/client").Shop | HttpException>;
-    addPayment(shopId: number, email: string): Promise<HttpException | import(".prisma/client").ShopWallet>;
-    dashbroad(shopId: number): Promise<HttpException | {
-        orderCount: number;
-        soldCount: import(".prisma/client").Prisma.GetOrder_detailAggregateType<{
-            where: {
-                order: {
-                    shop: {
-                        id: number;
-                    };
-                };
-            };
-            _sum: {
-                quantity: true;
-            };
-        }>;
-        revenue: import(".prisma/client").Prisma.GetOrderAggregateType<{
-            where: {
-                shop: {
-                    id: number;
-                };
-            };
-            _sum: {
-                total: true;
-            };
-        }>;
-        watchCount: import(".prisma/client").Prisma.GetWatchAggregateType<{
-            where: {
-                shop: {
-                    id: number;
-                };
-            };
-            _count: true;
-            _sum: {
-                quantity: true;
-            };
-        }>;
-        bestSellingProduct: import(".prisma/client").Watch;
-    }>;
+    }): Promise<(import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        content: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        email: string;
+        phoneNumber: string;
+        logo: string;
+        banner: string;
+        UID: number;
+        isActive: boolean;
+    }, unknown, never> & {}) | HttpException>;
+    create(userId: number, body: createShopDto): Promise<(import("@prisma/client/runtime").GetResult<{
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        description: string;
+        content: string;
+        province: string;
+        district: string;
+        ward: string;
+        address: string;
+        email: string;
+        phoneNumber: string;
+        logo: string;
+        banner: string;
+        UID: number;
+        isActive: boolean;
+    }, unknown, never> & {}) | HttpException>;
     dashbroadAdmin(): Promise<HttpException | {
         orderCount: number;
         soldCount: import(".prisma/client").Prisma.GetOrder_detailAggregateType<{
@@ -67,6 +114,6 @@ export declare class ShopService {
                 total: true;
             };
         }>;
-        watchCount: number;
+        productCount: number;
     }>;
 }

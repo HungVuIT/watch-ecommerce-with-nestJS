@@ -17,7 +17,7 @@ const storage = new CloudinaryStorage({
         const uniqFileName = file.originalname.replace(/\.jpeg|\.jpg|\.png/gi, '');
 
         return {
-            folder: 'watch-ecommerce',
+            folder: 'product-ecommerce',
             format: 'jpeg',
             public_id: uniqFileName,
         };
