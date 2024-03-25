@@ -28,33 +28,33 @@ import { Shop } from 'src/shared/customDecorator/shop.decorator';
 export class OrderController {
     constructor(private orderService: OrderService, private glo: globalVariables) {}
 
-    // @UseGuards(jwtGuard)
-    // @UseInterceptors(FileInterceptor(''))
-    // @Post('/checkout')
-    // async createOrder(@User('id') id: number, @Body() body: createOrderDto, @Req() req: Request) {
-    //     globalVariables.deliveryLocation[id] = {
-    //         address: body.address,
-    //         deliveryOption: body.deliveryOption,
-    //         district: body.district,
-    //         province: body.province,
-    //         ward: body.ward,
-    //     };
+    @UseGuards(jwtGuard)
+    @UseInterceptors(FileInterceptor(''))
+    @Post('/checkout')
+    async createOrder(@User('id') id: number, @Body() body: createOrderDto, @Req() req: Request) {
+        globalVariables.deliveryLocation[id] = {
+            address: body.address,
+            deliveryOption: body.deliveryOption,
+            district: body.district,
+            province: body.province,
+            ward: body.ward,
+        };
 
-    //     globalVariables.paymentHost[id] =
-    //         process.env.NODE_ENV === 'production'
-    //             ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
-    //             : 'http://localhost:8000/api/order/' + id.toString();
+        globalVariables.paymentHost[id] =
+            process.env.NODE_ENV === 'production'
+                ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
+                : 'http://localhost:8000/api/order/' + id.toString();
 
-    //     if (body.paymentMethod === 'offline') {
-    //         const order = await this.orderService.cashOnDelivery(id);
+        if (body.paymentMethod === 'offline') {
+            const order = await this.orderService.cashOnDelivery(id);
 
-    //         return order;
-    //     }
+            return order;
+        }
 
-    //     const order = await this.orderService.createLinkPaymant(id);
+        // const order = await this.orderService.createLinkPaymant(id);
 
-    //     return order;
-    // }
+        return undefined;
+    }
 
     // @Get(':id/success')
     // async success(@Param('id', ParseIntPipe) id: number, @Req() req: Request, @Res() res: any) {

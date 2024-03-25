@@ -31,6 +31,7 @@ export declare class OrderService {
     private config;
     private glo;
     constructor(prisma: PrismaService, payment: PaymentService, delivery: DeliveryService, config: ConfigService, glo: globalVariables);
+    cashOnDelivery(userId: number): Promise<void>;
     getOrdersUser(id: number): Promise<({
         Order_detail: (import("@prisma/client/runtime").GetResult<{
             id: number;

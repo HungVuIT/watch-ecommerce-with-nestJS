@@ -14,16 +14,36 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const user_decorator_1 = require("../shared/customDecorator/user.decorator");
 const global_service_1 = require("../shared/global.service");
 const guard_1 = require("../shared/guard");
 const res_interceptor_1 = require("../shared/interceptor/res.interceptor");
+const createOrder_dto_1 = require("./dto/createOrder.dto");
 const order_service_1 = require("./order.service");
 const shop_decorator_1 = require("../shared/customDecorator/shop.decorator");
 let OrderController = class OrderController {
     constructor(orderService, glo) {
         this.orderService = orderService;
         this.glo = glo;
+    }
+    async createOrder(id, body, req) {
+        global_service_1.globalVariables.deliveryLocation[id] = {
+            address: body.address,
+            deliveryOption: body.deliveryOption,
+            district: body.district,
+            province: body.province,
+            ward: body.ward,
+        };
+        global_service_1.globalVariables.paymentHost[id] =
+            process.env.NODE_ENV === 'production'
+                ? 'https://dhwatch.onrender.com/api/order/' + id.toString()
+                : 'http://localhost:8000/api/order/' + id.toString();
+        if (body.paymentMethod === 'offline') {
+            const order = await this.orderService.cashOnDelivery(id);
+            return order;
+        }
+        return undefined;
     }
     getOrderListUser(id) {
         return this.orderService.getOrdersUser(id);
@@ -44,6 +64,17 @@ let OrderController = class OrderController {
         return this.orderService.deleteOrder(id);
     }
 };
+__decorate([
+    (0, common_1.UseGuards)(guard_1.jwtGuard),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('')),
+    (0, common_1.Post)('/checkout'),
+    __param(0, (0, user_decorator_1.User)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, createOrder_dto_1.createOrderDto, Object]),
+    __metadata("design:returntype", Promise)
+], OrderController.prototype, "createOrder", null);
 __decorate([
     (0, common_1.UseGuards)(guard_1.jwtGuard),
     (0, common_1.Get)('/user'),

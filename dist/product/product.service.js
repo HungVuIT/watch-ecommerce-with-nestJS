@@ -133,7 +133,7 @@ let ProductService = class ProductService {
                 body.image = image;
             }
             const product = await this.prisma.product.create({
-                data: Object.assign(Object.assign({}, body), { SID: shopId, isHome: body.isHome === 1 ? true : false }),
+                data: Object.assign(Object.assign({}, body), { SID: shopId, isHome: body.isHome ? true : false }),
             });
             return product;
         }

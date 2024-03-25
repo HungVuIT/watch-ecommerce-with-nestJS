@@ -24,6 +24,143 @@ let OrderService = class OrderService {
         this.config = config;
         this.glo = glo;
     }
+    async cashOnDelivery(userId) {
+        var _a, _b;
+        try {
+            const listItem = await this.prisma.$queryRaw `
+          SELECT "Cart"."id", 
+          "Cart"."quantity", 
+          "Cart"."PID", 
+          "Cart"."UID", 
+          "Product"."name", 
+          "Product"."price", 
+          "Product"."SID",
+          "Product"."quantity" as "productQuantity"
+ 
+          FROM "Cart" 
+          LEFT JOIN "Product" ON "Cart"."PID" = "Product"."id"
+          LEFT JOIN "Shop" ON "Product"."SID" = "Shop"."id"
+
+          WHERE "Cart"."UID" = ${userId};
+        `;
+            if (listItem.length === 0)
+                throw new common_1.HttpException('Cart is emty', common_1.HttpStatus.BAD_REQUEST);
+            for (const item of listItem) {
+                const product = await this.prisma.product.findFirst({ where: { id: item.PID }, include: { sale_off: true } });
+                item.price = ((_a = product === null || product === void 0 ? void 0 : product.sale_off) === null || _a === void 0 ? void 0 : _a.amount) ? item.price - ((_b = product === null || product === void 0 ? void 0 : product.sale_off) === null || _b === void 0 ? void 0 : _b.amount) : item.price;
+            }
+            const groupedItems = listItem.reduce((acc, item) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                }
+                else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.productQuantity)
+                        throw new common_1.HttpException({
+                            message: 'out of stock',
+                            itemID: item.PID,
+                            itemName: item.name,
+                        }, common_1.HttpStatus.NOT_FOUND);
+                });
+            });
+            const location = global_service_1.globalVariables.deliveryLocation[userId];
+            const ordersByShop = [];
+            const code = this.generateOrderCode();
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
+                });
+                switch (global_service_1.globalVariables.deliveryLocation[userId].deliveryOption) {
+                    case 1:
+                        shipFee = Math.round(shipFee * 1.1);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        shipFee = Math.round(shipFee * 0.8);
+                        break;
+                }
+                const totalPrice = total + shipFee;
+                const order = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
+                };
+                ordersByShop.push(order);
+            }
+            global_service_1.globalVariables.orderList[userId] = ordersByShop;
+            const orderDetail = ordersByShop.reduce((acc, curr) => {
+                return {
+                    itemValue: acc.itemValue + curr.itemPrice,
+                    shipFee: acc.shipFee + curr.shipFee,
+                    total: acc.total + curr.totalPrice,
+                };
+            }, { itemValue: 0, shipFee: 0, total: 0 });
+            global_service_1.globalVariables.orderDetail[userId] = orderDetail;
+            await this.prisma.$transaction(async (tx) => {
+                const listorder = global_service_1.globalVariables.orderList[userId];
+                listorder.forEach(async (item) => {
+                    await this.prisma.$transaction(async (tx) => {
+                        const order = await tx.order.create({
+                            data: {
+                                code: item.code,
+                                UID: userId,
+                                SID: item.SID,
+                                total: item.totalPrice,
+                                paymentMethod: 'offline',
+                                status: 'created',
+                            },
+                        });
+                        let data = [];
+                        item.items.forEach((v) => data.push({
+                            OID: order.id,
+                            PID: v.PID,
+                            quantity: v.quantity,
+                            total: v.price * v.quantity,
+                            fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                        }));
+                        await tx.order_detail.createMany({
+                            data: data,
+                        });
+                        const updates = item.items.map((item) => tx.product.update({
+                            where: { id: item.PID },
+                            data: {
+                                quantity: { decrement: item.quantity },
+                                saled: { increment: item.quantity },
+                            },
+                        }));
+                        await Promise.all(updates);
+                        await tx.cart.deleteMany({
+                            where: { UID: userId },
+                        });
+                    });
+                });
+                this.glo.deleteUserInfor(userId);
+                return listorder;
+            });
+        }
+        catch (error) {
+            throw error;
+        }
+    }
     async getOrdersUser(id) {
         try {
             return await this.prisma.order.findMany({

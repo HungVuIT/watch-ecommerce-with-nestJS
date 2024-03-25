@@ -268,216 +268,216 @@ export class OrderService {
     //     }
     // }
 
-    // async cashOnDelivery(userId: number) {
-    //     try {
-    //         // trong postgresql table name nên để trong " " nếu không sẽ tự chuyển thành in thường -> lỗi ko tìm thấy
-    //         // chi tiết đọc tại https://stackoverflow.com/questions/26631205/postgresql-error-42p01-relation-table-does-not-exist
-    //         const listItem: {
-    //             id: number;
-    //             quantity: number;
-    //             PID: number;
-    //             UID: number;
-    //             name: string;
-    //             price: number;
-    //             productQuantity: number;
-    //             paypalMethod: string;
-    //         }[] = await this.prisma.$queryRaw`
-    //       SELECT "Cart"."id", 
-    //       "Cart"."quantity", 
-    //       "Cart"."PID", 
-    //       "Cart"."UID", 
-    //       "Product"."name", 
-    //       "Product"."price", 
-    //       "Product"."SID",
-    //       "Product"."quantity" as "productQuantity", 
-    //       "ShopWallet"."paypalMethod"
-    //       FROM "Cart" 
-    //       LEFT JOIN "Product" ON "Cart"."PID" = "Product"."id"
-    //       LEFT JOIN "Shop" ON "Product"."SID" = "Shop"."id"
-    //       LEFT JOIN "ShopWallet" On "Shop"."id" = "ShopWallet"."SID"
-    //       WHERE "Cart"."UID" = ${userId};
-    //     `;
+    async cashOnDelivery(userId: number) {
+        try {
+            // trong postgresql table name nên để trong " " nếu không sẽ tự chuyển thành in thường -> lỗi ko tìm thấy
+            // chi tiết đọc tại https://stackoverflow.com/questions/26631205/postgresql-error-42p01-relation-table-does-not-exist
+            const listItem: {
+                id: number;
+                quantity: number;
+                PID: number;
+                UID: number;
+                name: string;
+                price: number;
+                productQuantity: number;
+                paypalMethod: string;
+            }[] = await this.prisma.$queryRaw`
+          SELECT "Cart"."id", 
+          "Cart"."quantity", 
+          "Cart"."PID", 
+          "Cart"."UID", 
+          "Product"."name", 
+          "Product"."price", 
+          "Product"."SID",
+          "Product"."quantity" as "productQuantity"
+ 
+          FROM "Cart" 
+          LEFT JOIN "Product" ON "Cart"."PID" = "Product"."id"
+          LEFT JOIN "Shop" ON "Product"."SID" = "Shop"."id"
 
-    //         if (listItem.length === 0) throw new HttpException('Cart is emty', HttpStatus.BAD_REQUEST);
+          WHERE "Cart"."UID" = ${userId};
+        `;
 
-    //         for (const item of listItem) {
-    //             const product = await this.prisma.product.findFirst({where: {id: item.PID}, include: {sale_off: true}})
-    //             item.price = product?.sale_off?.amount ? item.price -  product?.sale_off?.amount: item.price
-    //         }
+            if (listItem.length === 0) throw new HttpException('Cart is emty', HttpStatus.BAD_REQUEST);
 
-    //         const groupedItems: CartGroupedByShop[] = listItem.reduce((acc: CartGroupedByShop[], item: Cart) => {
-    //             const existingGroup = acc.find((group) => group.SID === item.SID);
-    //             if (existingGroup) {
-    //                 existingGroup.items.push(item);
-    //             } else {
-    //                 acc.push({ SID: item.SID, items: [item] });
-    //             }
-    //             return acc;
-    //         }, []);
+            for (const item of listItem) {
+                const product = await this.prisma.product.findFirst({where: {id: item.PID}, include: {sale_off: true}})
+                item.price = product?.sale_off?.amount ? item.price -  product?.sale_off?.amount: item.price
+            }
 
-    //         // Kiểm tra xem trng kho còn đủ hàng không
-    //         groupedItems.forEach(({ items }) => {
-    //             items.forEach((item) => {
-    //                 if (item.quantity > item.productQuantity)
-    //                     throw new HttpException(
-    //                         {
-    //                             message: 'out of stock',
-    //                             itemID: item.PID,
-    //                             itemName: item.name,
-    //                         },
-    //                         HttpStatus.NOT_FOUND
-    //                     );
-    //             });
-    //         });
+            const groupedItems: CartGroupedByShop[] = listItem.reduce((acc: CartGroupedByShop[], item: Cart) => {
+                const existingGroup = acc.find((group) => group.SID === item.SID);
+                if (existingGroup) {
+                    existingGroup.items.push(item);
+                } else {
+                    acc.push({ SID: item.SID, items: [item] });
+                }
+                return acc;
+            }, []);
 
-    //         const location = globalVariables.deliveryLocation[userId];
+            // Kiểm tra xem trng kho còn đủ hàng không
+            groupedItems.forEach(({ items }) => {
+                items.forEach((item) => {
+                    if (item.quantity > item.productQuantity)
+                        throw new HttpException(
+                            {
+                                message: 'out of stock',
+                                itemID: item.PID,
+                                itemName: item.name,
+                            },
+                            HttpStatus.NOT_FOUND
+                        );
+                });
+            });
 
-    //         const ordersByShop: OrderByShop[] = [];
+            const location = globalVariables.deliveryLocation[userId];
 
-    //         const code = this.generateOrderCode()
+            const ordersByShop: OrderByShop[] = [];
 
-    //         for (const group of groupedItems) {
-    //             const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
+            const code = this.generateOrderCode()
 
-    //             const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
-    //             const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    //             let shipFee = await this.delivery.diliveryFee({
-    //                 fromDistrict: shop.district,
-    //                 fromProvince: shop.province,
-    //                 toProvince: location.province,
-    //                 toDistrict: location.district,
-    //                 toWard: location.district,
-    //                 value: total,
-    //                 quantity: quantity,
-    //             });
+            for (const group of groupedItems) {
+                const shop = await this.prisma.shop.findFirst({ where: { id: group.SID } });
 
-    //             switch (globalVariables.deliveryLocation[userId].deliveryOption) {
-    //                 case 1:
-    //                     shipFee = Math.round(shipFee * 1.1);
-    //                     break;
-    //                 case 2:
-    //                     break;
-    //                 case 3:
-    //                     shipFee = Math.round(shipFee * 0.8);
-    //                     break;
-    //             }
-    //             const totalPrice = total + shipFee;
+                const quantity = group.items.reduce((acc, item) => acc + item.quantity, 0);
+                const total = group.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                let shipFee = await this.delivery.diliveryFee({
+                    fromDistrict: shop.district,
+                    fromProvince: shop.province,
+                    toProvince: location.province,
+                    toDistrict: location.district,
+                    toWard: location.district,
+                    value: total,
+                    quantity: quantity,
+                });
 
-    //             const order: OrderByShop = {
-    //                 itemPrice: total,
-    //                 SID: group.SID,
-    //                 items: group.items,
-    //                 shipFee: shipFee,
-    //                 totalPrice: totalPrice,
-    //                 code: code + '.' + Date.now().toString().slice(-5)
-    //             };
-    //             ordersByShop.push(order);
-    //         }
+                switch (globalVariables.deliveryLocation[userId].deliveryOption) {
+                    case 1:
+                        shipFee = Math.round(shipFee * 1.1);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        shipFee = Math.round(shipFee * 0.8);
+                        break;
+                }
+                const totalPrice = total + shipFee;
 
-    //         globalVariables.orderList[userId] = ordersByShop;
+                const order: OrderByShop = {
+                    itemPrice: total,
+                    SID: group.SID,
+                    items: group.items,
+                    shipFee: shipFee,
+                    totalPrice: totalPrice,
+                    code: code + '.' + Date.now().toString().slice(-5)
+                };
+                ordersByShop.push(order);
+            }
 
-    //         const orderDetail = ordersByShop.reduce(
-    //             (acc, curr) => {
-    //                 return {
-    //                     itemValue: acc.itemValue + curr.itemPrice,
-    //                     shipFee: acc.shipFee + curr.shipFee,
-    //                     total: acc.total + curr.totalPrice,
-    //                 };
-    //             },
-    //             { itemValue: 0, shipFee: 0, total: 0 }
-    //         );
+            globalVariables.orderList[userId] = ordersByShop;
 
-    //         globalVariables.orderDetail[userId] = orderDetail;
+            const orderDetail = ordersByShop.reduce(
+                (acc, curr) => {
+                    return {
+                        itemValue: acc.itemValue + curr.itemPrice,
+                        shipFee: acc.shipFee + curr.shipFee,
+                        total: acc.total + curr.totalPrice,
+                    };
+                },
+                { itemValue: 0, shipFee: 0, total: 0 }
+            );
 
-    //         await this.prisma.$transaction(async (tx) => {
-    //             const listorder: OrderByShop[] = globalVariables.orderList[userId];
+            globalVariables.orderDetail[userId] = orderDetail;
 
-    //             listorder.forEach(async (item) => {
-    //                 await this.prisma.$transaction(async (tx) => {
-    //                     const order = await tx.order.create({
-    //                         data: {
-    //                             code: item.code,
-    //                             UID: userId,
-    //                             SID: item.SID,
-    //                             total: item.totalPrice,
-    //                             paymentMethod: 'offline',
-    //                             status: 'created',
-    //                         },
-    //                     });
+            await this.prisma.$transaction(async (tx) => {
+                const listorder: OrderByShop[] = globalVariables.orderList[userId];
 
-    //                     interface orderDetailData {
-    //                         OID: number;
-    //                         PID: number;
-    //                         quantity: number;
-    //                         total: number;
-    //                         fee: number;
-    //                     }
+                listorder.forEach(async (item) => {
+                    await this.prisma.$transaction(async (tx) => {
+                        const order = await tx.order.create({
+                            data: {
+                                code: item.code,
+                                UID: userId,
+                                SID: item.SID,
+                                total: item.totalPrice,
+                                paymentMethod: 'offline',
+                                status: 'created',
+                            },
+                        });
 
-    //                     let data: orderDetailData[] = [];
+                        interface orderDetailData {
+                            OID: number;
+                            PID: number;
+                            quantity: number;
+                            total: number;
+                            fee: number;
+                        }
 
-    //                     item.items.forEach((v) =>
-    //                         data.push({
-    //                             OID: order.id,
-    //                             PID: v.PID,
-    //                             quantity: v.quantity,
-    //                             total: v.price * v.quantity,
-    //                             fee: v.price * v.quantity * Number(this.config.get('FEE')),
-    //                         })
-    //                     );
+                        let data: orderDetailData[] = [];
 
-    //                     await tx.order_detail.createMany({
-    //                         data: data,
-    //                     });
+                        item.items.forEach((v) =>
+                            data.push({
+                                OID: order.id,
+                                PID: v.PID,
+                                quantity: v.quantity,
+                                total: v.price * v.quantity,
+                                fee: v.price * v.quantity * Number(this.config.get('FEE')),
+                            })
+                        );
 
-    //                     const updates = item.items.map((item) =>
-    //                         tx.product.update({
-    //                             where: { id: item.PID },
-    //                             data: {
-    //                                 quantity: { decrement: item.quantity },
-    //                                 saled: { increment: item.quantity },
-    //                             },
-    //                         })
-    //                     );
+                        await tx.order_detail.createMany({
+                            data: data,
+                        });
 
-    //                     await Promise.all(updates);
+                        const updates = item.items.map((item) =>
+                            tx.product.update({
+                                where: { id: item.PID },
+                                data: {
+                                    quantity: { decrement: item.quantity },
+                                    saled: { increment: item.quantity },
+                                },
+                            })
+                        );
 
-    //                     let deliveryType: deliveryOption = deliveryOption.standard;
+                        await Promise.all(updates);
 
-    //                     switch (location.deliveryOption) {
-    //                         case 1:
-    //                             deliveryType = deliveryOption.express;
-    //                             break;
-    //                         case 2:
-    //                             deliveryType = deliveryOption.standard;
-    //                             break;
-    //                         case 3:
-    //                             deliveryType = deliveryOption.saving;
-    //                             break;
-    //                     }
+                        // let deliveryType: deliveryOption = deliveryOption.standard;
 
-    //                     await tx.delivery_detail.create({
-    //                         data: {
-    //                             ...location,
-    //                             OID: order.id,
-    //                             shipFee: item.shipFee,
-    //                             deliveryOption: deliveryType,
-    //                         },
-    //                     });
+                        // switch (location.deliveryOption) {
+                        //     case 1:
+                        //         deliveryType = deliveryOption.express;
+                        //         break;
+                        //     case 2:
+                        //         deliveryType = deliveryOption.standard;
+                        //         break;
+                        //     case 3:
+                        //         deliveryType = deliveryOption.saving;
+                        //         break;
+                        // }
 
-    //                     await tx.cart.deleteMany({
-    //                         where: { UID: userId },
-    //                     });
-    //                 });
-    //             });
+                        // await tx.delivery_detail.create({
+                        //     data: {
+                        //         ...location,
+                        //         OID: order.id,
+                        //         shipFee: item.shipFee,
+                        //         deliveryOption: deliveryType,
+                        //     },
+                        // });
 
-    //             this.glo.deleteUserInfor(userId);
+                        await tx.cart.deleteMany({
+                            where: { UID: userId },
+                        });
+                    });
+                });
 
-    //             return listorder;
-    //         });
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
+                this.glo.deleteUserInfor(userId);
+
+                return listorder;
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async getOrdersUser(id: number) {
         try {

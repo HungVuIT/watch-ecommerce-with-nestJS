@@ -1,9 +1,12 @@
+import { Request } from 'express';
 import { globalVariables } from 'src/shared/global.service';
+import { createOrderDto } from './dto/createOrder.dto';
 import { OrderService } from './order.service';
 export declare class OrderController {
     private orderService;
     private glo;
     constructor(orderService: OrderService, glo: globalVariables);
+    createOrder(id: number, body: createOrderDto, req: Request): Promise<void>;
     getOrderListUser(id: number): Promise<({
         Order_detail: (import("@prisma/client/runtime").GetResult<{
             id: number;
